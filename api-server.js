@@ -43,8 +43,8 @@ var keys = [
 // Listen for HTTPS on port 443 only if KEY and CERT exists
 if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
   var httpsOptions = {
-    key: fsReadFileSync(keyFile),
-    cert: fsReadFileSync(crtFile),
+    key: fs.ReadFileSync(keyFile),
+    cert: fs.ReadFileSync(crtFile),
     rejectUnauthorized: false,
     agentOptions: {
       checkServerIdentity: function () { }
