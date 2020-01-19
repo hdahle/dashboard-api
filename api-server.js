@@ -48,7 +48,7 @@ if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
       checkServerIdentity: function () { }
     }
   };
-  https.createServer(httpsOptions, listenerFunction).listen(443);
+  https.createServer(httpsOptions, requestListener).listen(443);
 } else {
   console.log(moment().format(momFmt) + 'Warning: Not starting HTTPS server. Cert not found');
 }
