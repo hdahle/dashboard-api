@@ -16,3 +16,5 @@ On Ubuntu/Bitnami:
 sudo setcap "cap_net_bind_service=+ep" /opt/bitnami/nodejs/bin/.node.bin
 
 It's also a good idea to stop Apache from running.
+
+It's a good idea to verify that the certificate.key-file is readable by the node process. On Ubuntu/Bitnami the certs are in /opt/bitnami/letsencrypt/certificates - check the permissions on the *key* file. If necessary, create a group of users (bitnami + root) and give ownership of the *key* file to that group. Make sure that permissions survice after the cron-job renews certificates.
