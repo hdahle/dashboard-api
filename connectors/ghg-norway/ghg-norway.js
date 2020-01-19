@@ -8,26 +8,21 @@
 var fetch = require('node-fetch');
 var redis = require('redis');
 var redClient = redis.createClient();
-
 var moment = require('moment');
 const momFmt = 'YY-MM-DD hh:mm:ss';
 
 redClient.on('connect', function () {
   console.log(moment().format(momFmt) + ' Redis client connected');
 });
-
 redClient.on('ready', function () {
   console.log(moment().format(momFmt) + ' Redis client ready');
 });
-
 redClient.on('warning', function () {
   console.log(moment().format(momFmt) + ' Redis warning');
 });
-
 redClient.on('error', function (err) {
   console.log(moment().format(momFmt) + ' Redis error:' + err);
 });
-
 
 //
 // Fetch GHG Emissions Norway
@@ -51,7 +46,7 @@ function goFetch() {
     .then(json)
     .then(results => {
       let res = {
-        source: results.source,
+        source: 'Statistics Norway, https://ssb.no',
         updated: results.updated,
         license: 'Norwegian License for Open Government Data (NLOD) 2.0, http://data.norge.no/nlod/en/2.0',
         link: 'https://data.ssb.no/api/v0/',
@@ -97,7 +92,8 @@ function goFetch() {
       let redisKey = 'emissions-norway';
       let redisValue = JSON.stringify(res);
       console.log(moment().format(momFmt) +
-        ' Storing, key=' + redisKey +
+        ' Storing ' + redisValue.length +
+        ' bytes, key=' + redisKey +
         ' value=' + redisValue.substring(0, 60));
 
       redClient.set(redisKey, redisValue, function (error, result) {
