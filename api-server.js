@@ -3,6 +3,9 @@
 // Should have used Express actually
 // Should have used some debug framework and not console.log
 // Should have done a lot of things...
+// Most important todo: use mocha for testing
+//
+// H Dahle
 //
 var http = require('http');
 var https = require('https');
@@ -34,12 +37,6 @@ redClient.on('error', function (err) {
 const keyFile = '/opt/bitnami/letsencrypt/certificates/api.dashboard.eco.key';
 const crtFile = '/opt/bitnami/letsencrypt/certificates/api.dashboard.eco.crt';
 
-// Mapping from query path to redis-key
-var keys = [
-  { path: '/emissions-norway', key: 'emissions-norway' },
-  { path: '/test', key: 'test' }
-];
-
 // Listen for HTTPS on port 443 only if KEY and CERT exists
 if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
   console.log(moment().format(momFmt) + ' Certificate found');
@@ -53,7 +50,7 @@ if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
   };
   https.createServer(httpsOptions, listenerFunction).listen(443);
 } else {
-  console.log(moment().format(momFmt) + ' Not starting HTTPS server. Cert not found');
+  console.log(moment().format(momFmt) + 'Warning: Not starting HTTPS server. Cert not found');
 }
 
 // Listen on HTTP Port 80
@@ -61,10 +58,14 @@ http.createServer(requestListener).listen(80);
 
 // A single requestListener for both HTTP and HTTPS
 function requestListener(req, res) {
-  var path = url.parse(req.url).pathname;
-  var query = url.parse(req.url).query;
-  console.log(moment().format(momFmt) + ' Query:' + query + ' Path:' + path);
-
+  let path = url.parse(req.url).pathname;
+  let query = url.parse(req.url).query;
+  let dbgMsg = {
+    status: 'Error',
+    result: '',
+    time: moment().format(momFmt)
+  };
+  console.log(dbgMsg.time, 'Query:' + query, 'Path:' + path);
   if (path === '/favicon.ico') {
     // The favicon handler is inspired by
     //   https://stackoverflow.com/questions/15463199/how-to-set-custom-favicon-in-express
@@ -89,32 +90,33 @@ function requestListener(req, res) {
     'Content-Type': 'text/plain',
     'Access-Control-Allow-Origin': '*'
   });
+
   // The path part should not be empty
   if (path === undefined || path === null || path.length === 0) {
-    console.log(moment().format(momFmt) + ' Error: empty path');
-    res.write('Error: empty path');
+    dbgMsg.result = 'empty path';
+    console.log(dbgMsg.time, dbgMsg.status, dbgMsg.result);
+    res.write(JSON.stringify(dbgMsg));
     res.end('\n');
     return;
   }
-  let index = keys.findIndex(x => x.path === path);
-  if (index !== -1) {
-    redClient.get(keys[index].key, function (error, result) {
+
+  if (path === '/') {
+    res.write('root');
+    res.end('\n');
+  } else {
+    redClient.get(path.substr(1), function (error, result) {
       if (result) {
-        console.log(moment().format(momFmt) + ' Result:' + result.substring(0, 60));
+        dbgMsg.status = 'OK';
+        dbgMsg.result = result.substring(0, 50);
         res.write(result);
-        res.end('\n');
       }
       else {
-        console.log(moment().format(momFmt) + ' Error: no result in redis');
-        res.write('Error: no result at that path');
-        res.end('\n');
+        dbgMsg.status = 'Error';
+        dbgMsg.result = 'nothing in db';
+        res.write(JSON.stringify(dbgMsg));
       }
+      res.end('\n');
+      console.log(dbgMsg.time, dbgMsg.status, dbgMsg.result);
     });
-  }
-  else {
-    // Incorrect path
-    console.log(moment().format(momFmt) + ' Error: invalid path', path, query);
-    res.write('Error: invalid path');
-    res.end('\n');
   }
 }
