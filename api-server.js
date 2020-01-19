@@ -42,7 +42,7 @@ var keys = [
 
 // Listen for HTTPS on port 443 only if KEY and CERT exists
 if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
-  console.log(moment().format(momFmt) + ' OK. Certificate found');
+  console.log(moment().format(momFmt) + ' Certificate found');
   var httpsOptions = {
     key: fs.readFileSync(keyFile),
     cert: fs.readFileSync(crtFile),
@@ -57,10 +57,10 @@ if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
 }
 
 // Listen on HTTP Port 80
-http.createServer(listenerFunction).listen(80);
+http.createServer(requestListener).listen(80);
 
-// The server that works for both HTTP and HTTPS
-function listenerFunction(req, res) {
+// A single requestListener for both HTTP and HTTPS
+function requestListener(req, res) {
   var path = url.parse(req.url).pathname;
   var query = url.parse(req.url).query;
   console.log(moment().format(momFmt) + ' Query:' + query + ' Path:' + path);
