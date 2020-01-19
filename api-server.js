@@ -31,8 +31,8 @@ redClient.on('error', function (err) {
 });
 
 // For the certificate stuff
-const keyFile = '/home/bitnami/projects/https-server/server.key';
-const crtFile = '/home/bitnami/projects/https-server/server.crt';
+const keyFile = '/home/bitnami/stack/apache2/conf/server.key';
+const crtFile = '/home/bitnami/stack/apache2/conf/server.crt';
 
 // Mapping from query path to redis-key
 var keys = [
