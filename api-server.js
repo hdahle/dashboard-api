@@ -31,8 +31,8 @@ redClient.on('error', function (err) {
 });
 
 // For the certificate stuff
-const keyFile = '/home/bitnami/stack/apache2/conf/server.key';
-const crtFile = '/home/bitnami/stack/apache2/conf/server.crt';
+const keyFile = '/opt/bitnami/letsencrypt/certificates/api.dashboard.eco.key';
+const crtFile = '/opt/bitnami/letsencrypt/certificates/api.dashboard.eco.crt';
 
 // Mapping from query path to redis-key
 var keys = [
@@ -42,6 +42,7 @@ var keys = [
 
 // Listen for HTTPS on port 443 only if KEY and CERT exists
 if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
+  console.log(moment().format(momFmt) + ' OK. Certificate found');
   var httpsOptions = {
     key: fs.readFileSync(keyFile),
     cert: fs.readFileSync(crtFile),
