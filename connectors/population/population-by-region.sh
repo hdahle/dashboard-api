@@ -32,7 +32,7 @@ REDISKEY="WPP2019_TotalPopulationByRegion"
 TMPDIR=$(mktemp -d)
 
 # Fetch population data from UN
-curl "https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_TotalPopulationBySex.csv" > ${INPUTFILE}
+# curl "https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_TotalPopulationBySex.csv" > ${INPUTFILE}
 
 if [ -f "${INPUTFILE}" ]; then
     echo "Converting ${INPUTFILE} from CSV to JSON, using temp directory ${TMPDIR}"
