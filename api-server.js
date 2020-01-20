@@ -39,7 +39,6 @@ const crtFile = '/opt/bitnami/letsencrypt/certificates/api.dashboard.eco.crt';
 
 // Listen for HTTPS on port 443 only if KEY and CERT exists
 if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
-  console.log(moment().format(momFmt) + ' Certificate found');
   var httpsOptions = {
     key: fs.readFileSync(keyFile),
     cert: fs.readFileSync(crtFile),
@@ -50,7 +49,7 @@ if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
   };
   https.createServer(httpsOptions, requestListener).listen(443);
 } else {
-  console.log(moment().format(momFmt) + 'Warning: Not starting HTTPS server. Cert not found');
+  console.log(moment().format(momFmt), 'Warning: Not starting HTTPS server. Cert not found');
 }
 
 // Listen on HTTP Port 80
@@ -65,7 +64,7 @@ function requestListener(req, res) {
     result: '',
     time: moment().format(momFmt)
   };
-  console.log(dbgMsg.time, 'Query:' + query, 'Path:' + path);
+  console.log(dbgMsg.time, 'Query:' + query, 'Path:' + path, 'Host:', req.headers.host);
   if (path === '/favicon.ico') {
     // The favicon handler is inspired by
     //   https://stackoverflow.com/questions/15463199/how-to-set-custom-favicon-in-express
@@ -100,23 +99,26 @@ function requestListener(req, res) {
     return;
   }
 
+  // This is where I could serve index.html...
   if (path === '/') {
     res.write('root');
     res.end('\n');
-  } else {
-    redClient.get(path.substr(1), function (error, result) {
-      if (result) {
-        dbgMsg.status = 'OK';
-        dbgMsg.result = result.substring(0, 50);
-        res.write(result);
-      }
-      else {
-        dbgMsg.status = 'Error';
-        dbgMsg.result = 'nothing in db';
-        res.write(JSON.stringify(dbgMsg));
-      }
-      res.end('\n');
-      console.log(dbgMsg.time, dbgMsg.status, dbgMsg.result);
-    });
+    return;
   }
+
+  // Look up path in Redis after removing leading '/', write
+  redClient.get(path.substr(1), function (error, result) {
+    if (result) {
+      dbgMsg.status = 'OK';
+      dbgMsg.result = result.substring(0, 50);
+      res.write(result);
+    }
+    else {
+      dbgMsg.status = 'Error';
+      dbgMsg.result = 'nothing in db';
+      res.write(JSON.stringify(dbgMsg));
+    }
+    res.end('\n');
+    console.log(dbgMsg.time, dbgMsg.status, dbgMsg.result);
+  });
 }
