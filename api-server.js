@@ -64,7 +64,7 @@ function requestListener(req, res) {
     result: '',
     time: moment().format(momFmt)
   };
-  console.log(dbgMsg.time, 'Query:' + query, 'Path:' + path, 'Host:', req.headers.host);
+  console.log(dbgMsg.time, req.url, req.headers.host);
   if (path === '/favicon.ico') {
     // The favicon handler is inspired by
     //   https://stackoverflow.com/questions/15463199/how-to-set-custom-favicon-in-express
