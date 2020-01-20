@@ -59,12 +59,9 @@ http.createServer(requestListener).listen(80);
 function requestListener(req, res) {
   let path = url.parse(req.url).pathname;
   let query = url.parse(req.url).query;
-  let dbgMsg = {
-    status: 'Error',
-    result: '',
-    time: moment().format(momFmt)
-  };
-  console.log(dbgMsg.time, req.url, req.headers.host);
+  let t = moment().format(momFmt);
+
+  console.log(t, req.url, req.headers.host);
   if (path === '/favicon.ico') {
     // The favicon handler is inspired by
     //   https://stackoverflow.com/questions/15463199/how-to-set-custom-favicon-in-express
@@ -92,16 +89,15 @@ function requestListener(req, res) {
 
   // The path part should not be empty
   if (path === undefined || path === null || path.length === 0) {
-    dbgMsg.result = 'empty path';
-    console.log(dbgMsg.time, dbgMsg.status, dbgMsg.result);
-    res.write(JSON.stringify(dbgMsg));
+    console.log(t, 'Empty path');
+    res.write('null');
     res.end('\n');
     return;
   }
 
   // This is where I could serve index.html...
   if (path === '/') {
-    res.write('root');
+    res.write('null');
     res.end('\n');
     return;
   }
@@ -109,16 +105,14 @@ function requestListener(req, res) {
   // Look up path in Redis after removing leading '/', write
   redClient.get(path.substr(1), function (error, result) {
     if (result) {
-      dbgMsg.status = 'OK';
-      dbgMsg.result = result.substring(0, 50);
+      console.log(t, 'OK', result.substring(0, 50));
       res.write(result);
     }
     else {
-      dbgMsg.status = 'Error';
-      dbgMsg.result = 'nothing in db';
-      res.write(JSON.stringify(dbgMsg));
+      // dbgMsg.status = 'Error';
+      // dbgMsg.result = 'nothing in db';
+      // res.write(JSON.stringify(dbgMsg));
     }
     res.end('\n');
-    console.log(dbgMsg.time, dbgMsg.status, dbgMsg.result);
   });
 }
