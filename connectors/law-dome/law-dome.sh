@@ -35,7 +35,7 @@ awk 'BEGIN {ORS="";
             print "\"source\": \"Authors: Mauro Rubino, David Etheridge, David Thornton, Russell Howden, Colin Allison, Roger Francey, Ray Langenfelds, Paul Steele, Cathy Trudinger, Darren Spencer, Mark Curran, Tas Van Ommen, and Andrew Smith. Published:2018-12-14. Title: Revised records of atmospheric trace gases CO2, CH4, N2O and d13C-O2 over the last 2000 years from Law Dome, Antarctica\", "
             print "\"link\": \"ftp://ftp.ncdc.noaa.gov/pub/data/paleo/icecore/antarctica/law\", "
             print "\"info\": \"CO2 levels in PPM for the last 2000 years \", "
-            print "\"data\": [{\"region\":\"global\", \"data\":["
+            print "\"data\": ["
             FIRST=1
      }
 
@@ -48,9 +48,9 @@ awk 'BEGIN {ORS="";
      {
             if (!FIRST) print ", "
             FIRST=0
-            printf "{\"year\":\"%d\",\"data\":%.1f}", $4, $5
+            printf "{\"t\":\"%d\",\"y\":%.1f}", $4, $5
      }
-     END   {print "]}]}"}' < ${REDISKEY}.txt  > ${TMPDIR}/${REDISKEY}.json
+     END   {print "]}"}' < ${REDISKEY}.txt  > ${TMPDIR}/${REDISKEY}.json
 
 # Quick test
 echo "Storing JSON, number of bytes:"
