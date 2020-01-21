@@ -48,7 +48,7 @@ awk 'BEGIN {ORS="";
      {
             if (!FIRST) print ", "
             FIRST=0
-            printf "{\"t\":\"%d\",\"y\":%.1f}", $4, $5
+            printf "{\"x\":\"%d\",\"y\":%.1f}", $4, $5
      }
      END   {print "]}"}' < ${REDISKEY}.txt  > ${TMPDIR}/${REDISKEY}.json
 
