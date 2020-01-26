@@ -7,7 +7,7 @@ National_Carbon_Emissions_2019v1.0.xlsx
 ```
 These files are described here: https://www.globalcarbonproject.org/carbonbudget/19/data.htm
 
-This folder contains NodeJS scripts for processing the CSV files, converting to JSON and optionally storing to Redis. Https://dashboard.eco then reads from Redis and creates nice charts.
+This folder contains two NodeJS scripts for processing the CSV files, converting to JSON and optionally storing to Redis. Https://dashboard.eco then reads from Redis and creates nice charts.
 
 ## Pre-requisites
 The XLSX files must be downloaded from https://www.icos-cp.eu/GCP/2019, and then converted to CSV before processing. 
