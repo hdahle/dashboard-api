@@ -42,13 +42,13 @@ function processCSV() {
   }
 
   // create country-subset list and sort it
-  if (c !== undefined && c !== null && c.length) {
+  if (c !== undefined && c !== true && c.length) {
     cList = c.split(',');
     cList.sort();
   }
 
   // see if input-file exists
-  if (fn === undefined || fn === null || fn === '' || !fs.existsSync(fn)) {
+  if (fn === undefined || fn === true || fn === '' || !fs.existsSync(fn)) {
     console.log('File not found:', fn);
     process.exit();
   }
@@ -118,7 +118,7 @@ function processCSV() {
       }
       s = JSON.stringify(d);
       // Store to Redis is key is specified
-      if (key !== undefined && key !== null && key !== '') {
+      if (key !== undefined && key !== true && key !== '') {
         redClient.set(key, s, function (error, result) {
           if (result) {
             console.log(moment().format(momFmt), 'Wrote', s.length, 'bytes to Redis key: ' + key);
