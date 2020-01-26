@@ -121,7 +121,7 @@ function processCSV() {
       if (key !== undefined && key !== null && key !== '') {
         redClient.set(key, s, function (error, result) {
           if (result) {
-            console.log(moment().format(momFmt), 'Wrote', s.length, 'bytes to Redis key:', key);
+            console.log(moment().format(momFmt), 'Wrote', s.length, 'bytes to Redis key: ' + key);
           }
           else {
             console.log(moment().format(momFmt) + ' Error: ' + error);
