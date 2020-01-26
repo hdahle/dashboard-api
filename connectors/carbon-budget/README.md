@@ -1,6 +1,19 @@
 # Carbon-budget 
 
-NodeJS scripts for processing the files
+The Global Carbon Project publishes two Excel files annually. The latest versions are
+```
+Global_Carbon_Budget_2019v1.0.xlsx
+National_Carbon_Emissions_2019v1.0.xlsx
+```
+These files are described here: https://www.globalcarbonproject.org/carbonbudget/19/data.htm
+
+This folder contains NodeJS scripts for processing the CSV files, converting to JSON and optionally storing to Redis. Https://dashboard.eco then reads from Redis and creates nice charts.
+
+## Pre-requisites
+The XLSX files must be downloaded from https://www.icos-cp.eu/GCP/2019, and then converted to CSV before processing. 
+1. In the Global_Carbon_Budget file, the tab 'Fossil Emissions by Fuel Type' should be saved as CSV.
+2. In the National_Carbon_Emissions file, the tab 'Territorial Emissions' should be saved as CSV.
+The relevant NodeJS scripts should then be run on the files.
 
 ### Usage
 ```
