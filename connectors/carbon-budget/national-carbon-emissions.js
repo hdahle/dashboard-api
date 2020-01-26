@@ -36,6 +36,7 @@ function processCSV() {
   let d = {
     source: '',
     info: 'Fossil fuels and cement production emissions by country, in million tons of CO2 per country per year',
+    link: 'https://www.icos-cp.eu/GCP/2019',
     nCountries: '',
     countries: [],
     data: []
