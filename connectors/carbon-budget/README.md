@@ -45,7 +45,8 @@ The relevant NodeJS scripts should then be run on the files.
 
 #### Usage
 ```
-node script --file <filename.csv> [ --key <optional-redis-key> ]  [ --countries <optional-country-list> ]
+node national-carbon-emissions.js --file <filename.csv> [ --key <optional-redis-key> ]  [ --countries <optional-country-list> ]
+node fossil-emissions-by-fuel-type.js --file <filename.csv> [ --key <optional-redis-key> ] 
 ```
 #### Examples:
 
