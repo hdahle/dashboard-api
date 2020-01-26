@@ -37,7 +37,7 @@ The scripts follow the same recipe:
     });
     // that's pretty much it
 ```
-## Pre-requisites
+### Pre-requisites
 The XLSX files must be downloaded from https://www.icos-cp.eu/GCP/2019, and then converted to CSV before processing. 
 1. In the Global_Carbon_Budget file, the tab 'Fossil Emissions by Fuel Type' should be saved as CSV.
 2. In the National_Carbon_Emissions file, the tab 'Territorial Emissions' should be saved as CSV.
