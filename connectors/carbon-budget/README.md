@@ -7,8 +7,36 @@ National_Carbon_Emissions_2019v1.0.xlsx
 ```
 These files are described here: https://www.globalcarbonproject.org/carbonbudget/19/data.htm
 
-This folder contains two NodeJS scripts for processing the CSV files, converting to JSON and optionally storing to Redis. Https://dashboard.eco then reads from Redis and creates nice charts.
+This folder contains two NodeJS scripts for processing the CSV files, converting to JSON and optionally storing to Redis. Https://dashboard.eco then reads from Redis and creates nice charts. These scripts are very similar and should probably be combined into a single script:
+```
+national-carbon-emissions.js
+fossil-emissions-by-fuel-type.js
+```
+The scripts follow the same recipe:
 
+```js
+  // parse input arguments: filename and Redis-key
+  
+  // verify file exists
+  
+  // then process CSV line-by-line
+  fs.createReadStream(fn)
+    .pipe(parse({ delimiter: ',' }))
+    .on('data', csvRow => {
+    // csvRow is an array of columns for a single row
+    // place relevant data into an object
+    })
+    .on('end', () => {
+      // file processing done, now create output data
+      let s = JSON.stringify(d);
+      
+      // store to Redis 
+      if (key !== undefined && key !== true && key !== '') {
+        redClient.set(key, s, function (error, result) {
+        // ...  
+        });
+      });
+```
 ## Pre-requisites
 The XLSX files must be downloaded from https://www.icos-cp.eu/GCP/2019, and then converted to CSV before processing. 
 1. In the Global_Carbon_Budget file, the tab 'Fossil Emissions by Fuel Type' should be saved as CSV.
