@@ -37,17 +37,17 @@ The scripts follow the same recipe:
     });
     // that's pretty much it
 ```
-### Pre-requisites
+#### Pre-requisites
 The XLSX files must be downloaded from https://www.icos-cp.eu/GCP/2019, and then converted to CSV before processing. 
 1. In the Global_Carbon_Budget file, the tab 'Fossil Emissions by Fuel Type' should be saved as CSV.
 2. In the National_Carbon_Emissions file, the tab 'Territorial Emissions' should be saved as CSV.
 The relevant NodeJS scripts should then be run on the files.
 
-### Usage
+#### Usage
 ```
 node script --file <filename.csv> [ --key <optional-redis-key> ]  [ --countries <optional-country-list> ]
 ```
-### Examples:
+#### Examples:
 
 Process CSV file and output a JSON blob with all countries to stdout:
 ```
