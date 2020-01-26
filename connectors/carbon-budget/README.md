@@ -31,11 +31,11 @@ The scripts follow the same recipe:
       let s = JSON.stringify(d);
       
       // store to Redis 
-      if (key !== undefined && key !== true && key !== '') {
-        redClient.set(key, s, function (error, result) {
+      redClient.set(key, s, function (error, result) {
         // ...  
-        });
       });
+    });
+    // that's pretty much it
 ```
 ## Pre-requisites
 The XLSX files must be downloaded from https://www.icos-cp.eu/GCP/2019, and then converted to CSV before processing. 
