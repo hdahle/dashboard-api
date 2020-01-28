@@ -47,7 +47,7 @@ function processCSV() {
   let key = argv.key; // redis-key from commandline
 
   let d = {
-    source: 'Reference of the full global carbon budget 2019: Pierre Friedlingstein, Matthew W. Jones, Michael O’Sullivan, Robbie M. Andrew, Judith Hauck, Glen P. Peters, Wouter Peters, Julia Pongratz, Stephen Sitch, Corinne Le Quéré, Dorothee C. E. Bakker, Josep G. Canadell, Philippe Ciais, Rob Jackson, Peter  Anthoni, Leticia Barbero, Ana Bastos, Vladislav Bastrikov, Meike Becker, Laurent Bopp, Erik Buitenhuis, Naveen Chandra, Frédéric Chevallier, Louise P. Chini, Kim I. Currie, Richard A. Feely, Marion Gehlen, Dennis Gilfillan, Thanos Gkritzalis, Daniel S. Goll, Nicolas Gruber, Sören Gutekunst, Ian Harris, Vanessa Haverd, Richard A. Houghton, George Hurtt, Tatiana Ilyina, Atul K. Jain, Emilie Joetzjer, Jed O. Kaplan, Etsushi Kato, Kees Klein Goldewijk, Jan Ivar Korsbakken, Peter Landschützer, Siv K. Lauvset, Nathalie Lefèvre, Andrew Lenton, Sebastian Lienert, Danica Lombardozzi, Gregg Marland, Patrick C. McGuire, Joe R. Melton, Nicolas Metzl, David R. Munro, Julia E. M. S. Nabel, Shin-Ichiro Nakaoka, Craig Neill, Abdirahman M. Omar, Tsuneo Ono, Anna Peregon, Denis Pierrot, Benjamin Poulter, Gregor Rehder, Laure Resplandy, Eddy Robertson, Christian Rödenbeck, Roland Séférian, Jörg Schwinger, Naomi Smith, Pieter P. Tans, Hanqin Tian, Bronte Tilbrook, Francesco N Tubiello, Guido R. van der Werf, Andrew J. Wiltshire, Sönke Zaehle. Global Carbon Budget 2019, Earth Syst. Sci. Data, 2019. https://doi.org/10.5194/essd-11-1783-2019 ',
+    source: '',
     info: 'Fossil fuel and cement production emissions by fuel type, in million tons of CO2 per country per year',
     link: 'https://www.icos-cp.eu/GCP/2019',
     data: []
@@ -70,7 +70,7 @@ function processCSV() {
         // d.source += ' ' + csvRow[1];
       } else if (csvRow[1].includes('Cite as: ')) {
         // additional source information
-        // d.source += csvRow[1].replace('Cite as: ', '') + ' / ';
+        d.source += csvRow[1].replace('Cite as: ', '');
       } else if (csvRow[0] === 'Year') {
         // find first empty column
         nCols = csvRow.indexOf('');
