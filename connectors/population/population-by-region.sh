@@ -26,19 +26,17 @@
 #
 # Only contains REGIONS, all countries are skipped
 
-
 INPUTFILE="WPP2019_TotalPopulationBySex.csv"
 REDISKEY="WPP2019_TotalPopulationByRegion"
 TMPDIR=$(mktemp -d)
 
-# Fetch population data from UN
-# curl "https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_TotalPopulationBySex.csv" > ${INPUTFILE}
-
 if [ -f "${INPUTFILE}" ]; then
     echo "Converting ${INPUTFILE} from CSV to JSON, using temp directory ${TMPDIR}"
 else
-    echo "File not found: ${INPUTFILE}, aborting"
-    exit
+    echo "File not found: ${INPUTFILE}, downloading from UN"
+    # Fetch population data from UN
+    curl "https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_TotalPopulationBySex.csv" > ${INPUTFILE}
+    wc -l ${INPUTFILE}
 fi
 
 # Convert JSON to CSV
@@ -62,7 +60,8 @@ awk 'BEGIN {FS=",";
      $1=="LocID" {next}
 
      $4!="Medium" {next}
-
+     
+     # These codes are UN codes for the regions of the world
      $1!="900" && $1!="903" && $1!="904" && $1!="905" && $1!="908" && $1!="909" && $1!="935" {next}
 
      # Start new REGION
