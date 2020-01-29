@@ -1,10 +1,8 @@
 #!/bin/sh
 
-# Fetch annual forest fire data from queimadas.dgi.inpe.br
+# Fetch annual forest fire data from 
+#   http://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv
 # Convert CSV file to JSON
-# Note that CSV must be manually fetched from
-#    http://queimadas.dgi.inpe.br/queimadas/portal-static/estatisticas_paises
-#
 # Resulting CSV file should be saved to queimadas-brazil.csv
 #
 # H. Dahle
@@ -13,13 +11,14 @@ REDISKEY="queimadas-brazil"
 TMPDIR=$(mktemp -d)
 
 echo "Converting Brazil forest-fire data from CSV to JSON"
-echo "Reading from ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
+echo "Downloading ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
+curl "http://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv" > ${REDISKEY}.csv
 
 if [ -f "${REDISKEY}.csv" ]; then
-    echo "Reading from ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
+    wc -l ${REDISKEY}.csv    
 else
     echo "File not found: ${REDISKEY}.csv, aborting "
-    exit 1
+    exit
 fi
 
 # CSV input:
@@ -41,13 +40,12 @@ fi
 #   ]
 # }
 
-
 # Turn it into a JSON blob
 
 awk  -v COUNTRY="brazil" 'BEGIN {ORS=""
             FS=","
             print "{"
-            print "\"source\":\"INPE INSTITUTO NACIONAL DE PESQUISAS ESPACIAIS, Brazil\", "
+            print "\"source\":\"INPE Instituto Nacional de Pesquisas Espaciais, Brazil. Programa Queimadas, queimadas@inpe.br\", "
             print "\"link\":\"http://queimadas.dgi.inpe.br/queimadas/portal-static/estatisticas_paises\", "
             print "\"license\":\"Unknown, publicly available data\", "
             print "\"email\":\"queimadas@inpe.br\", "
@@ -56,15 +54,14 @@ awk  -v COUNTRY="brazil" 'BEGIN {ORS=""
      }
 
      # Skip comments
-
      /^#/  {next}
-
-     # Skip the first line in this CSV
-
+     
+     # Translate from Portuguese
      $1~/M?ximo+*/ { $1="Maximum" }
      $1~/M?dia\*/  { $1="Average" }
      $1~/M?nimo\*/ { $1="Minimum" }
 
+     # Skip the first line in this CSV
      /Ano/ {next}
 
      {      if (!FIRSTRECORD) printf ","
@@ -79,7 +76,6 @@ awk  -v COUNTRY="brazil" 'BEGIN {ORS=""
 
 echo "Storing JSON to Redis, bytes:"
 cat ${TMPDIR}/${REDISKEY}.json | wc --bytes
-
 
 echo "Saving JSON to Redis with key ${REDISKEY}"
 redis-cli -x set ${REDISKEY} < ${TMPDIR}/${REDISKEY}.json
