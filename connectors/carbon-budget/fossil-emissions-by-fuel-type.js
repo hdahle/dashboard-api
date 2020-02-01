@@ -47,7 +47,7 @@ function processCSV() {
   let key = argv.key; // redis-key from commandline
 
   let d = {
-    source: '',
+    source: 'Global Carbon Project December 2019, https://www.globalcarbonproject.org/carbonbudget/',
     info: 'Fossil fuel and cement production emissions by fuel type, in million tons of CO2 per country per year',
     link: 'https://www.icos-cp.eu/GCP/2019',
     data: []
@@ -55,7 +55,7 @@ function processCSV() {
   // number of columns in CSV file, for discarding empty columns
   let nCols = 0;
 
-  // see if input-file exists, abort if not
+  // see if input-file exists
   if (fn === undefined || fn === true || fn === '' || !fs.existsSync(fn)) {
     console.log('File not found:', fn);
     process.exit();

@@ -54,7 +54,7 @@ function processCSV() {
   let cList = [];
 
   let d = {
-    source: '',
+    source: 'Global Carbon Project December 2019, https://www.globalcarbonproject.org/carbonbudget/',
     info: 'Fossil fuels and cement production emissions by country, in million tons of CO2 per country per year',
     link: 'https://www.icos-cp.eu/GCP/2019',
     data: []
@@ -78,10 +78,14 @@ function processCSV() {
       cList = [
         'Argentina', 'Australia', 'Brazil', 'Canada', 'China', 'France', 'Germany', 'India',
         'Indonesia', 'Italy', 'Japan', 'South Korea', 'United Kingdom', 'Mexico',
-        'Russian Federation', 'Saudi Arabia', 'South Africa', 'Turkey', 'USA', 'EU28'];
+        'Russian Federation', 'Saudi Arabia', 'South Africa', 'Turkey', 'USA', 'EU28'
+      ];
     }
     if (cList[0] === 'Regions') {
-      cList = ['Africa', 'Asia', 'Bunkers', 'Central America', 'North America', 'South America', 'Europe', 'EU28', 'Middle East', 'Oceania', 'World']
+      cList = [
+        'Africa', 'Asia', 'Bunkers', 'Central America', 'North America',
+        'South America', 'Europe', 'EU28', 'Middle East', 'Oceania', 'World'
+      ];
     }
   }
 
