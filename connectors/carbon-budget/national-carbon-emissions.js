@@ -4,14 +4,36 @@
 // H. Dahle, 2020
 //
 
+// CSV input format:
+//  ,(4) The statistical difference presented on column HX is the 
+//  MtC/yr,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+//  ,AFGHANISTAN,ALBANIA,ALGERIA,ANDORRA,ANGOLA,ANGUILLA,ANTIGUA,....
+//  ,Afghanistan,Albania,Algeria,Andorra,Angola,Anguilla,Antigua,....
+//  1959,0,0,2,NaN,0,NaN,0,13,2,0,23,8,5,0,0,1,0,12,24,0,0,0,NaN,....
+//  1960,0,1,2,NaN,0,NaN,0,13,2,0,24,8,6,0,0,1,0,12,25,0,0,0,NaN,....
+//
+// Must transpose input data to generate:
+// {
+//   source: '...',
+//   link: '...'
+//   data: 
+//   [
+//     { country: 'name', data: [ { x: year, y: value}, ...] },
+//     { country: 'name', data: [ { x: year, y: value}, ...] },
+//   ]
+// }
+//
+
 var fs = require('fs');
 var parse = require('csv-parse');
 var argv = require('minimist')(process.argv.slice(2));
-var redis = require('redis');
-var redClient = redis.createClient();
+
 var moment = require('moment');
 const momFmt = 'YY-MM-DD hh:mm:ss';
 
+// Redis stuff
+var redis = require('redis');
+var redClient = redis.createClient();
 redClient.on('connect', function () {
 });
 redClient.on('ready', function () {
@@ -26,33 +48,43 @@ redClient.on('error', function (err) {
 processCSV();
 
 function processCSV() {
-  // process the command line, filename and redis key expected
-  // if no Redis key, we will just output to console.log
-  let fn = argv.file;
-  let key = argv.key;
-  let c = argv.countries;
+  let fn = argv.file; // filename from cmd line
+  let key = argv.key; // redis-key from cmd line
+  let c = argv.countries; // optional country-list from cmd-line
   let cList = [];
-  // this is the JSON we will store to Redis
+
   let d = {
     source: '',
     info: 'Fossil fuels and cement production emissions by country, in million tons of CO2 per country per year',
     link: 'https://www.icos-cp.eu/GCP/2019',
-    nCountries: '',
-    countries: [],
     data: []
   }
-
-  // create country-subset list and sort it
-  if (c !== undefined && c !== true && c.length) {
-    cList = c.split(',');
-    cList.sort();
-  }
+  // number of countries/entries per line/row
+  let nCols = 0;
 
   // see if input-file exists
   if (fn === undefined || fn === true || fn === '' || !fs.existsSync(fn)) {
     console.log('File not found:', fn);
     process.exit();
   }
+
+
+  // create country-subset list
+  if (c !== undefined && c !== true && c.length) {
+    cList = c.split(',');
+  }
+  if (cList.length === 1) {
+    if (cList[0] === 'G20') {
+      cList = [
+        'Argentina', 'Australia', 'Brazil', 'Canada', 'China', 'France', 'Germany', 'India',
+        'Indonesia', 'Italy', 'Japan', 'South Korea', 'United Kingdom', 'Mexico',
+        'Russian Federation', 'Saudi Arabia', 'South Africa', 'Turkey', 'USA', 'EU28'];
+    }
+    if (cList[0] === 'Regions') {
+      cList = ['Africa', 'Asia', 'Bunkers', 'Central America', 'North America', 'South America', 'Europe', 'EU28', 'Middle East', 'Oceania', 'World']
+    }
+  }
+
   // process the CSV file
   fs.createReadStream(fn)
     .pipe(parse({ delimiter: ',' }))
@@ -66,58 +98,33 @@ function processCSV() {
       } else if (csvRow[1] === 'Afghanistan') {
         // get the list of countries, row starts w empty element
         csvRow.shift();
-        d.countries = csvRow;
-        d.nCountries = csvRow.length;
-      } else {
+        nCols = csvRow.indexOf('');
+        for (let i = 0; i < nCols; i++) {
+          d.data[i] = {
+            country: csvRow[i],
+            data: []
+          };
+        }
+      } else if (csvRow[0] > 1900 && csvRow[0] < 2100) {
         // process the yearly data, 'year' is first element in the row
-        let y = csvRow.shift();
-        // skip any empty rows
-        if (y.length && (y > 1700) && (y < 2100)) {
-          // note that CSV files contain some cells with the string 'NaN'
-          // we will just use 0 instead of these 'NaN's
-          // multiply all values by 3.664 to convert from C to CO2
-          let v = csvRow.map(x => x === "NaN" ? 0 : Math.floor(x * 366.4) / 100);
-          d.data.push({
-            year: y,
-            records: v.length,
-            data: v
+        // multiply all values by 3.664 to convert from C to CO2
+        let year = csvRow.shift();
+        for (let i = 0; i < nCols; i++) {
+          d.data[i].data.push({
+            x: year,
+            y: Math.floor(csvRow[i] * 366.4) / 100
           });
         }
       }
     })
     .on('end', () => {
-      let s = '';
+      // if we have specified some countries, remove all other countries from result
       if (cList.length) {
-        // Build list of indices into d.countries[]
-        let idx = [];
-        for (let i = 0; i < cList.length; i++) {
-          let tmp;
-          idx.push((tmp = d.countries.findIndex(s => s === cList[i])));
-          if (tmp === -1) {
-            console.log('Error: country not found:', cList[i]);
-            process.exit();
-          }
-        }
-        let data = [];
-
-        for (let i = 0; i < d.data.length; i++) {
-          let res = [];
-          for (let j = 0; j < d.data[i].data.length; j++) {
-            if (idx.includes(j)) {
-              res.push(d.data[i].data[j])
-            }
-          }
-          data.push({
-            year: d.data[i].year,
-            records: res.length,
-            data: res
-          });
-        }
-        d.data = data;
-        d.countries = cList;
-        d.nCountries = cList.length;
+        let tmp = d;
+        d = tmp.data.filter(x => cList.includes(x.country));
       }
-      s = JSON.stringify(d);
+
+      let s = JSON.stringify(d);
       // Store to Redis is key is specified
       if (key !== undefined && key !== true && key !== '') {
         redClient.set(key, s, function (error, result) {
