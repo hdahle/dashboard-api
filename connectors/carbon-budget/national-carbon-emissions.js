@@ -120,8 +120,7 @@ function processCSV() {
     .on('end', () => {
       // if we have specified some countries, remove all other countries from result
       if (cList.length) {
-        let tmp = d;
-        d = tmp.data.filter(x => cList.includes(x.country));
+        d.data = d.data.filter(x => cList.includes(x.country));
       }
 
       let s = JSON.stringify(d);
