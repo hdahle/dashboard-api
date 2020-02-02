@@ -1,30 +1,41 @@
 #!/bin/sh
+#
 # Fetch monthly ice extent data from colorado.edu
 # There are twelve files per hemisphere, one per month
 # Northern hemisphere
+# 
+# H. Dahle
 
-key="ice-nsidc"
-tmpdir="/tmp/"
+REDISKEY="ice-nsidc"
+TMPDIR=$(mktemp -d)
+CSVFILE="${TMPDIR}/${REDISKEY}.csv"
+JSONFILE="${TMPDIR}/${REDISKEY}.json"
+DATE=`date --iso-8601='minutes'`
+
+echo ${DATE}
 echo "Fetch ice-extent data from NSIDC, convert to JSON, store to Redis"
-echo "Storing temporary files in ${tmpdir}"
-echo "Starting FTP from colorado.edu "
+echo "Getting ftp data from sidads.colorado.edu, saving to ${CSVFILE}"
 
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_01_extent_v3.0.csv > ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_02_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_03_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_04_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_05_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_06_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_07_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_08_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_09_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_10_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_11_extent_v3.0.csv >> ${tmpdir}${key}.csv
-curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_12_extent_v3.0.csv >> ${tmpdir}${key}.csv
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_01_extent_v3.0.csv > ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_02_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_03_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_04_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_05_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_06_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_07_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_08_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_09_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_10_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_11_extent_v3.0.csv >> ${CSVFILE}
+curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data/N_12_extent_v3.0.csv >> ${CSVFILE}
 
-wc -l ${tmpdir}${key}.csv
-
-echo "Starting data processing"
+if [ -f "${CSVFILE}" ]; then
+    echo -n "Number of lines in CSV:"
+    cat ${CSVFILE} | wc -l
+else
+    echo "File not found: ${CSVFILE}, aborting "
+    exit 0
+fi
 
 # Southern hemisphere
 # curl ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/south/monthly/data/S_01_extent_v3.0.csv
@@ -48,17 +59,17 @@ echo "Starting data processing"
 #   ]
 # }
 
-
 # Turn it into a JSON blob
 
-awk 'BEGIN {ORS=""
+awk -v d="${DATE}" 'BEGIN {
+            ORS=""
             FS=","
-            COUNTRY=""
             print "{"
             print "\"source\":\"NSIDC National Snow and Ice Data Center, University of Colorado, Boulder. https://nsidc.org \", "
             print "\"link\":\"ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/monthly/data\", "
             print "\"info\":\" \", "
-            print "\"license\":\" \", "
+            print "\"license\":\"From https://nsidc.org/about/use_copyright.html : You may download and use photographs, imagery, or text from our Web site, unless limitations for its use are specifically stated. Please credit the National Snow and Ice Data Center as described below.\", "
+            print "\"accessed\":\"" d "\", "
             print "\"data\": ["
             FIRSTRECORD=1
      }
@@ -85,15 +96,32 @@ awk 'BEGIN {ORS=""
      $6~/\-9999/ { $6="null" }
 
            { if (FIRSTRECORD == 0) print ","
-             printf "{\"year\":%d,\"month\":%d,\"type\":\"%s\",", $1,$2,$3
-             printf "\"region\":\"%s\",\"extent\":%s,\"area\":%s}", $4,$5,$6
+             printf "{\"year\":%d,\"month\":%d,", $1,$2
+             printf "\"extent\":%s,\"area\":%s}", $5,$6
              FIRSTRECORD = 0
            }
 
-     END   { print "]}" }' < ${tmpdir}${key}.csv > ${tmpdir}${key}.json
+     END   { print "]}" }' < ${CSVFILE} > ${JSONFILE}
 
-# stick it into Redis
+# Just for reassurance
+echo -n "JSON byte count:"
+cat ${JSONFILE} | wc --bytes
 
-echo "Updating Redis-database with key=${key}"
+# When installing cron job, provde fully qualified filename to this script
+REDIS=$1
+if [ "$REDIS" = "" ]; then
+  REDIS="redis-cli"
+else
+  if [ ! -f ${REDIS} ]; then
+    echo "Redis-executable not found: ${REDIS}, not storing in Redis"
+    exit
+  fi
+fi
 
-redis-cli -x set $key < ${tmpdir}${key}.json
+# Save to redis
+echo -n "Saving JSON to Redis, key: ${REDISKEY}: "
+${REDIS} -x set ${REDISKEY} < ${JSONFILE}
+
+# Quick verification
+echo -n "Retrieving from Redis, JSON byte count: "
+${REDIS} get ${REDISKEY} | wc --bytes
