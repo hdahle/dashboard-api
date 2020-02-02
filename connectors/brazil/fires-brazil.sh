@@ -9,12 +9,10 @@
 
 REDIS=$1
 
-if [ "$REDIS" = "" ]
-then
+if [ "$REDIS" = "" ]; then
   REDIS="redis-cli"
 else
-  if [ ! -f ${REDIS} ]
-  then
+  if [ ! -f ${REDIS} ]; then
     echo "Not found: ${REDIS}"
     exit
   fi
@@ -96,7 +94,7 @@ awk -v d="${DATE}" -v COUNTRY="Brazil" 'BEGIN {ORS=""
      END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
 
 echo "Storing JSON to Redis, bytes:"
-cat ${JSONFILE} | wc --bytes
+wc --bytes ${JSONFILE}
 
 echo "Saving JSON to Redis with key ${REDISKEY}"
 ${REDIS} -x set ${REDISKEY} < ${JSONFILE}
