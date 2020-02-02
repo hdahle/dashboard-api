@@ -7,6 +7,19 @@
 #
 # H. Dahle
 
+REDIS=$1
+
+if [ "$REDIS" = "" ]
+then
+  REDIS="redis-cli"
+else
+  if [ ! -f ${REDIS} ]
+  then
+    echo "Not found: ${REDIS}"
+    exit
+  fi
+fi
+
 REDISKEY="queimadas-brazil"
 TMPDIR=$(mktemp -d)
 CSVFILE="${TMPDIR}/${REDISKEY}.csv"
@@ -86,7 +99,7 @@ echo "Storing JSON to Redis, bytes:"
 cat ${JSONFILE} | wc --bytes
 
 echo "Saving JSON to Redis with key ${REDISKEY}"
-redis-cli -x set ${REDISKEY} < ${JSONFILE}
+${REDIS} -x set ${REDISKEY} < ${JSONFILE}
 
 echo "Retrieving key=${REDISKEY} from Redis, bytes:"
-redis-cli get ${REDISKEY} | wc --bytes
+${REDIS} get ${REDISKEY} | wc --bytes
