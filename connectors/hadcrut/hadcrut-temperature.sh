@@ -44,7 +44,7 @@ awk -v d="${DATE}" 'BEGIN {
             print "\"link\":\"https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat\", "
             print "\"accessed\":\"" d "\", "
             print "\"legend\":\"The temperature data is organized in year/value pairs: [ {y:year, x:annualMean}, ... ] \", "
-            print "\"info\":\" \", "Land temperature data is based on measurements at 4800 stations across the world. "
+            print "\"info\":\"Land temperature data is based on measurements at 4800 stations across the world. "
             print "Sea surface temperatures are measured by merchant ships and buoy (fixed and floating)\", "
             print "\"data\": ["
             NOTFIRST=0
