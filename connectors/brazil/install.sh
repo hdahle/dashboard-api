@@ -26,7 +26,7 @@ if [ ! -d "${LOGDIR}" ]; then
       echo "Logdir created"
     fi
 else
-  echo "Using exiting logfile: ${LOGFILE}"
+  echo "Using existing logfile: ${LOGFILE}"
 fi
 
 # check if script-file exists
