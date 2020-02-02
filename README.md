@@ -20,3 +20,6 @@ Make sure to stop Apache, you don't want both Apache and node trying to serve po
 
 ## Certificate access for node.js process
 It's a good idea to verify that the certificate.key-file is readable by the node.js process, otherwise node will only start HTTP and not HTTPS. On Ubuntu/Bitnami the certs are in /opt/bitnami/letsencrypt/certificates - check the permissions on the *key* file. If necessary, create a group of users (node.js process owner + root) and give ownership of the *key* file to that group. Make sure that permissions survive after the cron-job renews certificates.
+
+## Connectors
+The connectors are several 'micro-services'. There is one connector for each third party data source. Each connector runs as a Cron-job. There should be an install.sh script in each connector folder which adds the connector-script to crontab (while trying to take care to avoid adding duplicate crontab-entries, you should be able to run install as many times as you like). Also, some effort has gone into makeing sure that appropriate TMP-file directories are used and that executables used in crontab-entries have full path names. Path names for executables such as redis-cli varies between WSL/Ubuntu and Lightsail/Bitnami/Ubuntu which are the two platforms this is tested on.
