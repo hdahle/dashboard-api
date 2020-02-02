@@ -77,7 +77,7 @@ awk 'BEGIN {FS=",";
             if (!FIRSTYEAR) printf ", "
             FIRSTYEAR=0
             FIRSTREGION=0
-            printf "{\"t\":%d,\"y\":%d}", $5, $9/1000
+            printf "{\"x\":%d,\"y\":%d}", $5, $9/1000
      }
      END   {print "]}]}"}' < ${INPUTFILE}  > ${TMPDIR}/${REDISKEY}.json
 
