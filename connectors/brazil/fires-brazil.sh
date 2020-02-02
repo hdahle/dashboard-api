@@ -9,16 +9,21 @@
 
 REDISKEY="queimadas-brazil"
 TMPDIR=$(mktemp -d)
+CSVFILE="${TMPDIR}/${REDISKEY}.csv"
+JSONFILE="${TMPDIR}/${REDISKEY}.json"
+DATE=`date`
 
+echo ${DATE}
 echo "Converting Brazil forest-fire data from CSV to JSON"
 echo "Downloading ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
-curl "http://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv" > ${REDISKEY}.csv
+curl "http://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv" > ${CSVFILE}
 
-if [ -f "${REDISKEY}.csv" ]; then
-    wc -l ${REDISKEY}.csv    
+if [ -f "${CSVFILE}" ]; then
+    wc -l ${CSVFILE}   
+    grep 2020 ${CSVFILE} 
 else
-    echo "File not found: ${REDISKEY}.csv, aborting "
-    exit
+    echo "File not found: ${CSVFILE}, aborting "
+    exit 0
 fi
 
 # CSV input:
@@ -33,6 +38,7 @@ fi
 #   'license': 'Unknown. Public data source',
 #   'source': 'INPE INSTITUTO NACIONAL DE PESQUISAS ESPACIAIS, Brazil',
 #   'reference': 'INPE. Database of burns. Available at: http://queimadas.dgi.inpe.br/queimadas/bdqueimadas',
+#   'accessed': '<date of access>'
 #   'data':
 #   [
 #     { 'country': , 'year':COL1, 'data': [COL2,COL3, ... ,COL13] }
@@ -42,13 +48,14 @@ fi
 
 # Turn it into a JSON blob
 
-awk  -v COUNTRY="brazil" 'BEGIN {ORS=""
+awk -v d="${DATE}" -v COUNTRY="Brazil" 'BEGIN {ORS=""
             FS=","
             print "{"
             print "\"source\":\"INPE Instituto Nacional de Pesquisas Espaciais, Brazil. Programa Queimadas, queimadas@inpe.br\", "
             print "\"link\":\"http://queimadas.dgi.inpe.br/queimadas/portal-static/estatisticas_paises\", "
             print "\"license\":\"Unknown, publicly available data\", "
             print "\"email\":\"queimadas@inpe.br\", "
+            print "\"accessed\":\"" d "\", "
             print "\"data\": ["
             FIRSTRECORD = 1
      }
@@ -64,7 +71,8 @@ awk  -v COUNTRY="brazil" 'BEGIN {ORS=""
      # Skip the first line in this CSV
      /Ano/ {next}
 
-     {      if (!FIRSTRECORD) printf ","
+     NF==14 && $1 > 1970 && $1 < 2100 { 
+           if (!FIRSTRECORD) printf ","
             FIRSTRECORD = 0
             printf "{\"country\":\"%s\",\"year\":\"%s\",\"data\":",COUNTRY,$1
             for (i=2; i<14; i++) if ($i == "-") $i = "null"
@@ -72,13 +80,13 @@ awk  -v COUNTRY="brazil" 'BEGIN {ORS=""
             next
      }
 
-     END   {print "]}"}' < ${REDISKEY}.csv > ${TMPDIR}/${REDISKEY}.json
+     END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
 
 echo "Storing JSON to Redis, bytes:"
-cat ${TMPDIR}/${REDISKEY}.json | wc --bytes
+cat ${JSONFILE} | wc --bytes
 
 echo "Saving JSON to Redis with key ${REDISKEY}"
-redis-cli -x set ${REDISKEY} < ${TMPDIR}/${REDISKEY}.json
+redis-cli -x set ${REDISKEY} < ${JSONFILE}
 
 echo "Retrieving key=${REDISKEY} from Redis, bytes:"
 redis-cli get ${REDISKEY} | wc --bytes
