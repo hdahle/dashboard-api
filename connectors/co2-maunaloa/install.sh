@@ -1,7 +1,9 @@
 #!/bin/sh
+#
 # Installer for "co2-maunaloa.sh" and "ch4-maunaloa.sh"
 # Add script to crontab if it doesn't already exist
-# Crontab entries are weekly
+# Run these scrips weekly. Data is updated by NOAA monthly, time of month varies
+#
 # H. Dahle
 
 PWD=`pwd`
@@ -9,29 +11,31 @@ NUM=1
 
 # must use eval for tilde-expansion to work...dirty
 LOGDIR=`eval echo ~${USER}/log`
-LOGFILE="${LOGDIR}/${SCRIPT}.log"
-REDIS=`which redis-cli`
-
-echo "Using Redis at ${REDIS}"
-echo "Logs are in ${LOGDIR}"
-
-# Check if log directory exists
-if [ ! -d "${LOGDIR}" ]; then
-    echo "Creating ${LOGDIR}"
-    mkdir ${LOGDIR} 
-    if [ ! -d "${LOGDIR}" ]; then
-      echo "Could not create ${LOGDIR} - aborting"
-      exit
-    else
-      echo "Logdir created"
-    fi
-else
-  echo "Using existing logfile: ${LOGFILE}"
-fi
 
 for SCRIPT in "co2-maunaloa.sh" "ch4-maunaloa.sh"
 do
 
+  LOGFILE="${LOGDIR}/${SCRIPT}.log"
+  REDIS=`which redis-cli`
+
+  echo "Using Redis at ${REDIS}"
+  echo "Logs are in ${LOGDIR}"
+
+  # Check if log directory exists
+  if [ ! -d "${LOGDIR}" ]; then
+      echo "Creating ${LOGDIR}"
+      mkdir ${LOGDIR} 
+      if [ ! -d "${LOGDIR}" ]; then
+        echo "Could not create ${LOGDIR} - aborting"
+        exit
+      else
+        echo "Logdir created"
+      fi
+  else
+    echo "Using logfile: ${LOGFILE}"
+  fi
+  
+  # make sure script exists
   if [ -f "${PWD}/${SCRIPT}" ]; then
     echo "Shell script found"
   else

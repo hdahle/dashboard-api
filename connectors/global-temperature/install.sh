@@ -1,7 +1,9 @@
 #!/bin/sh
+#
 # Installer for "global-temperature.sh"
 # Add script to crontab if it doesn't already exist
 # The script should run weekly 
+#
 # H. Dahle
 
 PWD=`pwd`
