@@ -71,7 +71,7 @@ awk -v d="${DATE}" -v COUNTRY="Brazil" 'BEGIN {ORS=""
      # Skip the first line in this CSV
      /Ano/ {next}
 
-     NF==14 && $1 > 1970 && $1 < 2100 { 
+     NF==14 && (($1 > 1970 && $1 < 2100) || $1=="Maximum" || $1=="Average" || $1=="Minimum") { 
            if (!FIRSTRECORD) printf ","
             FIRSTRECORD = 0
             printf "{\"country\":\"%s\",\"year\":\"%s\",\"data\":",COUNTRY,$1
