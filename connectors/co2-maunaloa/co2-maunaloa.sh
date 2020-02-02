@@ -9,7 +9,7 @@ REDISKEY="maunaloaco2"
 TMPDIR=$(mktemp -d)
 CSVFILE="${TMPDIR}/${REDISKEY}.csv"
 JSONFILE="${TMPDIR}/${REDISKEY}.json"
-DATE=`date --iso-8601-minutes`
+DATE=`date --iso-8601='minutes'`
 
 echo ${DATE}
 echo "Getting ftp data from noaa.gov, saving to ${CSVFILE}"
