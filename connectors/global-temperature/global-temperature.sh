@@ -20,7 +20,7 @@ REDISKEY="global-temperature-anomaly"
 TMPDIR=$(mktemp -d)
 CSVFILE="${TMPDIR}/${REDISKEY}.csv"
 JSONFILE="${TMPDIR}/${REDISKEY}.json"
-DATE=`date`
+DATE=`date --iso-8601='minutes'`
 
 echo ${DATE}
 echo "Downloading from data.giss.nasa.gov"
