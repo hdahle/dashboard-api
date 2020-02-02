@@ -7,12 +7,24 @@
 
 REDISKEY="maunaloaco2"
 TMPDIR=$(mktemp -d)
+CSVFILE="${TMPDIR}/${REDISKEY}.csv"
+JSONFILE="${TMPDIR}/${REDISKEY}.json"
+DATE=`date --iso-8601-minutes`
 
-echo "Getting ftp data from noaa.gov, saving to ${TMPDIR}/${REDISKEY}.txt"
-curl ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt > ${TMPDIR}/${REDISKEY}.txt
+echo ${DATE}
+echo "Getting ftp data from noaa.gov, saving to ${CSVFILE}"
+curl ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt > ${CSVFILE}
 
-echo "Converting data to JSON, saving to ${TMPDIR}/${REDISKEY}.json"
-awk 'BEGIN {ORS="";
+if [ -f "${CSVFILE}" ]; then
+    echo -n "Number of lines in CSV:"
+    cat ${CSVFILE} | wc -l
+else
+    echo "File not found: ${CSVFILE}, aborting "
+    exit 0
+fi
+
+echo "Converting data to JSON, saving to ${JSONFILE}"
+awk -v d="${DATE}" 'BEGIN {ORS="";
             print "{"
             print "\"source\":"
             print "\"Dr. Pieter Tans, NOAA/ESRL (www.esrl.noaa.gov/gmd/ccgg/trends/) and "
@@ -22,6 +34,7 @@ awk 'BEGIN {ORS="";
             print "\"Before the Industrial Revolution in the 19th century, global average CO2 was about 280 ppm. "
             print "During the last 800,000 years, CO2 fluctuated between about 180 ppm during ice ages and "
             print "280 ppm during interglacial warm periods.\", "
+            print "\"accessed\":\"" d "\", "
             print "\"data\": ["
             NOTFIRST=0
            }
@@ -29,16 +42,28 @@ awk 'BEGIN {ORS="";
            {if (NOTFIRST) print ", "
             NOTFIRST=1
             printf "{\"date\":\"%s-%02d\",\"average\":%s,\"interpolated\":%s,\"trend\":%s}",  $1, $2, $4, $5, $6 }
-     END   {print "]}"}' < ${TMPDIR}/${REDISKEY}.txt > ${TMPDIR}/${REDISKEY}.json
+     END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
 
 # Just for reassurance
-echo "JSON byte count:"
-cat ${TMPDIR}/${REDISKEY}.json | wc --bytes
+echo -n "JSON byte count:"
+cat ${JSONFILE} | wc --bytes
+
+
+# When installing cron job, provde fully qualified filename to this script
+REDIS=$1
+if [ "$REDIS" = "" ]; then
+  REDIS="redis-cli"
+else
+  if [ ! -f ${REDIS} ]; then
+    echo "Redis-executable not found: ${REDIS}, not storing in Redis"
+    exit
+  fi
+fi
 
 # Save to redis
-echo "Saving JSON to Redis, key: ${REDISKEY}"
-redis-cli -x set ${REDISKEY} < ${TMPDIR}/${REDISKEY}.json
+echo -n "Saving JSON to Redis, key: ${REDISKEY}: "
+${REDIS} -x set ${REDISKEY} < ${JSONFILE}
 
 # Quick verification
-echo "Retrieving from Redis, JSON byte count:"
-redis-cli get ${REDISKEY} | wc --bytes
+echo -n "Retrieving from Redis, JSON byte count: "
+${REDIS} get ${REDISKEY} | wc --bytes
