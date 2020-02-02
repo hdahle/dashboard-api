@@ -71,6 +71,7 @@ echo -n "Storing (JSON size):"
 cat ${JSONFILE} | wc --bytes 
 
 # stick it into Redis
+echo -n "Storing to Redis, key=${REDISKEY}, result: "
 ${REDIS} -x set ${REDISKEY} < ${JSONFILE}
 
 # Quick verification
