@@ -27,10 +27,10 @@ DATE=`date`
 echo ${DATE}
 echo "Converting Brazil forest-fire data from CSV to JSON"
 echo "Downloading ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
-curl "http://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv" > ${CSVFILE}
+curl --silent --show-error "http://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv" > ${CSVFILE}
 
 if [ -f "${CSVFILE}" ]; then
-    echo "Downloaded CSV-file, lines: "
+    echo -n "Downloaded CSV-file, lines: "
     cat ${CSVFILE} | wc -l    
     # grep 2020 ${CSVFILE} 
 else
