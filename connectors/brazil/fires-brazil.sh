@@ -93,11 +93,11 @@ awk -v d="${DATE}" -v COUNTRY="Brazil" 'BEGIN {ORS=""
 
      END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
 
-echo "Storing JSON to Redis, bytes:"
+echo -n "Storing JSON to Redis, bytes:"
 wc --bytes ${JSONFILE}
 
-echo "Saving JSON to Redis with key ${REDISKEY}"
+echo -n "Saving JSON to Redis with key ${REDISKEY}"
 ${REDIS} -x set ${REDISKEY} < ${JSONFILE}
 
-echo "Retrieving key=${REDISKEY} from Redis, bytes:"
+echo -n "Retrieving key=${REDISKEY} from Redis, bytes:"
 ${REDIS} get ${REDISKEY} | wc --bytes
