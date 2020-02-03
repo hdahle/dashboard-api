@@ -62,7 +62,7 @@ awk -v d="${DATE}" 'BEGIN {
             FIRST=0
             print "{\"t\":\"" year "-" m[month] "\",\"y\":" $2 "}"
      }
-     END   {print "]}]}"}' < ${REDISKEY}.csv  > ${JSONFILE}
+     END   {print "]}]}"}' < ${CSVFILE}  > ${JSONFILE}
 
 # Quick test
 echo -n "JSON byte count:"
