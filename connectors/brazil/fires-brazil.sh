@@ -30,8 +30,9 @@ echo "Downloading ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
 curl "http://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv" > ${CSVFILE}
 
 if [ -f "${CSVFILE}" ]; then
-    wc -l ${CSVFILE}   
-    grep 2020 ${CSVFILE} 
+    echo "Downloaded CSV-file, lines: "
+    cat ${CSVFILE} | wc -l    
+    # grep 2020 ${CSVFILE} 
 else
     echo "File not found: ${CSVFILE}, aborting "
     exit 0
@@ -93,11 +94,11 @@ awk -v d="${DATE}" -v COUNTRY="Brazil" 'BEGIN {ORS=""
 
      END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
 
-echo -n "Storing JSON to Redis, bytes:"
-wc --bytes ${JSONFILE}
+echo -n "Storing JSON to Redis, bytes: "
+cat ${JSONFILE} | wc --bytes 
 
-echo -n "Saving JSON to Redis with key ${REDISKEY}"
+echo -n "Saving JSON to Redis with key ${REDISKEY}, result: "
 ${REDIS} -x set ${REDISKEY} < ${JSONFILE}
 
-echo -n "Retrieving key=${REDISKEY} from Redis, bytes:"
+echo -n "Retrieving key=${REDISKEY} from Redis, bytes: "
 ${REDIS} get ${REDISKEY} | wc --bytes
