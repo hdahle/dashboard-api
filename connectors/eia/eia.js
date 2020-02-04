@@ -13,7 +13,6 @@ var moment = require('moment');
 const momFmt = 'YY-MM-DD hh:mm:ss';
 const apiKey = '5b9ba590615f3bc01e0b18c8cdd021a7';
 
-
 redClient.on('connect', function () {
   console.log(moment().format(momFmt) + ' Redis client connected');
 });
@@ -55,14 +54,13 @@ function goFetch() {
     { region: 'North America', code: 'NOAM' }
   ];
 
-  let urls = [];
-  eiaRegions.forEach(e => {
-    urls.push('https://api.eia.gov/series/?api_key=' + apiKey
-      + '&series_id=INTL.7-1-' + e.code
-      + '-' + eiaUnit);
+  let url = 'https://api.eia.gov/series/?api_key=' + apiKey + '&series_id=';
+
+  eiaRegions.forEach(element => {
+    url += 'INTL.7-1-' + element.code + '-' + eiaUnit + ';';
   });
 
-  Promise.all(urls.map(url => fetch(url)
+  fetch(url)
     .then(status)
     .then(json)
     .then(results => {
@@ -70,25 +68,18 @@ function goFetch() {
         console.log('No data from api.eia.gov', results);
         return;
       }
-      let series = results.series[0];
-      let res = {
-        source: series.source,
-        accessed: series.updated,
-        license: 'Copyright:' + series.copyright,
-        link: 'https://api.eia.gov/',
-        info: 'Units:' + series.units,
-        //region: e.region,
-        name: series.name,
-        // convert EIA data array from [[],[],...] to [{},{},...]
-        data: series.data.map(x => ({
-          x: parseInt(x[0], 10), // convert year to number
-          y: x[1]                // data value
-        }))
-      };
+
+      results.series.forEach(series => {
+        let d = series.data;
+        series.data = d.map(x => ({
+          x: parseInt(x[0], 10),            // convert year to number
+          y: Math.round(x[1] * 100) / 100   // two decimals ok
+        }));
+      })
 
       // Store key/value pair to Redis
-      let redisKey = 'eia-' + series.series_id;
-      let redisValue = JSON.stringify(res);
+      let redisKey = 'eia-' + results.series_id;
+      let redisValue = JSON.stringify(results);
       console.log(moment().format(momFmt) +
         ' Storing ' + redisValue.length +
         ' bytes, key=' + redisKey +
@@ -97,19 +88,15 @@ function goFetch() {
       redClient.set(redisKey, redisValue, function (error, result) {
         if (result) {
           console.log(moment().format(momFmt) + ' Result:' + result);
-        }
-        else {
+        } else {
           console.log(moment().format(momFmt) + ' Error: ' + error);
         }
       });
-    })
-    .catch(err => console.log(err))
-  ))
-    .then(results => {
       setInterval((() => {
         process.exit();
       }), 2000)
-    });
+    })
+    .catch(err => console.log(err))
 }
 
 goFetch();
