@@ -12,7 +12,7 @@ NUM=1
 # must use eval for tilde-expansion to work...dirty
 LOGDIR=`eval echo ~${USER}/log`
 
-for SCRIPT in "co2-maunaloa.sh" "ch4-maunaloa.sh" "co2-maunaloa-sm.sh"
+for SCRIPT in "co2-maunaloa.sh" "ch4-maunaloa.sh" "co2-maunaloa-sm.sh" "ch4-maunaloa-sm.sh"
 do
   LOGFILE="${LOGDIR}/cron.log"
   REDIS=`which redis-cli`
