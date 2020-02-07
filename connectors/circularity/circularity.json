@@ -33,7 +33,8 @@
         "Unregistered" : 4.4,
         "Landfill" : 11.2,
         "Incinerated" : 1.0,
-        "Cycled": 8.6
+        "Recovered": 0.2,
+        "Recycled": 8.4
       }
     }
   ]
