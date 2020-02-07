@@ -6,36 +6,26 @@
   [ 
     {
       "year" : 2017,
-      "Resources" : {
-        "Total": 100.6,
-        "Minerals": 50.8,
-        "Ores": 10.1,
-        "FossilFuels": 15.1,
-        "Biomass": 24.6
-      },
-      "Use": {
-        "Housing": 38.8,
-        "Communication": 5.6,
-        "Mobility": 8.7,
-        "Healthcare": 9.3,
-        "Services": 10.0,
-        "Consumables": 6.9,
-        "Nutrition": 21.3
-      },
-      "End-of-use": {
-        "Emissions": 14.6,
-        "Dispersed": 22.4,
-        "In-use": 31.0,
-        "Waste": 32.6
-      },
-      "Waste": {
-        "Mining" : 7.4,
-        "Unregistered" : 4.4,
-        "Landfill" : 11.2,
-        "Incinerated" : 1.0,
-        "Recovered": 0.2,
-        "Recycled": 8.4
-      }
+      "region": "Global",
+      "data" : 
+      [
+        {
+          "title": "Resources",
+          "legend": ["Minerals","Ores","Fossil Fuels", "Biomass"],
+          "values": [50.8,10.1,15.1,24.6]
+        },{
+          "legend": ["Housing","Communication","Mobility","Healthcare","Services","Consumables","Nutrition"],
+            "values": [38.8,5.6,8.7,9.3,10.0,6.9,21.3]
+        },{
+          "title": "End of use",
+          "legend": ["Emissions","Dispersed","In use","Waste"],
+          "values": [14.6,22.4,31.0,32.6]
+        },{
+          "title": "Waste",
+          "legend": ["Mining Waste","Unregistered","Landfill","Incinerated","Recovered","Recycled"],
+          "values": [7.4,4.4,11.2,1.0,0.2,8.4 ]
+        }
+      ]
     }
   ]
 }
