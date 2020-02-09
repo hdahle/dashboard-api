@@ -70,9 +70,9 @@ function goFetch() {
     { region: 'EU28', code: 'EU27' },
     { region: 'Middle East', code: 'MIDE' },
     { region: 'Eurasia', code: 'EURA' },
-    { region: 'Asia and Oceania', code: 'ASOC' },
-    { region: 'Latin America', code: 'CSAM' },
-    { region: 'North America', code: 'NOAM' }
+    { region: 'Asia&Oceania', code: 'ASOC' },
+    { region: 'S America', code: 'CSAM' },
+    { region: 'N America', code: 'NOAM' }
   ];
 
   // build a single query URL, include all regions
