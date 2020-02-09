@@ -112,6 +112,12 @@ function goFetch() {
         });
       });
 
+      // add 'source', 'link', 'accessed' key/values to JSON 
+      // this is so that website can display this autmatically
+      results.link = 'https://www.eia.gov/opendata/qb.php';
+      results.source = results.series[0].source;
+      results.accessed = results.series[0].updated;
+
       // Store key/value pair to Redis
       let redisValue = JSON.stringify(results);
       console.log(moment().format(momFmt) +
