@@ -112,6 +112,9 @@ function goFetch() {
         });
       });
 
+      // sort based on production volumes -> chart easier to read
+      results.series.sort((a, b) => a.data[0].y - b.data[0].y);
+
       // add 'source', 'link', 'accessed' key/values to JSON 
       // this is so that website can display this autmatically
       results.link = 'https://www.eia.gov/opendata/qb.php';
