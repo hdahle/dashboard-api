@@ -11,7 +11,7 @@
       [
         {
           "title": "Resources",
-          "legend": ["Minerals","Ores","Fossil Fuels", "Biomass"],
+          "legend": ["Minerals","Metal Ores","Fossil Fuels", "Biomass"],
           "values": [50.8,10.1,15.1,24.6]
         },{
           "legend": ["Housing","Communication","Mobility","Healthcare","Services","Consumables","Nutrition"],
