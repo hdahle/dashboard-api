@@ -11,11 +11,12 @@
       [
         {
           "title": "Resources",
-          "legend": ["Minerals","Ores","Fossil Fuels", "Biomass"],
+          "legend": ["Minerals","Metal Ores","Fossil Fuels", "Biomass"],
           "values": [50.8,10.1,15.1,24.6]
         },{
+          "title": "Use",
           "legend": ["Housing","Communication","Mobility","Healthcare","Services","Consumables","Nutrition"],
-            "values": [38.8,5.6,8.7,9.3,10.0,6.9,21.3]
+          "values": [38.8,5.6,8.7,9.3,10.0,6.9,21.3]
         },{
           "title": "End of use",
           "legend": ["Emissions","Dispersed","In use","Waste"],
