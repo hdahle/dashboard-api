@@ -62,7 +62,7 @@ awk -v d="${DATE}" 'BEGIN {ORS="";
      {
             if (!FIRST) print ", "
             FIRST=0
-            printf "{\"year\":%d,\"mean\":%s, \"smooth\":%s }", $1, $2, $3
+            printf "{\"x\":%d,\"y\":%s, \"smooth\":%s }", $1, $2, $3
      }
      END   {print "]}"}' < ${CSVFILE}  > ${JSONFILE}
 
