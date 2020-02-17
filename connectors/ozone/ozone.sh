@@ -40,7 +40,7 @@ awk 'BEGIN {ORS="";
 
      START {if (NOTFIRST) print ", "
             NOTFIRST=1
-            printf "{\"date\":\"%s-09\",\"meanOzoneHoleSize\":%s,\"minimumOzoneLevel\":%s}",  $1, $2, $3 }
+            printf "{\"x\":%s,\"y\":%s,\"meanOzoneHoleSize\":%s,\"minimumOzoneLevel\":%s}",  $1, $2, $2, $3 }
      END   {print "]}"}' < ${TMPDIR}${REDISKEY}.txt > ${TMPDIR}${REDISKEY}.json
 
 # Not really necessary
