@@ -8,18 +8,9 @@
 # Svalbard Lufthavn,SN99840,1900,1,"-8,1"
 # Svalbard Lufthavn,SN99840,1901,2,"-7,7"
 
-# Entity,Code,Year,Median (℃),Upper (℃),Lower (℃)
-# Global,,1850,-0.373,-0.339,-0.425
-# Global,,1851,-0.218,-0.184,-0.274
-# Global,,1852,-0.228,-0.196,-0.28
-# Northern Hemisphere,,2002,0.593,0.627,0.562
-# Northern Hemisphere,,2003,0.642,0.679,0.608
-# Northern Hemisphere,,2004,0.604,0.636,0.571
-
 # JSON output:
-
 # { 'source': '',
-#   'license': 'https://ourworldindata.org/about: Feel free to make use of anything you find here.'
+#   'license': '',
 #   'link':
 #   'data':
 #   [
@@ -27,9 +18,6 @@
 #     { 'region': ... }
 #   ]
 # }
-
-
-# Turn it into a JSON blob
 
 REDISKEY="temperature-svalbard"
 TMPDIR=$(mktemp -d)
@@ -53,36 +41,24 @@ awk 'BEGIN {ORS=""
             print "\"source\":\"The Norwegian Meteorological Institute and The Norwegian Centre for Climate Services NCCS\", "
             print "\"license\":\"CC BY 4.0 \", "
             print "\"link\":\"https://seklima.met.no/observations\", "
+            print "\"info\":\"Annual mean temperatures at Svalbard Lufthavn/Svalbard Airport\", "
             print "\"data\": ["
-            FIRSTRECORD=1
+            SEP=""
      }
 
      $2 == "station" {next}
      /Meteorologisk institutt/ {next}
 
-     # We are continuing with a country data set
-     COUNTRY == $1 {
+     $1 == "Svalbard Lufthavn" {
             if ($6 == "") {
-              printf ",{\"year\":%s,\"temperature\":\"%s\"}", $3, $5
+              printf "%s{\"x\":%s,\"y\":\"%s\"}", SEP, $3, $5
             } else {
-              printf ",{\"year\":%s,\"temperature\":%s.%s}", $3, $5, $6
+              printf "%s{\"x\":%s,\"y\":%s.%s}", SEP, $3, $5, $6
             }
-            next
+            SEP = ","
      }
 
-     # We are starting a new country data set
-
-     {      if (!FIRSTRECORD) printf "]},"
-            if ($6 == "") {
-            printf "{\"country\":\"%s\",\"data\":[{\"year\":%s,\"temperature\":\"%s\"}", $1, $3, $5
-            } else {
-            printf "{\"country\":\"%s\",\"data\":[{\"year\":%s,\"temperature\":%s.%s}", $1, $3, $5, $6
-            }
-            COUNTRY = $1
-            FIRSTRECORD = 0
-     }
-
-     END   {print "]}]}"}' < ${REDISKEY}.csv > ${TMPDIR}/${REDISKEY}.json
+     END   {print "]}"}' < ${REDISKEY}.csv > ${TMPDIR}/${REDISKEY}.json
 
 
 echo "Saving JSON to Redis, bytes:"
