@@ -48,20 +48,26 @@ awk -v d="${DATE}" 'BEGIN {
             print "{"
             print "\"source\":\"NSSTC National Space Science and Technology Center, University of Alabama in Huntsville\", "
             print "\"license\":\"  \", "
+            print "\"legend\":\"x: year, y: average of all months in the year\", "
             print "\"link\":\"https://www.nsstc.uah.edu/data/msu/v6.0/tlt\", "
             print "\"accessed\":\"" d "\", "
             print "\"data\": ["
-            NOTFIRST=0
-           }
-     /^#/  {next}
-     $1 == "Year" { next}
+          }
+     /^#/ { next }
+     $1 == "Year" { next }
 
      NF == 29 {
-            if (NOTFIRST) print ", "
-            NOTFIRST=1
-            printf "{\"x\":%.2f,\"t\":\"%d-%02d\",\"y\":%.2f}", $1+($2-0.5)/12, $1,$2,$3
+            years[$1] += $3
+            num[$1] += 1
           }
-     END  { print "]}" }' < ${CSVFILE} > ${JSONFILE}
+     END  { first=1;
+            for (y in years) {
+              if (!first) print ","
+              first=0
+              printf " {\"x\":%d,\"y\":%.2f}", y, years[y]/num[y]
+            }
+            print "]}"            
+          }' < ${CSVFILE} > ${JSONFILE}
 
 # Just for reassurance
 echo -n "JSON byte count:"
