@@ -48,7 +48,7 @@ awk -v d="${DATE}" 'BEGIN {
             print "\"license\": "
             print "\"Creative Commons Attribution 4.0 International Licence\", "
             print "\"accessed\": \"" d "\", "
-            print "\"legend\":\"t: date, y: monthly GSML in mm, uncertainty: undertainty in mm\", "
+            print "\"legend\":\"x: year, y: annual GSML in mm, uncertainty: undertainty in mm\", "
             print "\"data\":["
             FIRST=1
      }
@@ -61,7 +61,7 @@ awk -v d="${DATE}" 'BEGIN {
             if (!FIRST) print ", "
             FIRST=0
             print "{"
-            print "\"t\":\"" substr($1,1,4) "-06-30\"," 
+            print "\"x\":" substr($1,1,4) "," 
             print "\"y\":" $2 ", " 
             print "\"uncertainty\":"  $3 
             print "}"
