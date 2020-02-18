@@ -12,7 +12,7 @@ PWD=`pwd`
 LOGDIR=`eval echo ~${USER}/log`
 SCRIPT="uah-temperature.sh"
 LOGFILE="${LOGDIR}/cron.log"
-TMPDIR=$(mktmp -d)
+TMPDIR=$(mktemp -d)
 NEWCRON="${TMPDIR}/crontab"
 REDIS=`which redis-cli`
 echo "Using Redis at ${REDIS}"
