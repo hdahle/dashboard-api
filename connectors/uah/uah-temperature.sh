@@ -59,7 +59,7 @@ awk -v d="${DATE}" 'BEGIN {
      NF == 29 {
             if (NOTFIRST) print ", "
             NOTFIRST=1
-            printf "{\"t\":\"%d-%02d\",\"y\":%.2f}", $1,$2,$3
+            printf "{\"x\":%.2f,\"t\":\"%d-%02d\",\"y\":%.2f}", $1+($2-0.5)/12, $1,$2,$3
           }
      END  { print "]}" }' < ${CSVFILE} > ${JSONFILE}
 
