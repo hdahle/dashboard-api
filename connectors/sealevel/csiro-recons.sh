@@ -5,7 +5,6 @@
 #
 # H. Dahle 2020
 
-
 REDISKEY="CSIRO_Recons_2015"
 TMPDIR=$(mktemp -d)
 CSVFILE="${REDISKEY}.csv"
@@ -25,7 +24,7 @@ if [ -f "${CSVFILE}" ]; then
   echo -n "Number of lines in CSV, ${CSVFILE}: "
   cat ${CSVFILE} | wc -l
 else
-  echo "No ${CSVFILE} - aborting"
+  echo "File not found: ${CSVFILE}, aborting"
   exit
 fi
 
@@ -35,8 +34,6 @@ fi
 #1880.5, -157.1,   24.2
 #1881.5, -151.5,   24.2
 #1882.5, -168.3,   23.0
-
-# JSON Output Format
 
 # Convert from CSV to JSON
 awk -v d="${DATE}" 'BEGIN {
@@ -51,6 +48,7 @@ awk -v d="${DATE}" 'BEGIN {
             print "\"license\": "
             print "\"Creative Commons Attribution 4.0 International Licence\", "
             print "\"accessed\": \"" d "\", "
+            print "\"legend\":\"t: date, y: monthly GSML in mm, uncertainty: undertainty in mm\", "
             print "\"data\":["
             FIRST=1
      }
@@ -64,7 +62,7 @@ awk -v d="${DATE}" 'BEGIN {
             FIRST=0
             print "{"
             print "\"t\":\"" substr($1,1,4) "-06-30\"," 
-            print "\"data\":" $2 ", " 
+            print "\"y\":" $2 ", " 
             print "\"uncertainty\":"  $3 
             print "}"
      }
