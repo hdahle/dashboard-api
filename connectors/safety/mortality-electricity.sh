@@ -38,7 +38,7 @@ do
      $2 != ""         {
                         if (NOTFIRST) print ", "
                         NOTFIRST=1
-                        print "{\"" $1 "\":" $2 "}" 
+                        print "{\"resource\":\"" $1 "\", \"deaths\":" $2 "}" 
                       }
      END              { print "]}" }' < ${CSVFILE} > ${JSONFILE}
 
