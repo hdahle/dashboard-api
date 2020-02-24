@@ -1,12 +1,10 @@
-source,Markandya Anil and Wilkinson Paul / The Lancet Volume 370 Issue 9591 P979-990 September 15 2007,,,
-link,https://www.thelancet.com/article/S0140-6736(07)61253-7/fulltext,,,
-info,Mortality figures (in deaths per TWh generated) includes accidents (occupational and those involving the public) as well as pollution/radiation related effects including cancers,,,
-data,total,public,occupational,pollution
-Lignite,32.7,0.02,0.10,32.6
-Coal,24.6,0.02,0.10,24.5
-Gas,2.8,0.02,0.001,2.8
-Oil,18.4,0.03,0,18.4
-Wind,,,,
-Solar,,,,
-Biomass,4.6,0,0,4.63
-Nuclear,0.07,0.003,0.019,0.052
+source,Sovacool et al Balancing safety with sustainability / Journal of Cleaner Production July 23 2015,,,
+link,https://www.academia.edu/40233260/Balancing_safety_with_sustainability_assessing_the_risk_of_accidents_for_modern_low-carbon_energy_systems,,,
+info,Deaths per TWh generated in the period 1990-2013, i.e. Chernobyl (4056 deaths according to WHO/IEAE) is excluded and Fukushima is included (573 deaths) in the data. Deaths due to particulate pollution from biomass and biofuels are not included,,,
+data,total,,,
+Hydro,0.0235,,,
+Wind,0.0917,,,
+Solar,0.0136,,,
+Biomass,0.0164,,,
+Biofuels,0.0048,,,
+Nuclear,0.0097,,,
