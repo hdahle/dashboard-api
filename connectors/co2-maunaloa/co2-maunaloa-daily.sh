@@ -43,7 +43,7 @@ awk -v d="${DATE}" 'BEGIN {ORS="";
      NF==5 {year= $1; month=$2; day=$3; value=$4 } 
      
      # end of file reached, print most recent data, done
-     END   {printf "{ \"date\":\"%04d-%02d-%02d\", \"value\":%f  }]}", $1, $2, $3, $4 
+     END   {printf "{ \"date\":\"%04d-%02d-%02d\", \"value\":%.2f  }]}", $1, $2, $3, $4 
      }' < ${CSVFILE} > ${JSONFILE}
 
 # Just for reassurance
