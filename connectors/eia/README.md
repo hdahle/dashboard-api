@@ -15,7 +15,7 @@ Then store the API key into a text file "eiakey.txt". This file is used by the s
 
 ### EIA API - Building the query URL
 Units and names of data-series were figured out by poking around the API:
-````
+````javascript
   let eiaUnit = '';
   let eiaSeriesName = '';
   if (fuel === 'coal') {
