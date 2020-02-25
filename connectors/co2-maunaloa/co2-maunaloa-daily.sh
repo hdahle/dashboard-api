@@ -10,7 +10,7 @@ REDISKEY="maunaloaco2-daily"
 TMPDIR=$(mktemp -d)
 CSVFILE="${TMPDIR}/${REDISKEY}.csv"
 JSONFILE="${TMPDIR}/${REDISKEY}.json"
-DATE=`date --iso-8601='minutes'`
+DATE=`date +'%Y-%m-%d'`
 
 echo ${DATE}
 echo "Getting ftp data from noaa.gov, saving to ${CSVFILE}"
@@ -26,6 +26,7 @@ fi
 
 echo "Converting data to JSON, saving to ${JSONFILE}"
 awk -v d="${DATE}" 'BEGIN {ORS="";
+            split(d,ymd,"-")
             print "{"
             print "\"source\":"
             print "\"Dr. Pieter Tans, NOAA/ESRL (www.esrl.noaa.gov/gmd/ccgg/trends/) and "
@@ -38,12 +39,23 @@ awk -v d="${DATE}" 'BEGIN {ORS="";
      # Skip comments      
      /^#/  {next}
 
-     # save date and value
+     # find the CO2 value 1 year ago
+     NF==5 && $1==(ymd[1]-1) && $2==(0+ymd[2]) && $3==(ymd[3]-2) {
+            lastYr = $4
+     } 
+
+     # find the CO2 value 10 years ago
+     NF==5 && $1==(ymd[1]-10) && $2==(0+ymd[2]) && $3==(ymd[3]-2) {
+            tenYrs = $4
+     } 
+
+     # just keep recording and overwriting date and value
      # we will do this until we reach end-of-file which is the most recent data
      NF==5 {year= $1; month=$2; day=$3; value=$4 } 
      
-     # end of file reached, print most recent data, done
-     END   {printf "{ \"date\":\"%04d-%02d-%02d\", \"value\":%.2f  }]}", $1, $2, $3, $4 
+     # end of file reached, print data, done
+     END   {
+            printf "{\"date\":\"%04d-%02d-%02d\", \"value\":%.2f, \"valueLastYear\":%.2f, \"value10yrsAgo\":%.2f}]}", $1, $2, $3, $4, lastYr, tenYrs
      }' < ${CSVFILE} > ${JSONFILE}
 
 # Just for reassurance
