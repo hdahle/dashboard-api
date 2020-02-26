@@ -42,27 +42,9 @@ function goFetch() {
   // process commandline
   let apiKey = argv.apikey; // filename from cmd line
   let redisKey = argv.key; // redis-key from cmd line
-  let fuel = argv.fuel; // coal, oil or gas
+  let series = argv.series; // coal, oil or gas
 
-  if (apiKey === undefined || redisKey === undefined || fuel === undefined) {
-    console.log('Usage: node eia.js --fuel <coal|oil|gas> --apikey <apikey> ---key <rediskey>')
-    process.exit();
-  }
-
-  // create components of query
-  let eiaUnit = '';
-  let eiaSeriesName = '';
-  if (fuel === 'coal') {
-    eiaUnit = 'MT.A';
-    eiaSeriesName = 'INTL.7-1-';
-  } else if (fuel === 'oil') {
-    eiaUnit = 'TBPD.A';
-    eiaSeriesName = 'INTL.55-1-';
-  } else if (fuel === 'gas') {
-    eiaUnit = 'BCM.A';
-    eiaSeriesName = 'INTL.26-1-';
-  }
-
+  // These are the regions we always query for
   const eiaRegions = [
     { region: 'Africa', code: 'AFRC' },
     { region: 'World', code: 'WORL' },
@@ -72,8 +54,33 @@ function goFetch() {
     { region: 'Eurasia', code: 'EURA' },
     { region: 'Asia&Oceania', code: 'ASOC' },
     { region: 'S America', code: 'CSAM' },
-    { region: 'N America', code: 'NOAM' }
+    { region: 'N America', code: 'NOAM' },
+    { region: 'USA', code: 'USA' },
+    { region: 'China', code: 'CHN' },
+    { region: 'India', code: 'IND' },
+    { region: 'Japan', code: 'JPN' },
+    { region: 'Russia', code: 'RUS' }
   ];
+  // Series names and appropriate units for series
+  const eiaSeries = {
+    'coal': { eiaSeriesName: 'INTL.7-1-', eiaUnit: 'MT.A' },
+    'oil': { eiaSeriesName: 'INTL.55-1-', eiaUnit: 'TBPD.A' },
+    'gas': { eiaSeriesName: 'INTL.26-1-', eiaUnit: 'BCM.A' },
+    'population': { eiaSeriesName: 'INTL.4702-33-', eiaUnit: 'THP.A' },
+    'emissions': { eiaSeriesName: 'INTL.4008-8-', eiaUnit: 'MMTCD.A' },
+    'nuclear': { eiaSeriesName: 'INTL.27-12-', eiaUnit: 'BKWH.A' },
+    'gdp': { eiaSeriesName: 'INTL.4701-34-', eiaUnit: 'BDOLPPP.A' }
+  };
+
+  if (apiKey === undefined || redisKey === undefined || series === undefined || eiaSeries[series] === undefined) {
+    console.log('Usage: node eia.js --series <seriesname> --apikey <apikey> --key <rediskey>');
+    let s = '';
+    Object.keys(eiaSeries).forEach(x => s += x + ' ');
+    console.log('  <seriesname> is one of: ', s)
+    process.exit();
+  }
+
+  let { eiaSeriesName, eiaUnit } = eiaSeries[series];
 
   // build a single query URL, include all regions
   let url = 'https://api.eia.gov/series/?api_key=' + apiKey + '&series_id=';
@@ -88,7 +95,7 @@ function goFetch() {
       // results.series is undefined if incorrect query URL
       if ((results.series === undefined) || (results.series.length === 0) ||
         (results.series[0].data === undefined) || (results.series[0].data.length === 0)) {
-        console.log('No data from api.eia.gov', results);
+        console.log('No data from api.eia.gov: ', results, url);
         process.exit();
       }
 
@@ -112,7 +119,7 @@ function goFetch() {
         });
       });
 
-      // sort based on production volumes -> chart easier to read
+      // sort regions based on production volumes -> chart easier to read
       results.series.sort((a, b) => a.data[0].y - b.data[0].y);
 
       // add 'source', 'link', 'accessed' key/values to JSON 

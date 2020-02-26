@@ -17,7 +17,7 @@ if [ ! -f "${eiaapikeyfile}" ]; then
 fi
 
 # read EIA KEY
-eiakey=`sudo cat ${eiaapikeyfile}`
+eiakey=`cat ${eiaapikeyfile}`
 echo "Using EIA API key: ${eiakey}"
 
 # Make sure JS file exists
@@ -26,7 +26,7 @@ if [ ! -f "${jsfile}" ]; then
 fi
 
 # Request Coal, Oil and Gas data
-for i in "coal" "oil" "gas" ; do
+for i in "coal" "oil" "gas" "emissions" "population" "gdp" "nuclear"; do
   rediskey="eia-global-${i}"
-  node ${jsfile} --fuel ${i} --apikey ${eiakey} --key ${rediskey} 
+  node ${jsfile} --series ${i} --apikey ${eiakey} --key ${rediskey} 
 done
