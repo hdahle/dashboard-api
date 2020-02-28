@@ -32,6 +32,11 @@ curl --silent --show-error "http://queimadas.dgi.inpe.br/queimadas/portal-static
 if [ -f "${CSVFILE}" ]; then
     echo -n "Downloaded CSV-file, lines: "
     cat ${CSVFILE} | wc -l    
+    LINES=`cat ${CSVFILE} | wc -l`
+    if [ "$LINES" -eq "0" ]; then
+      echo "Error: nothing downloaded, aborting"
+      exit
+    fi
     # grep 2020 ${CSVFILE} 
 else
     echo "File not found: ${CSVFILE}, aborting "
