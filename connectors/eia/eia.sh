@@ -9,6 +9,7 @@
 
 eiaapikeyfile='eiakey.txt'
 jsfile='eia.js'
+jsfile2='eia-gdp-pop-co2.js'
 
 # Make sure eiakey exists
 if [ ! -f "${eiaapikeyfile}" ]; then
@@ -30,3 +31,6 @@ for i in "coal" "oil" "gas" "emissions" "population" "gdp" "nuclear"; do
   rediskey="eia-global-${i}"
   node ${jsfile} --series ${i} --apikey ${eiakey} --key ${rediskey} 
 done
+
+# now run the second file which uses the output of the above
+node ${jsfile2}
