@@ -38,7 +38,7 @@ else
 fi
 
 # create new Crontab entry
-NEWENTRY="0 8 * * * ${PWD}/${SCRIPT} ${REDIS} >> ${LOGFILE} 2>&1"
+NEWENTRY="0 9 * * * ${PWD}/${SCRIPT} ${REDIS} >> ${LOGFILE} 2>&1"
 echo "Creating crontab-entry: ${NEWENTRY}"
 
 # test if new entry already exists
