@@ -111,6 +111,7 @@ function main() {
             x: parseInt(x[0], 10),
             y: Math.round(x[1] * 100) / 100
           }));
+          series.region = series.geography;
         })
 
         // add 'source', 'link', 'accessed' key/values to JSON 
