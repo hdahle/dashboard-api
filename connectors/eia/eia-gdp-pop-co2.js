@@ -127,7 +127,7 @@ function eiaGdpPopCo2() {
                 link: co2.link,
                 accessed: co2.accessed,
                 license: 'From https://www.eia.gov/about/copyrights_reuse.php: U.S. government publications are in the public domain and are not subject to copyright protection. You may use and/or distribute any of our data, files, databases, reports, graphs, charts, and other information products that are on our website or that you receive through our email distribution service. However, if you use or reproduce any of our information products, you should use an acknowledgment, which includes the publication date',
-                info: 'Units: Population - thousands, CO2 - million metric tons, GDP - million US dollars',
+                info: 'Units: Population - thousands, CO2 - million metric tons, GDP - million US dollars PPP',
                 data: list
               };
 
