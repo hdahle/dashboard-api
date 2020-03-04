@@ -36,8 +36,14 @@ done
 # now run the second file which uses the output of the above
 node ${jsfile2} --scope world
 
-# now run the third script to get country-specific data
+# merge gdp/co2/pop on a region level
 for i in "gdp" "emissions" "population"; do
   rediskey="eia-global-${i}"
   node ${jsfile3} --series ${i} --apikey ${eiakey} --key ${rediskey}   
+done
+
+# merge gdp/co2/pop on a country level
+for i in "WORL" "AFRC" "EURO" "EURA" "MIDE" "NOAM" "CSAM" "ASIA" "ASOC" "OCEA"; do
+  rediskey="eia-global-${i}"
+  node ${jsfile2} --scope country --region ${i}    
 done
