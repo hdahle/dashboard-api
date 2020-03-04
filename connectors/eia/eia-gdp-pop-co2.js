@@ -15,7 +15,7 @@ var fetch = require('node-fetch');
 var redis = require('redis');
 var redClient = redis.createClient();
 var moment = require('moment');
-//var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(2));
 const momFmt = 'YY-MM-DD hh:mm:ss';
 const redisKey = 'eia-global-gdp-pop-co2';
 
@@ -44,19 +44,43 @@ function eiaGdpPopCo2() {
     return response.json()
   }
 
-  let url = 'https://api.dashboard.eco/eia-global-gdp';
+  // process commandline
+  let scope = argv.scope; // coal, oil or gas
+  let reg = argv.region; // any of eiaRegions
+
+  const eiaRegions = [
+    'AFRC', 'WORL', 'EURO', 'EURA', 'MIDE', 'ASOC', 'ASIA', 'OCEA', 'CSAM', 'NOAM'
+  ];
+
+  // make sure command-line ARGS are good
+  if (scope === undefined || !['world', 'country'].includes(scope) || ((scope === 'country') && !eiaRegions.includes(reg))) {
+    console.log('Usage: node eia.js --scope [world|countries] --region <region>');
+    console.log('  world: merge data on a per region level (AFRC/EURO/NOAM...)');
+    console.log('  country: merge data on a per country level')
+    let s = '';
+    eiaRegions.forEach(r => s += r + ' ')
+    console.log('  <region> is one of ', s)
+    process.exit();
+  }
+
+  let urlSuffix = '';
+  if (scope === 'country') {
+    urlSuffix = '-' + reg;
+  }
+
+  let url = 'https://api.dashboard.eco/eia-global-gdp' + urlSuffix;
   fetch(url)
     .then(status)
     .then(json)
     .then(gdp => {
       //console.log(url, gdp);
-      url = 'https://api.dashboard.eco/eia-global-population';
+      url = 'https://api.dashboard.eco/eia-global-population' + urlSuffix;
       fetch(url)
         .then(status)
         .then(json)
         .then(pop => {
           //console.log(url, pop)
-          url = 'https://api.dashboard.eco/eia-global-emissions';
+          url = 'https://api.dashboard.eco/eia-global-emissions' + urlSuffix;
           fetch(url)
             .then(status)
             .then(json)
@@ -111,10 +135,10 @@ function eiaGdpPopCo2() {
               let redisValue = JSON.stringify(results);
               console.log(moment().format(momFmt) +
                 ' Storing ' + redisValue.length +
-                ' bytes, key=' + redisKey +
+                ' bytes, key=' + redisKey + urlSuffix +
                 ' value=' + redisValue.substring(0, 60));
 
-              redClient.set(redisKey, redisValue, function (error, result) {
+              redClient.set(redisKey + urlSuffix, redisValue, function (error, result) {
                 if (result) {
                   console.log(moment().format(momFmt) + ' Result:' + result);
                 } else {
