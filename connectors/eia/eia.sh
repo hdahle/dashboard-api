@@ -10,6 +10,7 @@
 eiaapikeyfile='eiakey.txt'
 jsfile='eia.js'
 jsfile2='eia-gdp-pop-co2.js'
+jsfile3='eia-all-countries.js'
 
 # Make sure eiakey exists
 if [ ! -f "${eiaapikeyfile}" ]; then
@@ -33,4 +34,10 @@ for i in "coal" "oil" "gas" "emissions" "population" "gdp" "nuclear"; do
 done
 
 # now run the second file which uses the output of the above
-node ${jsfile2}
+node ${jsfile2} --scope world
+
+# now run the third script to get country-specific data
+for i in "gdp" "emissions" "population"; do
+  rediskey="eia-global-${i}"
+  node ${jsfile3} --series ${i} --apikey ${eiakey} --key ${rediskey}   
+done
