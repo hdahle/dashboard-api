@@ -74,6 +74,9 @@ awk -v d="${DATE}" 'BEGIN {ORS=""
      # Skip comments
      /^#/  {next}
 
+     # Sometimes dataset has a missing last datum
+     $NF == "" {  $NF = $(NF-1) }
+
      $1=="Province/State" { 
             NUMF = NF
             
