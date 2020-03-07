@@ -73,6 +73,8 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
      # Sometimes dataset has a missing last datum
      $NF == "" {  $NF = $(NF-1) }
 
+     # This line contains the list of dates, from $5 to $NF
+     # Save the list of dates in the dates[] array
      $1=="Province/State" { 
             NUMF = NF
             
@@ -89,15 +91,18 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
      }
 
      {      indexOfDate = 5
-            # In some cases, $0 = "Region, State","Country",...
-            # Must convert $1 to Region State
-            # In this case, the comma in Region,State causes NF to be +1
+            # In some cases, $1 = "Region, State",,...
+            # The comma in Region,State causes NF to be to be off-by-one
             country = $2
             if (NUMF != NF) {
               country = $3
               indexOfDate = 6
             }
 
+            # Some countries are reported by region. Region is $1, Country is $2
+            # We only care about Country
+            # So we have to add all the regions in a Country
+            # An associative array seems a good approach
             for (i=indexOfDate; i<=NF; i++) {
               data[country][i-indexOfDate+5] += $i
             }
@@ -116,10 +121,8 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
            first = 0
          }
          print "]}"
-       }
-       
+       }       
        print " ]}"}' < ${CSVFILE} > ${JSONFILE}
-
 
 echo -n "Storing JSON to Redis, bytes: "
 cat ${JSONFILE} | wc --bytes 
