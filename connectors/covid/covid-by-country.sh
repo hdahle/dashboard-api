@@ -85,7 +85,7 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
                 exit
               }
               # Date conversion: "1/31/20" => "2020-Jan-31"
-              dates[i] = "20"  date[3] "-" m[date[1]] "-" date[2]
+              dates[i] = "20"  substr(date[3],1,2) "-" m[date[1]] "-" date[2]
             }
             next
      }
@@ -111,7 +111,7 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
      END   {
        firstcountry = 1
        for (country in data) {
-         if (!firstcountry) print ",\n"
+         if (!firstcountry) print ","
          firstcountry = 0
          print "{\"country\":\"" country "\",\"data\":["
          first = 1;
