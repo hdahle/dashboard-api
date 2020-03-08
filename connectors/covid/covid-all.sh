@@ -298,9 +298,6 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
             print "\"accessed\":\"" d "\", "
             print "\"legend\":\"Data for France includes St Barts. Data for Italy includes the Vatican and San Marino. Cruise ship Diamond Princess is reported as a separate country. The timeseries data per country is an array [{t:date,y:numberOfCases,ypm:casesPerMillion},{},...] \", "
             print "\"data\": ["
-            m[1] = "Jan"; m[2] = "Feb"; m[3] = "Mar"; m[4] = "Apr";
-            m[5] = "May"; m[6] = "Jun"; m[7] = "Jul"; m[8] = "Aug";
-            m[9] = "Sep"; m[10] = "Oct"; m[11] = "Nov"; m[12] = "Dec";
      }
 
      # Skip comments
@@ -327,8 +324,10 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
                 print "Error in date: " $0
                 exit
               }
-              # Save all date fields in the new format: "1/31/20" => "2020-Jan-31"
-              dates[i] = "20"  substr(date[3],1,2) "-" m[date[1]] "-" date[2]
+              # Save all date fields in the new format: "1/31/20" => "2020-01-31"
+              if (date[2]<10) date[2] = "0" date[2]
+              if (date[1]<10) date[1] = "0" date[1]
+              dates[i] = "20"  substr(date[3],1,2) "-" date[1] "-" date[2]
             }
             next
      }
