@@ -296,7 +296,7 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
             print "\"link\":\"https://github.com/CSSEGISandData/COVID-19\", "
             print "\"license\":\"README.md in the Github repo says: This GitHub repo and its contents herein, including all data, mapping, and analysis, copyright 2020 Johns Hopkins University, all rights reserved, is provided to the public strictly for educational and academic research purposes. The Website relies upon publicly available data from multiple sources, that do not always agree. The Johns Hopkins University hereby disclaims any and all representations and warranties with respect to the Website, including accuracy, fitness for use, and merchantability. Reliance on the Website for medical guidance or use of the Website in commerce is strictly prohibited\", "
             print "\"accessed\":\"" d "\", "
-            print "\"legend\":\"Data for France includes St Barts. Data for Italy includes the Vatican and San Marino. Cruise ship Diamond Princess is reported as a separate country. The timeseries data per country is an array [{t:date,x:numberOfCases,xpm:casesPerMillion},{},...] \", "
+            print "\"legend\":\"Data for France includes St Barts. Data for Italy includes the Vatican and San Marino. Cruise ship Diamond Princess is reported as a separate country. The timeseries data per country is an array [{t:date,y:numberOfCases,ypm:casesPerMillion},{},...] \", "
             print "\"data\": ["
             m[1] = "Jan"; m[2] = "Feb"; m[3] = "Mar"; m[4] = "Apr";
             m[5] = "May"; m[6] = "Jun"; m[7] = "Jul"; m[8] = "Aug";
@@ -365,8 +365,8 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
          for (j in data[country]) {
            if (!first) print ","
            cases = data[country][j]
-           print "{\"t\":\"" dates[j] "\",\"x\":" cases 
-           printf ",\"xpm\":%.2f}", 1000000*cases/pop
+           print "{\"t\":\"" dates[j] "\",\"y\":" cases 
+           printf ",\"ypm\":%.2f}", 1000000*cases/pop
            first = 0
          }
          print "]}"
