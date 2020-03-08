@@ -73,6 +73,10 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
      # Sometimes dataset has a missing last datum
      $NF == "" {  $NF = $(NF-1) }
 
+     $2=="San Marino" { $2="Italy"}
+     $2=="Vatican City" { $2="Italy"}
+     $2=="Saint Barthelemy" { $2="France"}
+     
      # This line contains the list of dates, from $5 to $NF
      # Save the list of dates in the dates[] array
      $1=="Province/State" { 
