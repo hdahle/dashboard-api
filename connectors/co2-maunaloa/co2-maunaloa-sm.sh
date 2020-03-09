@@ -42,7 +42,7 @@ awk -v d="${DATE}" 'BEGIN {ORS="";
            {if (NOTFIRST) print ", "
             NOTFIRST=1
             # printf "{\"date\":\"%s-%02d\",\"average\":%s,\"interpolated\":%s,\"trend\":%s}",  $1, $2, $4, $5, $6 }
-            printf "{\"x\":\"%s-%02d\",\"y\":%s}",  $1, $2, $5 }
+            printf "{\"x\":\"%s-%02d-15\",\"y\":%s}",  $1, $2, $5 }
      END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
 
 # Just for reassurance

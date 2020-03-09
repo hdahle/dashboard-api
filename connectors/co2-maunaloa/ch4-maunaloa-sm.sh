@@ -38,7 +38,7 @@ awk -v d="${DATE}" 'BEGIN {ORS="";
      /^#/  {next}
            {if (NOTFIRST) print ", "
             NOTFIRST=1
-            printf "{\"x\":\"%s-%02d\",\"y\":%s}",  $1, $2, $4 }
+            printf "{\"x\":\"%s-%02d-15\",\"y\":%s}",  $1, $2, $4 }
      END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
 
 echo -n "JSON byte count:"
