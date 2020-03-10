@@ -358,16 +358,19 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
          if (!firstcountry) print ","
          firstcountry = 0
          pop = population[country]
-         if (pop==0) pop=1
          print "{\"country\":\"" country "\","
-         print "\"population\":" pop ","
+         print "\"population\":" (pop ? pop:"null") ","
          print "\"data\":["
          first = 1;
          for (j in data[country]) {
            if (!first) print ","
            cases = data[country][j]
-           print "{\"t\":\"" dates[j] "\",\"y\":" cases 
-           printf ",\"ypm\":%.2f}", 1000000*cases/pop
+           print "{\"t\":\"" dates[j] "\",\"y\":" cases
+           if (pop) {
+             printf ",\"ypm\":%.2f}", 1000000*cases/pop
+           } else {
+             print ",\"ypm\":null}"
+           }
            first = 0
          }
          print "]}"
