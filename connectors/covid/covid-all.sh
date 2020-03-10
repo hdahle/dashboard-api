@@ -267,6 +267,7 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
             population["Saint Kitts and Nevis"] = 52823;
             population["Faroe Islands"] = 48678;
             population["Sint Maarten"] = 42388;
+            population["St. Martin"] = 42388;
             population["Monaco"] = 38964;
             population["Turks and Caicos Islands"] = 38191;
             population["Liechtenstein"] = 38019;
