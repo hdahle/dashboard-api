@@ -316,6 +316,7 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
      $2=="Hong Kong SAR" { $2="Hong Kong" }
      $2=="Taipei and environs" { $2="Taiwan" }
      $2=="Republic of Ireland" { $2="Ireland" }
+     $2=="Republic of Korea" { $2="South Korea" }
 
      # This line contains the list of dates, from $5 to $NF
      # Save the list of dates in the dates[] array
