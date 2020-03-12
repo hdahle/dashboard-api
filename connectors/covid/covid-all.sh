@@ -51,7 +51,7 @@ fi
 
 # Turn it into a JSON blob
 
-gawk -v d="${DATE}" 'BEGIN {ORS=""
+cat ${CSVFILE} | sed 's/\"Korea, South\"/South Korea/' | gawk -v d="${DATE}" 'BEGIN {ORS=""
             FS=","
             population["China"] = 1433783686;
             population["Mainland China"] = 1433783686;
@@ -305,7 +305,7 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
      /^#/  {next}
 
      # Sometimes dataset has a missing last datum
-     $NF == "" {  $NF = $(NF-1) }
+     $NF == "" {  $NF = 0 }
 
      # Some ad-hoc groupings of entities, renaming of entities
      $2=="San Marino" { $2="Italy"}
@@ -346,6 +346,9 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
               country = $3
               indexOfDate = 6
             }
+if (country == "US" && NUMF!=NF) {
+$NF = $(NF-1)
+}
 
             # Some countries are reported by region. Region is $1, Country is $2
             # We only care about Country
@@ -379,7 +382,7 @@ gawk -v d="${DATE}" 'BEGIN {ORS=""
          }
          print "]}"
        }       
-       print " ]}"}' < ${CSVFILE} > ${JSONFILE}
+       print " ]}"}' > ${JSONFILE}
 
 echo -n "Storing JSON to Redis, bytes: "
 cat ${JSONFILE} | wc --bytes 
