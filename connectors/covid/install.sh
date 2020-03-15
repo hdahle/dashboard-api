@@ -38,7 +38,7 @@ else
 fi
 
 # make new crontab entry, twice a month, on 10th and 20th
-NEWENTRY="0,2,4,6,8 15 * * * ${PWD}/${SCRIPT} ${REDIS} >> ${LOGFILE} 2>&1"
+NEWENTRY="15 0,2,4,6,8 * * * ${PWD}/${SCRIPT} ${REDIS} >> ${LOGFILE} 2>&1"
 echo "Creating crontab entry: ${NEWENTRY}"
 
 # test if new entry already exists
