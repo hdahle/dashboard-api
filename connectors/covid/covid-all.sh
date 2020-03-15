@@ -7,13 +7,13 @@
 # H. Dahle
 
 REDIS=$1
-
+CSVDIR="../../../covid/csse_covid_19_data/csse_covid_19_time_series"
 if [ "$REDIS" = "" ]; then
   REDIS="redis-cli"
 else
   if [ ! -f ${REDIS} ]; then
-    echo "Not found: ${REDIS}"
-    exit
+    echo `date` "Not found: ${REDIS}"
+    exit 1
   fi
 fi
 
@@ -22,25 +22,22 @@ DATE=`date`
 
 for i in "Confirmed" "Deaths" "Recovered" ; do
 
-REDISKEY="covid-timeseries-${i}"
-CSVFILE="time_series_19-covid-${i}.csv"
-JSONFILE="${TMPDIR}/${REDISKEY}.json"
-
-echo ${DATE}
-echo "Converting Covid data from CSV to JSON"
-
-if [ -f "${CSVFILE}" ]; then
-    echo -n "Downloaded CSV-file, lines: "
+  REDISKEY="covid-timeseries-${i}"
+  CSVFILE="${CSVDIR}/time_series_19-covid-${i}.csv"
+  JSONFILE="${TMPDIR}/${REDISKEY}.json"
+  echo `date` "Converting Covid data from CSV to JSON: ${i}"
+  if [ -f "${CSVFILE}" ]; then
+    echo -n `date` "Downloaded CSV-file, lines: "
     cat ${CSVFILE} | wc -l    
     LINES=`cat ${CSVFILE} | wc -l`
     if [ "$LINES" -eq "0" ]; then
-      echo "Error: empty file ${CSVFILE}, aborting"
-      exit
+      echo `date` "Error: empty file ${CSVFILE}, aborting"
+      exit 1
     fi
-else
-    echo "File not found: ${CSVFILE}, aborting "
-    exit
-fi
+  else
+    echo `date` "File not found: ${CSVFILE}, aborting "
+    exit 1
+  fi
 
 # CSV input:
 
@@ -51,7 +48,7 @@ fi
 
 # Turn it into a JSON blob
 
-cat ${CSVFILE} | sed 's/\"Korea, South\"/South Korea/' | gawk -v d="${DATE}" 'BEGIN {ORS=""
+  cat ${CSVFILE} | sed 's/\"Korea, South\"/South Korea/' | gawk -v d="${DATE}" 'BEGIN {ORS=""
             FS=","
             population["China"] = 1433783686;
             population["Mainland China"] = 1433783686;
@@ -346,9 +343,9 @@ cat ${CSVFILE} | sed 's/\"Korea, South\"/South Korea/' | gawk -v d="${DATE}" 'BE
               country = $3
               indexOfDate = 6
             }
-if (country == "US" && NUMF!=NF) {
-$NF = $(NF-1)
-}
+     if (country == "US" && NUMF!=NF) {
+              $NF = $(NF-1) 
+            }
 
             # Some countries are reported by region. Region is $1, Country is $2
             # We only care about Country
@@ -384,13 +381,15 @@ $NF = $(NF-1)
        }       
        print " ]}"}' > ${JSONFILE}
 
-echo -n "Storing JSON to Redis, bytes: "
-cat ${JSONFILE} | wc --bytes 
+  echo -n `date` "Storing JSON to Redis, bytes: "
+  cat ${JSONFILE} | wc --bytes 
 
-echo -n "Saving JSON to Redis with key ${REDISKEY}, result: "
-${REDIS} -x set ${REDISKEY} < ${JSONFILE}
+  echo -n `date` "Saving JSON to Redis with key ${REDISKEY}, result: "
+  ${REDIS} -x set ${REDISKEY} < ${JSONFILE}
 
-echo -n "Retrieving key=${REDISKEY} from Redis, bytes: "
-${REDIS} get ${REDISKEY} | wc --bytes
+  echo -n `date` "Retrieving key=${REDISKEY} from Redis, bytes: "
+  ${REDIS} get ${REDISKEY} | wc --bytes
 
 done
+
+exit 0
