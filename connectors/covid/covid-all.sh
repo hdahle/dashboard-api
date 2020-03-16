@@ -7,7 +7,8 @@
 # H. Dahle
 
 REDIS=$1
-CSVDIR="../../../covid/csse_covid_19_data/csse_covid_19_time_series"
+USERDIR=`eval echo ~${USER}`
+CSVDIR="${USERDIR}/covid/csse_covid_19_data/csse_covid_19_time_series"
 if [ "$REDIS" = "" ]; then
   REDIS="redis-cli"
 else
@@ -21,11 +22,7 @@ TMPDIR=$(mktemp -d)
 DATE=`date`
 
 for i in "Confirmed" "Deaths" "Recovered" ; do
-
-  REDISKEY="covid-timeseries-${i}"
   CSVFILE="${CSVDIR}/time_series_19-covid-${i}.csv"
-  JSONFILE="${TMPDIR}/${REDISKEY}.json"
-  echo `date` "Converting Covid data from CSV to JSON: ${i}"
   if [ -f "${CSVFILE}" ]; then
     echo -n `date` "Downloaded CSV-file, lines: "
     cat ${CSVFILE} | wc -l    
@@ -38,6 +35,9 @@ for i in "Confirmed" "Deaths" "Recovered" ; do
     echo `date` "File not found: ${CSVFILE}, aborting "
     exit 1
   fi
+  REDISKEY="covid-timeseries-${i}"
+  JSONFILE="${TMPDIR}/${REDISKEY}.json"
+  echo `date` "Converting Covid data from CSV to JSON: ${i}"
 
 # CSV input:
 
