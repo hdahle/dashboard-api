@@ -179,6 +179,7 @@ for i in "confirmed" "deaths" ; do
             population["Mauritania"] = 4525696;
             population["Panama"] = 4246439;
             population["Kuwait"] = 4207083;
+            population["West Bank and Gaza"] = 4170000;
             population["Croatia"] = 4130304;
             population["Moldova"] = 4043263;
             population["Georgia"] = 3996765;

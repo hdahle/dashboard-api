@@ -65,6 +65,7 @@ for i in "confirmed" "deaths" ; do
             population["Egypt"] = 100388073;
             population["Vietnam"] = 96462106;
             population["DR Congo"] = 86790567;
+            population["Congo (Kinshasa)"] = 86790567;
             population["Germany"] = 83517045;
             population["Turkey"] = 83429615;
             population["Iran"] = 82913906;
@@ -166,7 +167,7 @@ for i in "confirmed" "deaths" ; do
             population["Denmark"] = 5771876;
             population["Finland"] = 5532156;
             population["Slovakia"] = 5457013;
-            population["Congo"] = 5380508;
+            population["Congo (Brazzaville)"] = 5380508;
             population["Norway"] = 5378857;
             population["Costa Rica"] = 5047561;
             population["Palestine"] = 4981420;
@@ -178,6 +179,7 @@ for i in "confirmed" "deaths" ; do
             population["Mauritania"] = 4525696;
             population["Panama"] = 4246439;
             population["Kuwait"] = 4207083;
+            population["West Bank and Gaza"] = 4170000;
             population["Croatia"] = 4130304;
             population["Moldova"] = 4043263;
             population["Georgia"] = 3996765;
