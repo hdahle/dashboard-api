@@ -379,7 +379,7 @@ for i in "confirmed" "deaths" ; do
            numtoday = cases-prev
            print ", \"d\":" cases-prev
            printf ", \"c\":%d", numtoday - numyesterday
-           printf ", \"cp\":%.2f", numyesterday?((numtoday - numyesterday)/numyesterday):0
+           printf ", \"cp\":%.2f", numyesterday?(100*(numtoday - numyesterday)/numyesterday):0
            prev=cases
            numyesterday=numtoday
            if (pop) {
@@ -408,7 +408,7 @@ for i in "confirmed" "deaths" ; do
          numtoday = cases-prev
          print ", \"d\":" cases-prev         
          printf ", \"c\":%d", numtoday - numyesterday
-         printf ", \"cp\":%.2f", numyesterday?((numtoday - numyesterday)/numyesterday):0
+         printf ", \"cp\":%.2f", numyesterday?(100*(numtoday - numyesterday)/numyesterday):0
          prev=cases
          numyesterday=numtoday
          if (pop) {
