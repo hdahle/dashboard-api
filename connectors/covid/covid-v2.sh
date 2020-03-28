@@ -365,23 +365,26 @@ for i in "confirmed" "deaths" ; do
          pop = population[country]
          popworld += pop
          print "{\"country\":\"" country "\","
-         print "\"population\":" (pop ? pop:"null") ","
+         print "\"population\":" (pop ? pop : "null") ","
          print "\"data\":["
          first = 1;
-         prev = 0;
-         numyesterday = 0
-
+         totalYesterday = 0
          for (j in data[country]) {
            if (!first) print ","
-           cases = data[country][j]
-           data["World"][j] += cases
-           print "{\"t\":\"" dates[j] "\",\"y\":" cases
-           numtoday = cases-prev
-           print ", \"d\":" cases-prev
-           printf ", \"c\":%d", numtoday - numyesterday
-           printf ", \"cp\":%.2f", numyesterday?(100*(numtoday - numyesterday)/numyesterday):0
-           prev=cases
-           numyesterday=numtoday
+
+           # totalToday = actual cases to date cumulative
+           totalToday = data[country][j]
+           data["World"][j] += totalToday
+           print "{\"t\":\"" dates[j] "\",\"y\":" totalToday
+
+           # nToday = new cases per day
+           nToday = totalToday - totalYesterday
+           print ", \"d\":" nToday
+
+           # c = change
+           printf ", \"c\":%.2f", totalYesterday ? (100 * nToday / totalYesterday) : 0
+           totalYesterday=totalToday
+
            if (pop) {
              printf ",\"ypm\":%.2f}", 1000000*cases/pop
            } else {
@@ -399,18 +402,22 @@ for i in "confirmed" "deaths" ; do
        print "\"population\":" pop ","
        print "\"data\":["
        first = 1
-       prev = 0
-       numyesterday = 0
+       totalYesterday = 0
        for (j in data[country]) {
          if (!first) print ","
-         cases = data[country][j]
-         print "{\"t\":\"" dates[j] "\",\"y\":" cases
-         numtoday = cases-prev
-         print ", \"d\":" cases-prev         
-         printf ", \"c\":%d", numtoday - numyesterday
-         printf ", \"cp\":%.2f", numyesterday?(100*(numtoday - numyesterday)/numyesterday):0
-         prev=cases
-         numyesterday=numtoday
+
+         # totalToday= actual cases to date
+         totalToday = data[country][j]
+         print "{\"t\":\"" dates[j] "\",\"y\":" totalToday
+         
+         # nToday = new cases per day
+         nToday = totalToday - totalYesterday
+         print ", \"d\":" nToday 
+         
+         # c = change, daily relative to number of total cases yesterday        
+         printf ", \"c\":%.2f", totalYesterday? (100 * nToday / totalYesterday) : 0 
+         totalYesterday = totalToday
+
          if (pop) {
            printf ",\"ypm\":%.2f}", 1000000*cases/pop
          } else {
