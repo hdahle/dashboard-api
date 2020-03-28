@@ -46,7 +46,7 @@ for i in "confirmed" "deaths" ; do
 
 # Turn it into a JSON blob
 
-  cat ${CSVFILE} | sed 's/United Kingdom/UK/' | sed 's/Taiwan\*/Taiwan/' | sed 's/\"Korea, South\"/South Korea/' | sed 's/The Bahamas/Bahamas/' | sed 's/\"Gambia, The\"/Gambia/' | sed 's/\"Bahamas, The\"/Bahamas/' | gawk -v d="${DATE}" 'BEGIN {ORS=""
+  cat ${CSVFILE}  | sed 's/Burma/Myanmar/' | sed "s/Cote d'Ivoire/Ivory Coast/" | sed 's/United Kingdom/UK/' | sed 's/Taiwan\*/Taiwan/' | sed 's/\"Korea, South\"/South Korea/' | sed 's/The Bahamas/Bahamas/' | sed 's/\"Gambia, The\"/Gambia/' | sed 's/\"Bahamas, The\"/Bahamas/' | gawk -v d="${DATE}" 'BEGIN {ORS=""
             FS=","
             population["China"] = 1433783686;
             population["Mainland China"] = 1433783686;
