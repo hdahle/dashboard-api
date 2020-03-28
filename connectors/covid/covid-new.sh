@@ -136,6 +136,7 @@ for i in "confirmed" "deaths" ; do
             population["Burundi"] = 10864245;
             population["Dominican Republic"] = 10738958;
             population["Czech Republic"] = 10689209;
+            population["Czechia"] = 10689209;
             population["Greece"] = 10473455;
             population["Portugal"] = 10226187;
             population["Jordan"] = 10101694;
