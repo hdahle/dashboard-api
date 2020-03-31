@@ -59,7 +59,7 @@ function processFile(fn, redisKey, redClient) {
           t: csvDates[i - 4],
           y: parseInt(csv[i], 10),
           d: parseInt(i > 4 ? csv[i] - csv[i - 1] : csv[i], 10),
-          ypm: Math.trunc(100 * csv[i] / cPop) / 100,
+          ypm: 0,
           c: 0
         });
       }
@@ -81,7 +81,12 @@ function processFile(fn, redisKey, redClient) {
     })
     .on('end', () => {
       // calculate smoothed increase in percent
+      countries.push(calculateWorld(countries));
+      // calculate smoothed rate of increase
       countries.forEach(x => x.data = smoothData(x.data));
+      // calculate YPM
+      countries.forEach(c => c.data.forEach((x => x.ypm = Math.trunc(10 * x.y / c.population) / 10)));
+
       let d = {
         source: '"2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE, https://systems.jhu.edu. Population figures from Wikipedia/UN"',
         license: '"README.md in the Github repo says: This GitHub repo and its contents herein, including all data, mapping, and analysis, copyright 2020 Johns Hopkins University, all rights reserved, is provided to the public strictly for educational and academic research purposes. The Website relies upon publicly available data from multiple sources, that do not always agree. The Johns Hopkins University hereby disclaims any and all representations and warranties with respect to the Website, including accuracy, fitness for use, and merchantability. Reliance on the Website for medical guidance or use of the Website in commerce is strictly prohibited"',
@@ -91,7 +96,7 @@ function processFile(fn, redisKey, redClient) {
       }
       // Store key/value pair to Redis
       let val = JSON.stringify(d);
-      console.log(moment().format(momFmt) + ' Store:' + val.length + 'Key=' + redisKey + 'Val=' + val.substring(0, 100));
+      console.log(moment().format(momFmt) + ' Store:' + val.length + ' Key=' + redisKey + ' Val=' + val.substring(0, 100));
       redClient.set(redisKey, val, function (error, result) {
         if (result) {
           console.log(moment().format(momFmt) + ' Result:' + result);
@@ -107,6 +112,27 @@ function processFile(fn, redisKey, redClient) {
     .on('error', err => {
       console.log('Readstream error:', err)
     })
+}
+
+//
+// Calculate the values for World where .y and .d are sum of all countries
+//
+function calculateWorld(countries) {
+  let pop = 0;
+  let data = [];
+  for (let i = 0; i < countries.length; i++) {
+    if (i === 0) {  // this is the first country
+      countries[0].data.forEach(x => data.push(x));
+      pop = countries[0].population;
+    } else {
+      pop += countries[i].population;
+      for (let j = 0; j < data.length; j++) {
+        data[j].y += countries[i].data[j].y;
+        data[j].d += countries[i].data[j].d;
+      }
+    }
+  }
+  return { country: 'World', population: Math.trunc(pop), data: data };
 }
 
 // smoothData
@@ -167,7 +193,7 @@ function countryName(country) {
     { n: "Taiwan*", standard: "Taiwan" },
     { n: "Holy See", standard: "Vatican City" }
   ];
-  let x = countryNameMap.find(x => x.c === country);
+  let x = countryNameMap.find(x => x.n === country);
   return (x === undefined) ? country : x.standard;
 }
 
