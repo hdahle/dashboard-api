@@ -382,7 +382,7 @@ for i in "confirmed" "deaths" ; do
            print ", \"d\":" nToday
 
            # c = change
-           printf ", \"c\":%.2f", totalYesterday ? (100 * nToday / totalYesterday) : 0
+           # printf ", \"c\":%.2f", totalYesterday ? (100 * nToday / totalYesterday) : 0
            totalYesterday=totalToday
 
            if (pop) {
@@ -415,11 +415,11 @@ for i in "confirmed" "deaths" ; do
          print ", \"d\":" nToday 
          
          # c = change, daily relative to number of total cases yesterday        
-         printf ", \"c\":%.2f", totalYesterday? (100 * nToday / totalYesterday) : 0 
+         # printf ", \"c\":%.2f", totalYesterday? (100 * nToday / totalYesterday) : 0 
          totalYesterday = totalToday
 
          if (pop) {
-           printf ",\"ypm\":%.2f}", 1000000*cases/pop
+           printf ",\"ypm\":%.2f}", 1000000*totalToday/pop
          } else {
            print ",\"ypm\":null}"
          }
