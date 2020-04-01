@@ -37,7 +37,6 @@ function main() {
 }
 
 function processFile(fn, redisKey, redClient) {
-
   // cmdline OK, now read file - one or more lines per country
   let countries = [];
   let csvDates = [];
@@ -118,21 +117,29 @@ function processFile(fn, redisKey, redClient) {
 // Calculate the values for World where .y and .d are sum of all countries
 //
 function calculateWorld(countries) {
-  let pop = 0;
-  let data = [];
-  for (let i = 0; i < countries.length; i++) {
-    if (i === 0) {  // this is the first country
-      countries[0].data.forEach(x => data.push(x));
-      pop = countries[0].population;
-    } else {
-      pop += countries[i].population;
-      for (let j = 0; j < data.length; j++) {
-        data[j].y += countries[i].data[j].y;
-        data[j].d += countries[i].data[j].d;
+  if (countries === undefined || countries === null || !Array.isArray(countries) || countries.length === 0) {
+    return null;
+  }
+  if (countries[0].data === undefined || !Array.isArray(countries[0].data)) {
+    return null;
+  }
+  let population = 0;
+  // initialize d array with empties
+  let d = [];
+  for (let i = 0; i < countries[0].data.length; i++) {
+    d.push({ y: 0, d: 0 })
+  }
+  // now add up all the data arrays
+  countries.forEach(c => {
+    population += c.population;
+    for (let i = 0; i < c.data.length; i++) {
+      d[i] = {
+        y: d[i].y + c.data[i].y,
+        d: d[i].d + c.data[i].d
       }
     }
-  }
-  return { country: 'World', population: Math.trunc(pop), data: data };
+  });
+  return { country: 'World', population: population, data: d };
 }
 
 // smoothData
@@ -150,38 +157,47 @@ function calculateWorld(countries) {
 //  t: y: d: c: 
 // }
 function smoothData(d) {
-  // Create a smoothed array of daily cases
-  let smooth = [];
+  if (d === undefined || d === null || !Array.isArray(d) || d.length === 0) return null;
+
+  let smoothY = []; // Smoothed array of cumulative cases, using d[].y
+  let smoothD = []; // Smoothed array of daily change, smooth[i].y - smooth[i-1].y
+
+  // First calculate smoothY[]
   for (let i = 0; i < d.length; i++) {
-    let e = {
-      y: 0, // cumulative 
-    }
+    if (d[i].y === undefined) return null;
+    let y = 0; // cumulative 
     if (i === 0) {
-      e.y = d[i].y;
+      y = d[i].y;
     } else if (i === d.length - 1) {
-      e.y = d[i].y;
+      y = d[i].y;
     } else {
-      e.y = (d[i - 1].y + d[i].y + d[i + 1].y) / 3;
+      y = (d[i - 1].y + d[i].y + d[i + 1].y) / 3;
     }
-    smooth[i] = e;
+    smoothY[i] = y === 0 ? 1 : y;
   }
-  // Calculate growth based on smoothed daily numbers
+
+  // Then calculate smoothD[]
+  for (let i = 0; i < d.length; i++) {
+    if (i === 0) {
+      smoothD[i] = 0;
+    } else if (i === d.length - 1) {
+      smoothD[i] = d[i].y - d[i - 1].y;
+    } else {
+      smoothD[i] = smoothY[i] - smoothY[i - 1];
+    }
+  }
+
+  // Finally calculate smoothed d[].c rate of change
   for (let i = 0; i < d.length; i++) {
     if (i === 0) {
       d[i].c = 0;
-      smooth[i].d = 0;
-    } else if (i === smooth.length - 1) {
-      smooth[i].d = d[i].y - d[i - 1].y;
-      d[i].c = 100 * smooth[i].d / smooth[i - 1].y;
     } else {
-      smooth[i].d = (smooth[i].y - smooth[i - 1].y)
-      d[i].c = 100 * smooth[i].d / smooth[i - 1].y;
+      d[i].c = Math.floor(1000 * smoothD[i] / smoothY[i - 1]) / 10;
     }
-    d[i].c = Math.floor(d[i].c * 10) / 10;
   }
+
   return d;
 }
-
 
 // The raw data contains some country names that should be changed
 function countryName(country) {
@@ -456,3 +472,10 @@ function p(country) {
   return population[idx].p;
 
 }
+
+// Exports for Mocha/Chai Testing
+
+module.exports.p = p;
+module.exports.countryName = countryName;
+module.exports.smoothData = smoothData;
+module.exports.calculateWorld = calculateWorld;
