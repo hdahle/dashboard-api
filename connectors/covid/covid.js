@@ -127,16 +127,14 @@ function calculateWorld(countries) {
   // initialize d array with empties
   let d = [];
   for (let i = 0; i < countries[0].data.length; i++) {
-    d.push({ y: 0, d: 0 })
+    d.push({ t: countries[0].data[i].t, y: 0, d: 0 })
   }
   // now add up all the data arrays
   countries.forEach(c => {
     population += c.population;
     for (let i = 0; i < c.data.length; i++) {
-      d[i] = {
-        y: d[i].y + c.data[i].y,
-        d: d[i].d + c.data[i].d
-      }
+      d[i].y += c.data[i].y;
+      d[i].d += c.data[i].d;
     }
   });
   return { country: 'World', population: population, data: d };

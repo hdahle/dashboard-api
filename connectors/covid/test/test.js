@@ -73,17 +73,17 @@ describe('calculateworld', function () {
   let sweden = {
     country: 'Sweden',
     population: 9,
-    data: [{ y: 2, d: 3 }]
+    data: [{ t: "2020-01-30", y: 2, d: 3 }]
   };
   let norway = {
     country: 'Norway',
     population: 4.5,
-    data: [{ y: 10, d: 9 }]
+    data: [{ t: "2020-01-30", y: 10, d: 9 }]
   };
   let world = {
     country: 'World',
     population: 4.5,
-    data: [{ y: 10, d: 9 }]
+    data: [{ t: "2020-01-30", y: 10, d: 9 }]
   };
   it('1 return null on empty input list', function () {
     assert.equal(null, covid.calculateWorld([]));
@@ -116,24 +116,29 @@ describe('calculateworld', function () {
     assert.equal(norway.data[0].d, result.data[0].d);
   });
   it('8 input length = 1, result should be the same except for name', function () {
-    assert.deepEqual(world, covid.calculateWorld([norway]));
+    let result = {
+      country: 'World',
+      population: 4.5,
+      data: [{ t: "2020-01-30", y: 10, d: 9 }]
+    };
+    assert.deepEqual(result, covid.calculateWorld([norway]));
   });
   it('9 input length = 2, make sure everything adds', function () {
-    norway.data = [{ y: 10, d: 9 }, { y: 1, d: 1 }, { y: 1, d: 1 }];
-    sweden.data = [{ y: 11, d: 3 }, { y: 1, d: 1 }, { y: 1, d: 1 }];
-    world.data = [{ y: 21, d: 12 }, { y: 2, d: 2 }, { y: 2, d: 2 }];
+    norway.data = [{ t: "2020-01-30", y: 10, d: 9 }, { t: "2020-01-31", y: 1, d: 1 }, { t: "2020-02-01", y: 1, d: 1 }];
+    sweden.data = [{ t: "2020-01-30", y: 11, d: 3 }, { t: "2020-01-31", y: 1, d: 1 }, { t: "2020-02-01", y: 1, d: 1 }];
+    world.data = [{ t: "2020-01-30", y: 21, d: 12 }, { t: "2020-01-31", y: 2, d: 2 }, { t: "2020-02-01", y: 2, d: 2 }];
     world.population = norway.population + sweden.population;
     assert.deepEqual(world, covid.calculateWorld([norway, sweden]));
   });
   it('10 input length = 10000, verify pop/d/y add up', function () {
     let a = [];
     let len = 10000;
-    norway.data = [{ y: 2, d: 3 }];
+    norway.data = [{ t: "2020-02-01", y: 2, d: 3 }];
     for (let x = 0; x < len; x++) {
       a.push(norway);
     }
     world.population = len * norway.population;
-    world.data = [{ y: len * norway.data[0].y, d: len * norway.data[0].d }];
+    world.data = [{ t: norway.data[0].t, y: len * norway.data[0].y, d: len * norway.data[0].d }];
     assert.deepEqual(world, covid.calculateWorld(a));
   });
 });
