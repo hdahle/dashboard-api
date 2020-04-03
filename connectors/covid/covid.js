@@ -82,19 +82,18 @@ function processFile(fn, redisKey, redClient) {
       // calculate smoothed increase in percent
       countries.push(calculateWorld(countries));
       // calculate smoothed rate of increase
-      countries.forEach(x => x.data = smoothData(x.data));
+      countries.forEach(c => c.data = smoothData(c.data));
       // calculate YPM
       countries.forEach(c => c.data.forEach((x => x.ypm = Math.trunc(10 * x.y / c.population) / 10)));
-
-      let d = {
+      // Store key/value pair to Redis
+      let val = JSON.stringify({
         source: '"2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE, https://systems.jhu.edu. Population figures from Wikipedia/UN"',
         license: '"README.md in the Github repo says: This GitHub repo and its contents herein, including all data, mapping, and analysis, copyright 2020 Johns Hopkins University, all rights reserved, is provided to the public strictly for educational and academic research purposes. The Website relies upon publicly available data from multiple sources, that do not always agree. The Johns Hopkins University hereby disclaims any and all representations and warranties with respect to the Website, including accuracy, fitness for use, and merchantability. Reliance on the Website for medical guidance or use of the Website in commerce is strictly prohibited"',
         link: '"https://github.com/CSSEGISandData/COVID-19"',
         info: '"Data format: [ {country: string, population:number, data:[{t:time, y:cumulative-data, d:daily-data, c:daily-change,ypm:y-per-million},...,{}]}]. Note that daily-change is based on 3-day averaged daily-data"',
+        updated: moment().format(momFmt),
         data: countries
-      }
-      // Store key/value pair to Redis
-      let val = JSON.stringify(d);
+      });
       console.log(moment().format(momFmt) + ' Store:' + val.length + ' Key=' + redisKey + ' Val=' + val.substring(0, 100));
       redClient.set(redisKey, val, function (error, result) {
         if (result) {
@@ -102,7 +101,7 @@ function processFile(fn, redisKey, redClient) {
         } else {
           console.log(moment().format(momFmt) + ' Error: ' + error);
         }
-        setTimeout(() => { process.exit(); }, 1000);
+        setTimeout(() => { process.exit(); }, 1000); // We are done
       });
     })
     .on('close', () => {
@@ -123,13 +122,13 @@ function calculateWorld(countries) {
   if (countries[0].data === undefined || !Array.isArray(countries[0].data)) {
     return null;
   }
-  let population = 0;
   // initialize d array with empties
   let d = [];
   for (let i = 0; i < countries[0].data.length; i++) {
     d.push({ t: countries[0].data[i].t, y: 0, d: 0 })
   }
   // now add up all the data arrays
+  let population = 0;
   countries.forEach(c => {
     population += c.population;
     for (let i = 0; i < c.data.length; i++) {
@@ -156,10 +155,8 @@ function calculateWorld(countries) {
 // }
 function smoothData(d) {
   if (d === undefined || d === null || !Array.isArray(d) || d.length === 0) return null;
-
   let smoothY = []; // Smoothed array of cumulative cases, using d[].y
   let smoothD = []; // Smoothed array of daily change, smooth[i].y - smooth[i-1].y
-
   // First calculate smoothY[]
   for (let i = 0; i < d.length; i++) {
     if (d[i].y === undefined) return null;
@@ -173,7 +170,6 @@ function smoothData(d) {
     }
     smoothY[i] = y === 0 ? 1 : y;
   }
-
   // Then calculate smoothD[]
   for (let i = 0; i < d.length; i++) {
     if (i === 0) {
@@ -184,7 +180,6 @@ function smoothData(d) {
       smoothD[i] = smoothY[i] - smoothY[i - 1];
     }
   }
-
   // Finally calculate smoothed d[].c rate of change
   for (let i = 0; i < d.length; i++) {
     if (i === 0) {
@@ -193,7 +188,6 @@ function smoothData(d) {
       d[i].c = Math.floor(1000 * smoothD[i] / smoothY[i - 1]) / 10;
     }
   }
-
   return d;
 }
 
@@ -205,7 +199,10 @@ function countryName(country) {
     { n: "United Kingdom", standard: "UK" },
     { n: "Mainland China", standard: "China" },
     { n: "Taiwan*", standard: "Taiwan" },
-    { n: "Holy See", standard: "Vatican City" }
+    { n: "Holy See", standard: "Italy" },
+    { n: "Vatican City", standard: "Italy" },
+    { n: "San Marino", standard: "Italy" },
+    { n: "Monaco", standard: "France" }
   ];
   let x = countryNameMap.find(x => x.n === country);
   return (x === undefined) ? country : x.standard;
@@ -386,6 +383,7 @@ function p(country) {
     { c: "Djibouti", p: 973560 },
     { c: "Fiji", p: 889953 },
     { c: "Réunion", p: 888927 },
+    { c: "Reunion", p: 888927 },
     { c: "Comoros", p: 850886 },
     { c: "Guyana", p: 782766 },
     { c: "Bhutan", p: 763092 },
@@ -419,6 +417,7 @@ function p(country) {
     { c: "Curacao", p: 163424 },
     { c: "Kiribati", p: 117606 },
     { c: "F.S. Micronesia", p: 113815 },
+    { c: "Micronesia", p: 113815 },
     { c: "Grenada", p: 112003 },
     { c: "Tonga", p: 110940 },
     { c: "Saint Vincent and the Grenadines", p: 110589 },
@@ -452,7 +451,7 @@ function p(country) {
     { c: "Tuvalu", p: 11646 },
     { c: "Wallis and Futuna", p: 11432 },
     { c: "Nauru", p: 10756 },
-    { c: "Saint Helena}, Ascension and Tristan da Cunha", p: 6059 },
+    { c: "Saint Helena, Ascension and Tristan da Cunha", p: 6059 },
     { c: "Saint Barthelemy", p: 9800 },
     { c: "Saint Pierre and Miquelon", p: 5822 },
     { c: "Montserrat", p: 4989 },
@@ -463,12 +462,11 @@ function p(country) {
     { c: "MS Zaandam", p: 2047 },
     { c: "Tokela", p: 1340 },
     { c: "Vatican City", p: 799 },
-    { c: "Holy See", p: 799 }];
-
+    { c: "Holy See", p: 799 }
+  ];
   let idx = population.findIndex(x => x.c === country);
   if (idx === -1) return 1;
   return population[idx].p;
-
 }
 
 // Exports for Mocha/Chai Testing
