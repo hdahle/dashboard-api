@@ -1,0 +1,20 @@
+{
+  "name": "co2-daily",
+  "version": "1.0.0",
+  "description": "convert daily co2 from csv to json",
+  "main": "co2-daily.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "minimist": "^1.2.5",
+    "moment": "^2.24.0",
+    "redis": "^3.0.2"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}
