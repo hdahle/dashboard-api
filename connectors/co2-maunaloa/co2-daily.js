@@ -68,19 +68,16 @@ function processFile(fn, key) {
 // Verify and process a line. Thers is one line per day
 function processLine(csv) {
   let s = csv.split(/[ ]+/);
-  //console.log(s);
-  // s often has a leading " " element, potentially trailing. Trim out these empties.
+  // Remove empty fields, often occurs at beginning of line
   s = s.filter(x => !isNaN(parseFloat(x)));
-  // Sanity check the input line
+  // Sanity check the input line, should be exactly 5 fields
+  // Y M D float float
   if (s.length !== 5) return null;
   if (s[0] < 1900 || s[0] > moment().format('YYYY')) return null;
   if (s[1] < 1 || s[1] > 12) return null;
   if (s[2] < 1 || s[2] > 31) return null;
-  // Use moment to calculate day of year
-  let dayOfYear = moment(s[0] + '-' + s[1] + '-' + s[2], 'YYYY-M-D').format('DDD');
   return {
-    year: parseInt(s[0], 10),
-    t: parseInt(dayOfYear, 10),
+    t: moment(s[0] + '-' + s[1] + '-' + s[2], 'YYYY-M-D').format('YYYYMMDD'),
     y: parseFloat(s[3])
   };
 }
@@ -98,4 +95,4 @@ function processCsvEnd(timeSeries) {
 }
 
 // Exports for Mocha/Chai Testing
-exports.processLine = processLine;
+module.exports.processLine = processLine;
