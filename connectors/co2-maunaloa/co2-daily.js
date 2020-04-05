@@ -83,14 +83,43 @@ function processLine(csv) {
 }
 
 // When finished processing, create JSON datastructure
+// This should be the result:
+// [ 
+//   { year: 2010, data: [ {t:MM-DD, y:float}, {}, ... ] }
+//   { year: 2011, data: [ {t:MM-DD, y:float}, {}, ... ] }
+// ]
+// This structure should make client-side processing very easy
 function processCsvEnd(timeSeries) {
+  // create list of years
+  let unique = [];
+  let years = timeSeries.map(x => moment(x.t).format('YYYY'));
+  while (years.length) {
+    let y = years.pop();
+    if (unique.includes(y)) continue;
+    unique.push(y);
+  }
+  // unique[] is now list of years
+  // now create one data array per year
+  let d = [];
+  while (unique.length) {
+    let y = unique.shift();
+    let data = timeSeries.filter(x => y == moment(x.t).format('YYYY'));
+    data = data.map(x => ({
+      t: moment(x.t).format('MM-DD'),
+      y: x.y
+    }));
+    d.push({
+      year: y,
+      data: data
+    });
+  }
   return {
     source: '""',
     license: '""',
     link: '""',
     info: '"Daily atmospheric CO2 values measured at the Mauna Loa Observatory"',
     updated: moment().format(momFmt),
-    data: timeSeries
+    data: d
   };
 }
 
