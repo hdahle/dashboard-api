@@ -65,7 +65,7 @@ function processFile(url, key) {
       console.log(moment().format(momFmt) + ' Records:' + d.length);
       d = d.map(x => ({
         t: moment(x.datetime).format('MM-DD'),
-        y: x.value
+        y: Math.floor(x.value / 1000)
       }))
 
       d.pop(); // remove 1. jan of following year
@@ -73,9 +73,10 @@ function processFile(url, key) {
       let val = JSON.stringify({
         source: 'Red Electrica de Espana, https://ree.es/en',
         link: 'https://apidatos.ree.es',
-        info: 'Daily electricity demand in Spain',
+        info: 'Daily electricity demand in Spain, measured in GWh',
         updated: moment().format(momFmt),
         year: year,
+        units: 'GWh',
         data: d
       });
 
