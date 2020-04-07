@@ -1,0 +1,17 @@
+{
+  "name": "power-generation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "spain-electricity.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "^1.2.5",
+    "moment": "^2.24.0",
+    "node-fetch": "^2.6.0",
+    "redis": "^3.0.2"
+  }
+}
