@@ -63,11 +63,12 @@ function processFile(url, key) {
         return;
       }
       console.log(moment().format(momFmt) + ' Records:' + d.length);
-      let year = moment(d[0].datetime).format('YYYY');
       d = d.map(x => ({
-        t: moment(x.datetime).format('YYYY-MM-DD'),
+        t: moment(x.datetime).format('MM-DD'),
         y: x.value
       }))
+
+      d.pop(); // remove 1. jan of following year
 
       let val = JSON.stringify({
         source: 'Red Electrica de Espana, https://ree.es/en',
