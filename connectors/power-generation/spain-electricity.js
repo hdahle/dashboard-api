@@ -47,7 +47,8 @@ function processFile(url, key) {
     if (response.status >= 200 && response.status < 300) {
       return Promise.resolve(response)
     } else {
-      console.log(response)
+      console.log(moment().format(momFmt) + ' Status:' + response.status)
+      //process.exit();
       return Promise.reject(new Error(response.statusText))
     }
   }
@@ -67,9 +68,7 @@ function processFile(url, key) {
         t: moment(x.datetime).format('MM-DD'),
         y: Math.floor(x.value / 100) / 10
       }))
-
       d.pop(); // remove 1. jan of following year
-
       let val = JSON.stringify({
         source: 'Red Electrica de Espana, https://www.ree.es/en',
         link: 'https://apidatos.ree.es',
@@ -81,7 +80,6 @@ function processFile(url, key) {
       });
 
       console.log(moment().format(momFmt) + ' Store:' + val.length + ' Key=' + key + ' Val=' + val.substring(0, 100));
-
       redClient.set(key, val, function (error, result) {
         if (result) {
           console.log(moment().format(momFmt) + ' Result:' + result);
@@ -90,8 +88,10 @@ function processFile(url, key) {
         }
         setTimeout(() => { process.exit(); }, 2000); // We are done
       });
-
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(moment().format(momFmt), err)
+      setTimeout(() => { process.exit(); }, 2000); // We are done
+    });
 }
 
