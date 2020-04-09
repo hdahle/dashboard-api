@@ -118,7 +118,7 @@ function processCsvEnd(timeSeries) {
     license: 'From https://www.esrl.noaa.gov/gmd/about/disclaimer.html: The information on government servers are in the public domain, unless specifically annotated otherwise, and may be used freely by the public so long as you do not 1) claim it is your own (e.g. by claiming copyright for NOAA information – see next paragraph), 2) use it in a manner that implies an endorsement or affiliation with NOAA, or 3) modify it in content and then present it as official government material. You also cannot present information of your own in a way that makes it appear to be official government information. Please provide acknowledgement of the NOAA ESRL Global Monitoring Division in use of any of our web products as: Data / Image provided by NOAA ESRL Global Monitoring Division, Boulder, Colorado, USA(http://esrl.noaa.gov/gmd/)',
     link: 'ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_trend_gl.txt',
     info: 'Daily atmospheric CO2 values measured at the Mauna Loa Observatory',
-    updated: moment().format(momFmt),
+    accessed: moment().format(momFmt),
     data: d
   };
 }
