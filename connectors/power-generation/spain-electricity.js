@@ -71,10 +71,10 @@ function processFile(url, key) {
       d.pop(); // remove 1. jan of following year
 
       let val = JSON.stringify({
-        source: 'Red Electrica de Espana, https://ree.es/en',
+        source: 'Red Electrica de Espana, https://www.ree.es/en',
         link: 'https://apidatos.ree.es',
         info: 'Daily electricity demand in Spain, measured in GWh',
-        updated: moment().format(momFmt),
+        accessed: moment().format(momFmt),
         year: year,
         units: 'GWh',
         data: d
