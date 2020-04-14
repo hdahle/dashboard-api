@@ -71,8 +71,12 @@ function processFile(year, stationID, redisKey, redClient) {
         console.log(moment().format(momFmt) + ' Error: No data, aborting')
         process.exit();
       }
+
+      // time-data is in YYYY-MM-DDTHH:MM+02:00 format
+      // we want to simplify to MM-DD
+      // however we need to stay in the same timezone, so we use moment.parseZone()
       let d = res.data.trafficData.volume.byDay.edges.map(e => ({
-        t: moment(e.node.from).format('MM-DD'),
+        t: moment.parseZone(e.node.from).format('MM-DD'),
         y: e.node.total.volumeNumbers ? e.node.total.volumeNumbers.volume : null
       }));
 
