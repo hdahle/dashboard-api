@@ -4,7 +4,9 @@
   "description": "",
   "main": "traffic.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "baneheia": "node traffic.js --station 57166V121303 --key norway-traffic-baneheia-2020 --year 2020",
+    "smestad": "node traffic.js --station 24764V625406 --key norway-traffic-smestad-2020 --year 2020"
   },
   "keywords": [],
   "author": "",
