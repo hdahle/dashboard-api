@@ -26,7 +26,7 @@ The API uses GraphQL for queries
     })
   })
 ````
-Once we're sorted the query, the rest is standard:
+Once we've sorted the query, the rest is standard:
 ````
     .then(status)
     .then(json)
