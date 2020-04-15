@@ -38,7 +38,7 @@ function main() {
 
 function processFile(fn, redisKey, redClient) {
   // cmdline OK, now read file - one or more lines per country
-  let countries = [];
+  let allCountries = [];
   let csvDates = [];
   fs.createReadStream(fn)
     .pipe(parse({ delimiter: ',' }))
@@ -63,15 +63,15 @@ function processFile(fn, redisKey, redClient) {
         });
       }
       // Each country may have several entries which should be added together
-      let idx = countries.findIndex(x => x.country === cName);
+      let idx = allCountries.findIndex(x => x.country === cName);
       if (idx === -1) {
-        countries.push({
+        allCountries.push({
           country: cName,
           population: Math.floor(100 * cPop) / 100,
           data: d
         })
       } else {
-        let d = countries[idx].data;
+        let d = allCountries[idx].data;
         for (let i = 0; i < d.length; i++) {
           d[i].y += parseInt(csv[i + 4], 10);
           d[i].d = i > 0 ? (d[i].y - d[i - 1].y) : d[i].y
@@ -80,28 +80,66 @@ function processFile(fn, redisKey, redClient) {
     })
     .on('end', () => {
       // calculate smoothed increase in percent
-      countries.push(calculateWorld(countries));
+      allCountries.push(calculateWorld(allCountries));
       // calculate smoothed rate of increase
-      countries.forEach(c => c.data = smoothData(c.data));
+      allCountries.forEach(c => c.data = smoothData(c.data));
       // calculate YPM
-      countries.forEach(c => c.data.forEach((x => x.ypm = Math.trunc(10 * x.y / c.population) / 10)));
+      allCountries.forEach(c => c.data.forEach((x => x.ypm = Math.trunc(10 * x.y / c.population) / 10)));
       // Store key/value pair to Redis
-      let val = JSON.stringify({
+      let val = {
         source: '2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE, https://systems.jhu.edu. Population figures from Wikipedia/UN',
         license: 'README.md in the Github repo says: This GitHub repo and its contents herein, including all data, mapping, and analysis, copyright 2020 Johns Hopkins University, all rights reserved, is provided to the public strictly for educational and academic research purposes. The Website relies upon publicly available data from multiple sources, that do not always agree. The Johns Hopkins University hereby disclaims any and all representations and warranties with respect to the Website, including accuracy, fitness for use, and merchantability. Reliance on the Website for medical guidance or use of the Website in commerce is strictly prohibited',
         link: 'https://github.com/CSSEGISandData/COVID-19',
         info: 'Data format: [ {country: string, population:number, data:[{t:time, y:cumulative-data, d:daily-data, c:daily-change,ypm:y-per-million},...,{}]}]. Note that daily-change is based on 3-day averaged daily-data',
         updated: moment().format(momFmt),
-        data: countries
-      });
-      console.log(moment().format(momFmt) + ' Store:' + val.length + ' Key=' + redisKey + ' Val=' + val.substring(0, 100));
-      redClient.set(redisKey, val, function (error, result) {
+        data: allCountries
+      };
+
+      let rVal = JSON.stringify(val);
+      let rKey = redisKey;
+      console.log(moment().format(momFmt) + ' Store:' + rVal.length + ' Key=' + rKey + ' Val=' + rVal.substring(0, 60));
+      redClient.set(rKey, rVal, function (error, result) {
         if (result) {
           console.log(moment().format(momFmt) + ' Result:' + result);
         } else {
           console.log(moment().format(momFmt) + ' Error: ' + error);
         }
-        setTimeout(() => { process.exit(); }, 1000); // We are done
+
+        // Create list of select countries we want to chart
+        val.data = allCountries.filter(x => ['USA', 'UK', 'France', 'Italy', 'Spain', 'World', 'Norway', 'Sweden', 'Denmark'].includes(x.country));
+        rKey = redisKey + '-select';
+        rVal = JSON.stringify(val);
+        console.log(moment().format(momFmt) + ' Store:' + rVal.length + ' Key=' + rKey + ' Val=' + rVal.substring(0, 60));
+        redClient.set(rKey, rVal, function (error, result) {
+          if (result) {
+            console.log(moment().format(momFmt) + ' Result:' + result);
+          } else {
+            console.log(moment().format(momFmt) + ' Error: ' + error);
+          }
+
+          // Create list of top 20 countries wrt deaths per capita
+          let topCountries = allCountries.filter(x => x.population > 0.05).map(d => ({
+            country: d.country,
+            ypm: d.data.slice(-1)[0].ypm,
+            y: d.data.slice(-1)[0].y
+          }));
+          // Sort array
+          topCountries = topCountries.sort((a, b) => b.ypm - a.ypm);
+          // Extract top 20 deaths per capita
+          topCountries = topCountries.slice(0, 20);
+          val.data = topCountries;
+          rKey = redisKey + '-top';
+          rVal = JSON.stringify(val);
+          console.log(moment().format(momFmt) + ' Store:' + rVal.length + ' Key=' + rKey + ' Val=' + rVal.substring(0, 60));
+          redClient.set(rKey, rVal, function (error, result) {
+            if (result) {
+              console.log(moment().format(momFmt) + ' Result:' + result);
+            } else {
+              console.log(moment().format(momFmt) + ' Error: ' + error);
+            }
+            setTimeout(() => { process.exit(); }, 1000); // We are done
+          });
+        });
       });
     })
     .on('close', () => {
