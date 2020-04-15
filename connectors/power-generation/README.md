@@ -30,3 +30,5 @@ With this URL we request data from ree.es:
 Some stuff removed, but that's it really. Then store to Redis.
 ### Issues
 Just getting the data for the current year will of course fail to work well after the end of this year.
+### Important
+Sometimes the API server returns 500 and we have to retry. Part of this seems to be the server pacing requests, but sometimes it happens even after a long wait.
