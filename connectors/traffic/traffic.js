@@ -49,6 +49,16 @@ function processFile(year, stationID, redisKey, redClient) {
     return response.json()
   }
 
+  // We will grab 99 days of data, 90 days before today and 9 days after
+  let yearDiff = parseInt(year, 10) - parseInt(moment().format('YYYY'), 10);
+  let fromDate = moment().add(yearDiff, 'y').add(-90, 'd').format('YYYY-MM-DD');
+  let days = 99;
+  // If we are getting data for current year, then do not ask for data today or future
+  if (yearDiff === 0) {
+    days = 90;
+  }
+  let toDate = moment(fromDate).add(days, 'd').format('YYYY-MM-DD');
+
   // This is a GraphQL query 
   fetch(url, {
     method: 'POST',
@@ -56,7 +66,7 @@ function processFile(year, stationID, redisKey, redClient) {
     body: JSON.stringify({
       query: '{ trafficData(trafficRegistrationPointId: \"' + stationID + '\") ' +
         '{ volume ' +
-        '{ byDay(from: \"' + year + '-02-01T00:00:00+02:00\", to: \"' + year + '-05-01T00:00:00+02:00\")' +
+        '{ byDay(from: \"' + fromDate + 'T00:00:00+02:00\", to: \"' + toDate + 'T00:00:00+02:00\")' +
         '{ edges' +
         '{ node' +
         '{ from to total' +
