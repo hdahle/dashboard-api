@@ -131,7 +131,14 @@ function processFile(fn, redisKey, redClient) {
           topCountries = topCountries.sort((a, b) => b.ypm - a.ypm);
           // Extract top 20 deaths per capita
           topCountries = topCountries.slice(0, 20);
-          val.data = topCountries;
+
+          // reformat data to better fit bar chart needs
+          val.data = {
+            countries: topCountries.map(x => x.country),
+            percapita: topCountries.map(x => x.ypm),
+            total: topCountries.map(x => x.y)
+          };
+
           rKey = redisKey + '-top';
           rVal = JSON.stringify(val);
           console.log(moment().format(momFmt) + ' Store:' + rVal.length + ' Key=' + rKey + ' Val=' + rVal.substring(0, 60));
