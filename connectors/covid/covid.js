@@ -79,6 +79,8 @@ function processFile(fn, redisKey, redClient) {
       }
     })
     .on('end', () => {
+      // for eases of use in charting, add a field for total deaths/cases
+      allCountries.forEach(c => c.total = c.data[c.data.length - 1].y);
       // calculate smoothed increase in percent
       allCountries.push(calculateWorld(allCountries));
       // calculate smoothed rate of increase
@@ -91,7 +93,7 @@ function processFile(fn, redisKey, redClient) {
         license: 'README.md in the Github repo says: This GitHub repo and its contents herein, including all data, mapping, and analysis, copyright 2020 Johns Hopkins University, all rights reserved, is provided to the public strictly for educational and academic research purposes. The Website relies upon publicly available data from multiple sources, that do not always agree. The Johns Hopkins University hereby disclaims any and all representations and warranties with respect to the Website, including accuracy, fitness for use, and merchantability. Reliance on the Website for medical guidance or use of the Website in commerce is strictly prohibited',
         link: 'https://github.com/CSSEGISandData/COVID-19',
         info: 'Data format: [ {country: string, population:number, data:[{t:time, y:cumulative-data, d:daily-data, c:daily-change,ypm:y-per-million},...,{}]}]. Note that daily-change is based on 3-day averaged daily-data',
-        updated: moment().format(momFmt),
+        accessed: moment().format(momFmt),
         data: allCountries
       };
 
@@ -106,7 +108,9 @@ function processFile(fn, redisKey, redClient) {
         }
 
         // Create list of select countries we want to chart
-        val.data = allCountries.filter(x => ['USA', 'UK', 'France', 'Italy', 'Spain', 'World', 'Norway', 'Sweden', 'Denmark'].includes(x.country));
+        let selectCountries = allCountries.filter(x => ['USA', 'UK', 'France', 'Italy', 'Spain', 'World', 'Norway', 'Sweden', 'Denmark'].includes(x.country));
+        val.data = selectCountries;
+        // to-do: remove unneccessary variables in each object
         rKey = redisKey + '-select';
         rVal = JSON.stringify(val);
         console.log(moment().format(momFmt) + ' Store:' + rVal.length + ' Key=' + rKey + ' Val=' + rVal.substring(0, 60));
