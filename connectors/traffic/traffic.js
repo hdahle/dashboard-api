@@ -98,7 +98,7 @@ function processFile(year, stationID, redisKey, redClient) {
         source: 'Statens Vegvesen / Norwegian Public Roads Administration',
         license: 'Norwegian Licence for Open Government Data (NLOD). You are allowed to: copy and distribute data, modify data and/ or combine data with other data sets, copy and distribute such changed or combined data, use the data commercially.',
         link: 'https://www.vegvesen.no/trafikkdata/api',
-        updated: moment().format(momFmt),
+        accessed: moment().format(momFmt),
         year: year,
         station: stationID,
         data: d
