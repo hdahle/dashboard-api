@@ -24,10 +24,13 @@ redClient.on('error', function (err) {
   console.log(moment().format(momFmt) + ' Redis error:' + err);
 });
 
+
+main();
+
 //
 // Fetch GHG Emissions Norway
 //
-function goFetch() {
+function main() {
   function status(response) {
     if (response.status >= 200 && response.status < 300) {
       return Promise.resolve(response)
@@ -50,7 +53,7 @@ function goFetch() {
         updated: results.updated,
         license: 'Norwegian License for Open Government Data (NLOD) 2.0, http://data.norge.no/nlod/en/2.0',
         link: 'https://data.ssb.no/api/v0/',
-        info: 'Data is in 1000 tons CO2 Equivalents per year',
+        info: 'Units: 1000 tons CO2 Equivalents per year',
         data: []
       };
       // Number of values per component (one value for each year)
@@ -79,7 +82,7 @@ function goFetch() {
         let annualValues = [];
         for (let j = 0; j < numValues; j++) {
           annualValues.push({
-            t: years[j],
+            x: parseInt(years[j], 10),//t: years[j],
             y: results.value[i + j]
           })
         }
@@ -90,28 +93,22 @@ function goFetch() {
       }
       // Store key/value pair to Redis
       let redisKey = 'emissions-norway';
-      let redisValue = JSON.stringify(res);
-      console.log(moment().format(momFmt) +
-        ' Storing ' + redisValue.length +
-        ' bytes, key=' + redisKey +
-        ' value=' + redisValue.substring(0, 60));
+      let redisVal = JSON.stringify(res);
+      console.log(moment().format(momFmt) + ' Bytes: ' + redisVal.length + ' Key=' + redisKey + ' Value=' + redisVal.substring(0, 60));
 
-      redClient.set(redisKey, redisValue, function (error, result) {
+      redClient.set(redisKey, redisVal, function (error, result) {
         if (result) {
           console.log(moment().format(momFmt) + ' Result:' + result);
         }
         else {
           console.log(moment().format(momFmt) + ' Error: ' + error);
         }
+        // The Node event loop should be empty, so Node should exit automatically, 
+        // but there is something about this fetch() not quite being done:
+        setInterval((() => {
+          process.exit();
+        }), 1000);
       });
-      // This next one is terrible. I am ashamed, but I need a way to terminate this program
-      // The Node event loop should be empty, so Node should exit automatically, 
-      // but there is something about this fetch() not quite being done:
-      setInterval((() => {
-        process.exit();
-      }), 2000);
     })
     .catch(err => console.log(err));
 }
-
-goFetch();
