@@ -109,8 +109,15 @@ function processFile(fn, redisKey, redClient) {
 
         // Create list of select countries we want to chart
         let selectCountries = allCountries.filter(x => ['US', 'UK', 'France', 'Italy', 'Spain', 'World', 'Norway', 'Sweden', 'Denmark'].includes(x.country));
+        // Set c (change) to 'null' if number of cases (y) is less than 100
+        selectCountries.forEach(c => {
+          c.data = c.data.map(x => ({
+            t: x.t,
+            d: x.d,
+            c: x.y > 100 ? x.c : null
+          }))
+        });
         val.data = selectCountries;
-        // to-do: remove unneccessary variables in each object
         rKey = redisKey + '-select';
         rVal = JSON.stringify(val);
         console.log(moment().format(momFmt) + ' Store:' + rVal.length + ' Key=' + rKey + ' Val=' + rVal.substring(0, 60));
