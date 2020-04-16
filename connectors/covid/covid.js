@@ -79,10 +79,10 @@ function processFile(fn, redisKey, redClient) {
       }
     })
     .on('end', () => {
-      // for eases of use in charting, add a field for total deaths/cases
-      allCountries.forEach(c => c.total = c.data[c.data.length - 1].y);
       // calculate smoothed increase in percent
       allCountries.push(calculateWorld(allCountries));
+      // for eases of use in charting, add a field for total deaths/cases
+      allCountries.forEach(c => c.total = c.data[c.data.length - 1].y);
       // calculate smoothed rate of increase
       allCountries.forEach(c => c.data = smoothData(c.data));
       // calculate YPM
