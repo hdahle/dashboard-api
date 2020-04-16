@@ -47,10 +47,10 @@ YEAR=2020
 BANEHEIA=57166V121303
 SMESTAD=24764V625406
 
-# make new crontab entry: once daily
-NEWENTRY1="16 7 * * * cd ${PWD} && ${NODE} ${SCRIPT} --station ${SMESTAD} --key ${REDISKEY}-smestad-${YEAR} --year ${YEAR} >> ${LOGFILE} 2>&1"
+# make new crontab entry: once daily at 3am UTC which is 1am norway DST
+NEWENTRY1="16 3 * * * cd ${PWD} && ${NODE} ${SCRIPT} --station ${SMESTAD} --key ${REDISKEY}-smestad-${YEAR} --year ${YEAR} >> ${LOGFILE} 2>&1"
 echo "Crontab entry will be: ${NEWENTRY1}"
-NEWENTRY2="17 7 * * * cd ${PWD} && ${NODE} ${SCRIPT} --station ${BANEHEIA} --key ${REDISKEY}-baneheia-${YEAR} --year ${YEAR} >> ${LOGFILE} 2>&1"
+NEWENTRY2="17 3 * * * cd ${PWD} && ${NODE} ${SCRIPT} --station ${BANEHEIA} --key ${REDISKEY}-baneheia-${YEAR} --year ${YEAR} >> ${LOGFILE} 2>&1"
 echo "Crontab entry will be: ${NEWENTRY2}"
 
 # test if new entry already exists
