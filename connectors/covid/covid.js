@@ -114,7 +114,7 @@ function processFile(fn, redisKey, redClient) {
           c.data = c.data.map(x => ({
             t: x.t,
             d: x.d,
-            c: x.y > 100 ? x.c : null
+            y: x.y > 100 ? x.c : null
           }))
         });
         val.data = selectCountries;
