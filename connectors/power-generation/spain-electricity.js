@@ -65,7 +65,7 @@ function processFile(url, key) {
       }
       console.log(moment().format(momFmt) + ' Records:' + d.length);
       d = d.map(x => ({
-        t: moment(x.datetime).format('MM-DD'),
+        t: moment.parseZone(x.datetime).format('MM-DD'),
         y: Math.floor(x.value / 100) / 10
       }))
       d.pop(); // remove 1. jan of following year
