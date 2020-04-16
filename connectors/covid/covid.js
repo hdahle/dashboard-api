@@ -108,7 +108,7 @@ function processFile(fn, redisKey, redClient) {
         }
 
         // Create list of select countries we want to chart
-        let selectCountries = allCountries.filter(x => ['USA', 'UK', 'France', 'Italy', 'Spain', 'World', 'Norway', 'Sweden', 'Denmark'].includes(x.country));
+        let selectCountries = allCountries.filter(x => ['US', 'UK', 'France', 'Italy', 'Spain', 'World', 'Norway', 'Sweden', 'Denmark'].includes(x.country));
         val.data = selectCountries;
         // to-do: remove unneccessary variables in each object
         rKey = redisKey + '-select';
