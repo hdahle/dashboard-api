@@ -135,6 +135,13 @@ function processCSV() {
         d.data = d.data.filter(x => cList.includes(x.country));
       }
 
+      d.data.forEach(x => {
+        x.country = x.country.replace('Central', 'C');
+        x.country = x.country.replace('North', 'N');
+        x.country = x.country.replace('South', 'S');
+        x.country = x.country.replace('Bunkers', 'Transport');
+      });
+
       let s = JSON.stringify(d);
       // Store to Redis is key is specified
       if (key !== undefined && key !== true && key !== '') {
