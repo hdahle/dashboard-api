@@ -58,6 +58,10 @@ function processCSV() {
   // see if input-file exists
   if (fn === undefined || fn === true || fn === '' || !fs.existsSync(fn)) {
     console.log('File not found:', fn);
+    console.log('Usage: node script --file <filename> [--key <rediskey>]');
+    console.log('Writes JSON to stdout if no --key is specified');
+    console.log('Stores JSON to Redis if --key is specified');
+    console.log('Also have a look in npm scripts for usage')
     process.exit();
   }
 
@@ -86,7 +90,7 @@ function processCSV() {
         // convert from C to CO2 by multiplying by 3.664
         for (let i = 0; i < nCols - 1; i++) {
           d.data[i].data.push({
-            x: csvRow[0],
+            x: parseInt(csvRow[0], 10),
             y: Math.floor(csvRow[i + 1] * 366.4) / 100
           });
         }

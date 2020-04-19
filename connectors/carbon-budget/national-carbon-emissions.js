@@ -65,6 +65,14 @@ function processCSV() {
   // see if input-file exists
   if (fn === undefined || fn === true || fn === '' || !fs.existsSync(fn)) {
     console.log('File not found:', fn);
+    console.log('Usage: node script --file <filename> [--countries <countries>] [--key <rediskey>]');
+    console.log('Writes JSON to stdout if no --key is specified');
+    console.log('Stores JSON to Redis if --key is specified');
+    console.log('If --countries is not used, will generate a full list of countries');
+    console.log('Using --countries: --countries "Norway,Sweden,USA,Canada,Saudi Arabia"');
+    console.log('Using --countries: --countries Regions');
+    console.log('Using --countries: --countries G20');
+    console.log('Also have a look in npm scripts for usage')
     process.exit();
   }
 
@@ -84,7 +92,7 @@ function processCSV() {
     if (cList[0] === 'Regions') {
       cList = [
         'Africa', 'Asia', 'Bunkers', 'Central America', 'North America',
-        'South America', 'Europe', 'EU28', 'Middle East', 'Oceania', 'World'
+        'South America', 'Europe', 'Middle East', 'Oceania'
       ];
     }
   }
@@ -115,7 +123,7 @@ function processCSV() {
         let year = csvRow.shift();
         for (let i = 0; i < nCols; i++) {
           d.data[i].data.push({
-            x: year,
+            x: parseInt(year, 10), // avoid quotemarks around year
             y: Math.floor(csvRow[i] * 366.4) / 100
           });
         }
