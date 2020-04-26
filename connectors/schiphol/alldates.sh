@@ -2,7 +2,7 @@
 
 # slightly malformed input data
 input_start=2020-1-1
-input_end=2020-3-1
+input_end=2020-4-27
 
 # After this, startdate and enddate will be valid ISO 8601 dates,
 # or the script will have aborted when it encountered unparseable data
