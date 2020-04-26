@@ -4,7 +4,7 @@
   "description": "",
   "main": "schiphol.js",
   "scripts": {
-    "flights": "node schiphol.js --date '2020-02-19' --appID `cat app.id` --appKey `cat app.key`",
+    "flights": "node schiphol.js --date '2020-02-19' --appID `cat app.id` --appKey `cat app.key` --key tmp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "HD",

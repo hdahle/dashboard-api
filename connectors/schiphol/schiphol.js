@@ -33,16 +33,17 @@ let appKey = argv.appKey;
 let date = argv.date;
 let redisKey = argv.key;
 
-if (appKey === undefined || appID === undefined || date === undefined || redisKey === undefined) {
-  console.log('Usage: node script --date <schedule date> --appID <applicationID> --appKey <applicationKey> --key <redisKey>');
+if (appKey === undefined || appID === undefined || redisKey === undefined) {
+  console.log('Usage: node script [--date <schedule date>] --appID <applicationID> --appKey <applicationKey> --key <redisKey>');
+  console.log('If no --date is specified, date will default to yesterday');
   console.log('If "--key REDISKEY" is specified:');
   console.log('  REDISKEY-Z : will be used for the sorted set');
   console.log('  REDISKEY : will be used for the entire time-series in JSON format');
   process.exit();
 }
-// If no date given, use today's date
-if (date === null) {
-  date = moment().format('YYYY-MM-DD');
+// If no date given, use yesterday's date
+if (date === undefined) {
+  date = moment().add(-1, 'day').format('YYYY-MM-DD');
 }
 // Make sure it's a valid date otherwise Schiphol returns an error
 if (!moment(date, 'YYYY-MM-DD', true).isValid()) {
@@ -107,7 +108,7 @@ async function getFlightDataSingleDay(url) {
     } else {
       // No more pages, complete data received
       let s = {
-        t: date,
+        t: moment(date).format('MM-DD'),
         y: uniqueFlights.length
       }
 
@@ -129,6 +130,7 @@ async function getFlightDataSingleDay(url) {
               source: 'Schiphol Airport Developer Center, https://www.schiphol.nl/en/developer-center/',
               accessed: moment().format(momFmt),
               units: 'Flight arrivals per day',
+              year: moment(date).format('YYYY'),
               data: []
             };
             for (let i = 0; i < result.length; i++) {
