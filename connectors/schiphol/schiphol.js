@@ -128,7 +128,7 @@ async function getFlightDataSingleDay(url) {
           if (result) {
             let val = {
               source: 'Schiphol Airport Developer Center, https://www.schiphol.nl/en/developer-center/',
-              accessed: moment().format(momFmt),
+              accessed: moment().format('YYYY-MM-DD hh:mm:ss'),
               units: 'Flight arrivals per day',
               year: moment(date).format('YYYY'),
               data: []
