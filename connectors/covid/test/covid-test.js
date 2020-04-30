@@ -37,6 +37,38 @@ describe('Country Name Lookup Table', function () {
   });
 });
 
+// --- RegionList ---
+describe('RegionList', function () {
+  it('no arguments should return empty list', function () {
+    assert.deepEqual([], covid.regionList());
+  });
+  it('null should return empty list', function () {
+    assert.deepEqual([], covid.regionList(null));
+  });
+  it('Invalid region name should return empty list', function () {
+    assert.deepEqual([], covid.regionList("Jalla Jalla"));
+    assert.deepEqual([], covid.regionList(""));
+    assert.deepEqual([], covid.regionList({ x: 1 }));
+    assert.deepEqual([], covid.regionList(10));
+  });
+  it('Asia and Europe should return lists of reasonable lengths', function () {
+    let list = covid.regionList("Asia");
+    console.log(list.length);
+    assert.ok(list.length > 50 && list.length < 60);
+    assert.ok(['Japan', 'Thailand', 'Brunei', 'Nepal'].every(x => list.includes(x)));
+
+    list = covid.regionList("Europe");
+    console.log(list.length);
+    assert.ok(list.length > 50 && list.length < 60);
+    assert.ok(['Norway', 'UK', 'France', 'Estonia'].every(x => list.includes(x)));
+
+    list = covid.regionList("South America");
+    console.log(list.length);
+    assert.ok(list.length > 10 && list.length < 20);
+    assert.ok(['Colombia', 'Brazil', 'Chile', 'Paraguay'].every(x => list.includes(x)));
+  });
+});
+
 // --- smoothData ---
 describe('smoothData', function () {
   it('no arguments should return null', function () {
@@ -86,32 +118,32 @@ describe('calculateworld', function () {
     data: [{ t: "2020-01-30", y: 10, d: 9 }]
   };
   it('1 return null on empty input list', function () {
-    assert.equal(null, covid.calculateWorld([]));
+    assert.equal(null, covid.calculateWorld('World', []));
   });
   it('2 return null if null data array', function () {
     let n = {
       data: null
     };
-    assert.equal(null, covid.calculateWorld(n));
+    assert.equal(null, covid.calculateWorld('', n));
   });
   it('3 return null if empty data array', function () {
     let n = {
       data: []
     };
-    assert.equal(null, covid.calculateWorld(n));
+    assert.equal(null, covid.calculateWorld('', n));
   });
   it('4 input length = 1, make sure population is equal', function () {
-    assert.equal(norway.population, covid.calculateWorld([norway]).population);
+    assert.equal(norway.population, covid.calculateWorld('', [norway]).population);
   });
   it('5 input length = 2, make sure population adds', function () {
-    assert.equal(norway.population + norway.population, covid.calculateWorld([norway, norway]).population);
+    assert.equal(norway.population + norway.population, covid.calculateWorld('', [norway, norway]).population);
   });
   it('6 input length = 2, make sure population adds', function () {
-    let result = covid.calculateWorld([norway, sweden]);
+    let result = covid.calculateWorld('', [norway, sweden]);
     assert.equal(norway.population + sweden.population, result.population);
   });
   it('7 input length = 1, make sure d and y are the same', function () {
-    let result = covid.calculateWorld([norway]);
+    let result = covid.calculateWorld('', [norway]);
     assert.equal(norway.data[0].y, result.data[0].y);
     assert.equal(norway.data[0].d, result.data[0].d);
   });
@@ -121,14 +153,14 @@ describe('calculateworld', function () {
       population: 4.5,
       data: [{ t: "2020-01-30", y: 10, d: 9 }]
     };
-    assert.deepEqual(result, covid.calculateWorld([norway]));
+    assert.deepEqual(result, covid.calculateWorld('World', [norway]));
   });
   it('9 input length = 2, make sure everything adds', function () {
     norway.data = [{ t: "2020-01-30", y: 10, d: 9 }, { t: "2020-01-31", y: 1, d: 1 }, { t: "2020-02-01", y: 1, d: 1 }];
     sweden.data = [{ t: "2020-01-30", y: 11, d: 3 }, { t: "2020-01-31", y: 1, d: 1 }, { t: "2020-02-01", y: 1, d: 1 }];
     world.data = [{ t: "2020-01-30", y: 21, d: 12 }, { t: "2020-01-31", y: 2, d: 2 }, { t: "2020-02-01", y: 2, d: 2 }];
     world.population = norway.population + sweden.population;
-    assert.deepEqual(world, covid.calculateWorld([norway, sweden]));
+    assert.deepEqual(world, covid.calculateWorld('World', [norway, sweden]));
   });
   it('10 input length = 10000, verify pop/d/y add up', function () {
     let a = [];
@@ -139,6 +171,6 @@ describe('calculateworld', function () {
     }
     world.population = len * norway.population;
     world.data = [{ t: norway.data[0].t, y: len * norway.data[0].y, d: len * norway.data[0].d }];
-    assert.deepEqual(world, covid.calculateWorld(a));
+    assert.deepEqual(world, covid.calculateWorld('World', a));
   });
 });

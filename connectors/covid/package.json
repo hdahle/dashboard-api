@@ -2,12 +2,15 @@
   "name": "covid",
   "version": "1.0.0",
   "description": "",
-  "main": "covid.js",
+  "main": "covid2.js",
   "private": true,
   "scripts": {
     "test": "mocha",
     "deaths": "node covid.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths",
-    "confirmed": "node covid.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-confirmed"
+    "confirmed": "node covid.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-confirmed",
+    "regions": "node covid2.js --countries 'Asia,Europe,Africa,Oceania,North America,Central America,South America' --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-deaths-regions",
+    "top20": "node covid2.js --countries top20 --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-deaths-top20",
+    "select": "node covid2.js --countries US,UK,Spain,Italy,France,World,Norway,Denmark,Sweden --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-deaths-select"
   },
   "keywords": [],
   "author": "Håkon Dahle",
