@@ -40,12 +40,12 @@ awk -v d="${DATE}" 'BEGIN {ORS="";
      /^#/  {next}
 
      # find the CO2 value 1 year ago
-     NF==5 && $1==(ymd[1]-1) && $2==(0+ymd[2]) && $3==(ymd[3]-2) {
+     NF==5 && $1==(ymd[1]-1) && $2==(ymd[2]+0) && $3==(ymd[3]+0) {
             lastYr = $4
      } 
 
      # find the CO2 value 10 years ago
-     NF==5 && $1==(ymd[1]-10) && $2==(0+ymd[2]) && $3==(ymd[3]-2) {
+     NF==5 && $1==(ymd[1]-10) && $2==(ymd[2]+0) && $3==(ymd[3]+0) {
             tenYrs = $4
      } 
 
