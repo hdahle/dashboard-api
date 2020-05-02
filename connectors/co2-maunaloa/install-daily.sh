@@ -41,7 +41,7 @@ do
   fi
 
   # make new crontab daily entry
-  NEWENTRY="2 2 * * * ${PWD}/${SCRIPT} ${REDIS} >> ${LOGFILE} 2>&1"
+  NEWENTRY="2 11,12,13 * * * ${PWD}/${SCRIPT} ${REDIS} >> ${LOGFILE} 2>&1"
   echo "Creating crontab entry: ${NEWENTRY}"
 
   # test if new entry already exists
