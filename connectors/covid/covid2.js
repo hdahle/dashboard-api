@@ -10,7 +10,7 @@ var redis = require('redis');
 var moment = require('moment');
 var argv = require('minimist')(process.argv.slice(2));
 const momFmt = 'YY-MM-DD hh:mm:ss';
-const regionNames = ['Latin America', 'Northern America', 'Africa', 'Europe', 'Asia', 'Oceania'];
+const regionNames = ['Oceania', 'Asia', 'Europe', 'Northern America', 'Latin America', 'Africa'];
 
 main();
 
@@ -28,7 +28,7 @@ function parseArgv(argv) {
     console.log('\n')
     console.log('\t--countries=top20\n\t\tgenerate list of top 20 countries w.r.t. deaths per million')
     console.log('\t--countries=regions\n\t\tgenerate time-series data for Europe, Asia, Northern America, Latin America, Africa, Oceania')
-    console.log('\t--countries="Norway,France,Japan,UK"\n\t\tgenerate time-series data for the specified countries only')
+    console.log('\t--countries="Norway,France,Japan,South Korea"\n\t\tgenerate time-series data for the specified countries only')
     process.exit();
   }
   if (1) {
