@@ -36,6 +36,14 @@ function main() {
   });
 }
 
+function redisResultError(result, error) {
+  if (result) {
+    console.log(moment().format(momFmt) + ' Result:' + result);
+  } else {
+    console.log(moment().format(momFmt) + ' Error: ' + error);
+  }
+}
+
 function processFile(fn, redisKey, redClient) {
   // cmdline OK, now read file - one or more lines per country
   let allCountries = [];
@@ -79,8 +87,14 @@ function processFile(fn, redisKey, redClient) {
       }
     })
     .on('end', () => {
-      // calculate smoothed increase in percent
-      allCountries.push(calculateWorld(allCountries));
+      // calculate for World
+      allCountries.push(calculateRegion('World', allCountries));
+
+      // calculate each world region
+      ['Europe', 'Asia', 'Africa', 'Oceania', 'North America', 'Central America', 'South America'].forEach(reg => {
+        allCountries.push(calculateRegion(reg, allCountries.filter(x => regionList(reg).includes(x.country))));
+      });
+
       // for eases of use in charting, add a field for total deaths/cases
       allCountries.forEach(c => c.total = c.data[c.data.length - 1].y);
       // calculate smoothed rate of increase
@@ -101,16 +115,13 @@ function processFile(fn, redisKey, redClient) {
       let rKey = redisKey;
       console.log(moment().format(momFmt) + ' Store:' + rVal.length + ' Key=' + rKey + ' Val=' + rVal.substring(0, 60));
       redClient.set(rKey, rVal, function (error, result) {
-        if (result) {
-          console.log(moment().format(momFmt) + ' Result:' + result);
-        } else {
-          console.log(moment().format(momFmt) + ' Error: ' + error);
-        }
+        redisResultError(result, error);
 
         // Create list of select countries we want to chart
         let selectCountries = [];
+        let sCountries = ['US', 'UK', 'France', 'Italy', 'Spain', 'World', 'Norway', 'Sweden', 'Denmark'];
         allCountries.forEach(c => {
-          if (['US', 'UK', 'France', 'Italy', 'Spain', 'World', 'Norway', 'Sweden', 'Denmark'].includes(c.country)) {
+          if (sCountries.includes(c.country)) {
             let tmp = c.data.map(x => ({
               t: x.t,
               d: x.d,
@@ -130,11 +141,7 @@ function processFile(fn, redisKey, redClient) {
         rVal = JSON.stringify(val);
         console.log(moment().format(momFmt) + ' Store:' + rVal.length + ' Key=' + rKey + ' Val=' + rVal.substring(0, 60));
         redClient.set(rKey, rVal, function (error, result) {
-          if (result) {
-            console.log(moment().format(momFmt) + ' Result:' + result);
-          } else {
-            console.log(moment().format(momFmt) + ' Error: ' + error);
-          }
+          redisResultError(result, error);
 
           // Create list of top 20 countries wrt deaths per capita
           let topCountries = allCountries.filter(x => x.population > 0.05).map(d => ({
@@ -146,7 +153,6 @@ function processFile(fn, redisKey, redClient) {
           topCountries = topCountries.sort((a, b) => b.ypm - a.ypm);
           // Extract top 20 deaths per capita
           topCountries = topCountries.slice(0, 20);
-
           // reformat data to better fit bar chart needs
           val.data = {
             countries: topCountries.map(x => x.country),
@@ -158,11 +164,7 @@ function processFile(fn, redisKey, redClient) {
           rVal = JSON.stringify(val);
           console.log(moment().format(momFmt) + ' Store:' + rVal.length + ' Key=' + rKey + ' Val=' + rVal.substring(0, 60));
           redClient.set(rKey, rVal, function (error, result) {
-            if (result) {
-              console.log(moment().format(momFmt) + ' Result:' + result);
-            } else {
-              console.log(moment().format(momFmt) + ' Error: ' + error);
-            }
+            redisResultError(result, error);
             setTimeout(() => { process.exit(); }, 1000); // We are done
           });
         });
@@ -179,7 +181,7 @@ function processFile(fn, redisKey, redClient) {
 //
 // Calculate the values for World where .y and .d are sum of all countries
 //
-function calculateWorld(countries) {
+function calculateWorld(region, countries) {
   if (countries === undefined || countries === null || !Array.isArray(countries) || countries.length === 0) {
     return null;
   }
@@ -200,7 +202,34 @@ function calculateWorld(countries) {
       d[i].d += c.data[i].d;
     }
   });
-  return { country: 'World', population: population, data: d };
+  return { country: region, population: Math.trunc(10 * population) / 10, data: d };
+}
+
+//
+// Calculate the values for a region where .y and .d are sum of all countries
+//
+function calculateRegion(region, countries) {
+  if (countries === undefined || countries === null || !Array.isArray(countries) || countries.length === 0) {
+    return null;
+  }
+  if (countries[0].data === undefined || !Array.isArray(countries[0].data)) {
+    return null;
+  }
+  // initialize d array with empties
+  let d = [];
+  for (let i = 0; i < countries[0].data.length; i++) {
+    d.push({ t: countries[0].data[i].t, y: 0, d: 0 })
+  }
+  // now add up all the data arrays
+  let population = 0;
+  countries.forEach(c => {
+    population += c.population;
+    for (let i = 0; i < c.data.length; i++) {
+      d[i].y += c.data[i].y;
+      d[i].d += c.data[i].d;
+    }
+  });
+  return { country: region, population: Math.trunc(10 * population) / 10, data: d };
 }
 
 // smoothData
@@ -272,8 +301,15 @@ function countryName(country) {
   return (x === undefined) ? country : x.standard;
 }
 
+function regionList(region = null) {
+  if (region === null) {
+    return [];
+  }
+  return p(null, region);
+}
+
 // Population data from Wikipedia/UN
-function p(country) {
+function p(country, region = null) {
   let population = [
     { c: "China", p: 1433783686, r: "Asia" },
     { c: "India", p: 1366417754, r: "Asia" },
@@ -529,9 +565,17 @@ function p(country) {
     { c: "Vatican City", p: 799, r: "Europe" },
     { c: "Holy See", p: 799, r: "Europe" }
   ];
-  let idx = population.findIndex(x => x.c === country);
-  if (idx === -1) return 1;
-  return population[idx].p;
+  if (country === null && region === null) {
+    return 1;
+  }
+  if (country !== null && region === null) {
+    let idx = population.findIndex(x => x.c === country);
+    if (idx === -1) return 1;
+    return population[idx].p;
+  }
+  if (country === null && region !== null) {
+    return population.filter(x => x.r === region).map(x => x.c)
+  }
 }
 
 // Exports for Mocha/Chai Testing
@@ -539,4 +583,6 @@ function p(country) {
 module.exports.p = p;
 module.exports.countryName = countryName;
 module.exports.smoothData = smoothData;
-module.exports.calculateWorld = calculateWorld;
+module.exports.calculateWorld = calculateRegion;
+module.exports.calculateRegion = calculateRegion;
+module.exports.regionList = regionList;
