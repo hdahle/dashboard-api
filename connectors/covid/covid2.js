@@ -10,7 +10,7 @@ var redis = require('redis');
 var moment = require('moment');
 var argv = require('minimist')(process.argv.slice(2));
 const momFmt = 'YY-MM-DD hh:mm:ss';
-const regionNames = ['World', 'Europe', 'Asia', 'Africa', 'Oceania', 'Northern America', 'Latin America'];
+const regionNames = ['Latin America', 'Northern America', 'Africa', 'Europe', 'Asia', 'Oceania'];
 
 main();
 
