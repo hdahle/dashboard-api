@@ -506,7 +506,7 @@ function avgData(d) {
     if (i === 0) d[i].c = 0;
 
     d[i].c += d[i].y;
-    if (i >= 7) d[i].c -= d[i - 7].y;
+    if (i >= 6) d[i].c -= d[i - 7].y;
   }
 
   for (let i = 0; i < d.length; i++) {
