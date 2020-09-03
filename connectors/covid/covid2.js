@@ -395,6 +395,8 @@ function processFile(fn, redisKey, redClient, cList) {
     })
     .on('end', () => {
       // all input data now consumed, allCountries contains all country data
+      allCountries.push(calculateRegion('World', allCountries));
+
       // calculate each world region, push result into allCountries      
       regionNames.forEach(reg => {
         let countries = allCountries.filter(x => x.region === reg);
