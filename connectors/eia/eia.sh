@@ -46,6 +46,5 @@ done
 # merge gdp/co2/pop on a country level
 # stores to eia-global-gdp-pop-co2-REGION
 for i in "WORL" "AFRC" "EURO" "EURA" "MIDE" "NOAM" "CSAM" "ASIA" "ASOC" "OCEA"; do
-  #rediskey="eia-global-${i}"
   node ${jsfile2} --scope country --region ${i}    
 done
