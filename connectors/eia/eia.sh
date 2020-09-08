@@ -28,9 +28,14 @@ if [ ! -f "${jsfile}" ]; then
 fi
 
 # Request Coal, Oil and Gas data
-for i in "electricity" "coal" "oil" "gas" "emissions" "population" "gdp" "nuclear"; do
+for i in "electricity" "coal" "oil" "emissions" "population" "gdp" "nuclear"; do
   rediskey="eia-global-${i}"
   node ${jsfile} --series ${i} --apikey ${eiakey} --key ${rediskey} 
+done
+
+for i in "gas"; do
+  rediskey="eia-global-${i}"
+  node ${jsfile} --series ${i} --apikey ${eiakey} --key ${rediskey} --end 2018
 done
 
 # now run the second file which uses the output of the above

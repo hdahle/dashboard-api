@@ -41,8 +41,9 @@ function goFetch() {
 
   // process commandline
   let apiKey = argv.apikey; // filename from cmd line
-  let redisKey = argv.key; // redis-key from cmd line
+  let redisKey = argv.key;  // redis-key from cmd line
   let series = argv.series; // coal, oil or gas
+  let endDate = argv.end;   // end date
 
   // These are the regions we always query for
   const eiaRegions = [
@@ -74,10 +75,10 @@ function goFetch() {
   };
 
   if (apiKey === undefined || redisKey === undefined || series === undefined || eiaSeries[series] === undefined) {
-    console.log('Usage: node eia.js --series <seriesname> --apikey <apikey> --key <rediskey>');
+    console.log('Usage: node eia.js --series <seriesname> --apikey <apikey> --key <rediskey> [--end <endYear>]');
     let s = '';
     Object.keys(eiaSeries).forEach(x => s += x + ' ');
-    console.log('  <seriesname> is one of: ', s)
+    console.log('  <seriesname> is one of: ', s);
     process.exit();
   }
 
@@ -88,6 +89,15 @@ function goFetch() {
   eiaRegions.forEach(element => {
     url += eiaSeriesName + element.code + '-' + eiaUnit + ';';
   });
+  // If ending date was specified, use it. With no end date, EIA will return all data up to today
+  if (endDate !== undefined) {
+    let n = parseInt(endDate, 10);
+    if (isNaN(n) || n < 2000 || n > parseInt(moment().format("YYYY"), 10)) {
+      console.log('  <end> should be a valid year between 2000 and today');
+      process.exit();
+    }
+    url += '&end=' + endDate;
+  }
 
   fetch(url)
     .then(status)
