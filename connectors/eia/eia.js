@@ -69,7 +69,8 @@ function goFetch() {
     'population': { eiaSeriesName: 'INTL.4702-33-', eiaUnit: 'THP.A' },
     'emissions': { eiaSeriesName: 'INTL.4008-8-', eiaUnit: 'MMTCD.A' },
     'nuclear': { eiaSeriesName: 'INTL.27-12-', eiaUnit: 'BKWH.A' },
-    'gdp': { eiaSeriesName: 'INTL.4701-34-', eiaUnit: 'BDOLPPP.A' }
+    'gdp': { eiaSeriesName: 'INTL.4701-34-', eiaUnit: 'BDOLPPP.A' },
+    'electricity': { eiaSeriesName: 'INTL.2-12-', eiaUnit: 'BKWH.A' }
   };
 
   if (apiKey === undefined || redisKey === undefined || series === undefined || eiaSeries[series] === undefined) {

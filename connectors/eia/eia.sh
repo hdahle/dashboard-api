@@ -28,12 +28,13 @@ if [ ! -f "${jsfile}" ]; then
 fi
 
 # Request Coal, Oil and Gas data
-for i in "coal" "oil" "gas" "emissions" "population" "gdp" "nuclear"; do
+for i in "electricity" "coal" "oil" "gas" "emissions" "population" "gdp" "nuclear"; do
   rediskey="eia-global-${i}"
   node ${jsfile} --series ${i} --apikey ${eiakey} --key ${rediskey} 
 done
 
 # now run the second file which uses the output of the above
+# stores to eia-global-gdp-pop-co2
 node ${jsfile2} --scope world
 
 # merge gdp/co2/pop on a region level
@@ -43,7 +44,8 @@ for i in "gdp" "emissions" "population"; do
 done
 
 # merge gdp/co2/pop on a country level
+# stores to eia-global-gdp-pop-co2-REGION
 for i in "WORL" "AFRC" "EURO" "EURA" "MIDE" "NOAM" "CSAM" "ASIA" "ASOC" "OCEA"; do
-  rediskey="eia-global-${i}"
+  #rediskey="eia-global-${i}"
   node ${jsfile2} --scope country --region ${i}    
 done
