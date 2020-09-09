@@ -1,0 +1,38 @@
+{
+  "source": "US Energy Information Administration: Levelized Cost and Levelized Avoided Cost of New Generation Resources AEO2020",
+  "link": "https://www.eia.gov/outlooks/aeo/pdf/electricity_generation.pdf",
+  "copyright": "EIA",
+  "license": "Public information",
+  "data": {
+    "fuels": [
+      "Coal",
+      "Gas CC",
+      "Gas turbine",
+      "Nuclear",
+      "Biomass",
+      "Geothermal",
+      "Hydro",
+      "Solar PV",
+      "Wind offshore",
+      "Wind onshore"
+    ],
+    "datasets": [
+      {
+        "label": 2025,
+        "info": "Table shows LCOE in dollars/MWh, without tax-incentives, for new plants coming online in 2025",
+        "data": [
+          76.44,
+          38.07,
+          66.62,
+          81.65,
+          94.83,
+          37.47,
+          52.79,
+          35.74,
+          122.25,
+          39.95
+        ]
+      }
+    ]
+  }
+}
