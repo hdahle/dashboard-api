@@ -1,4 +1,4 @@
-# CCS Circularity
+# IRENA Report on Cost of Renewable Power Generation
 
 The data is from the IRENA 2020 report, there is no data online AFAIK.
 
