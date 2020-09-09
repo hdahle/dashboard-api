@@ -5,7 +5,7 @@ The data is from the Circularity report, there is no data online AFAIK.
 So I just typed up the JSON.
 
 ### To-do: Script to add JSON to Redis
-There should be a shell script that updates Redis with the JSON data. THere is no need for adding anything to cron since this is static data.
+There should be a shell script that updates Redis with the JSON data. There is no need for adding anything to cron since this is static data.
 
 ````
 # redis key is circularity-2020
