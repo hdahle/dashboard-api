@@ -15,10 +15,10 @@ echo ${DATE}
 echo "Global Sea Level. Converting from CSV to JSON"
 echo "Using temporary directory ${TMPDIR}"
 
-if [ ! -f "${CSVFILE}" ]; then
-  echo -n "File not found: ${CSVFILE}, downloading: "
+#if [ ! -f "${CSVFILE}" ]; then
+#  echo -n "File not found: ${CSVFILE}, downloading: "
   curl -s -S "ftp://ftp.csiro.au/legresy/gmsl_files/CSIRO_Alt_yearly.csv" > ${CSVFILE}
-fi
+#fi
 
 if [ -f "${CSVFILE}" ]; then
     echo -n "Number of lines in CSV:"
