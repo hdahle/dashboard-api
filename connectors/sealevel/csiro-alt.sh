@@ -1,5 +1,5 @@
 
-!/bin/sh
+#!/bin/sh
 
 # Convert CSIRO CSV file to JSON and store into Redis
 # CSIRO files: ftp://ftp.csiro.au/legresy/gmsl_files
