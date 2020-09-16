@@ -1,0 +1,35 @@
+{
+  "source": "World Resources Institute: World Greenhouse Gas Emissions 2016",
+  "link": "https://www.wri.org/resources/data-visualizations/world-greenhouse-gas-emissions-2016",
+  "license": "Creative Commons Attribution-ShareAlike 4.0 International License",
+  "data": [
+    {
+      "year": 2017,
+      "region": "Global",
+      "title": "GHG Emissions by Sector 2016",
+      "legend": [
+        "Energy: Transportation",
+        "Energy: Electricity and Heat",
+        "Energy: Other",
+        "Energy: Buildings",
+        "Energy: Manufacturing and Construction",
+        "Energy: Loss",
+        "Insustrial Processes",
+        "Agriculture",
+        "Land Use Change and Forestry"
+      ],
+      "values": [
+        15.9,
+        30.4,
+        2.9,
+        5.5,
+        12.4,
+        5.8,
+        5.6,
+        11.8,
+        6.5
+      ],
+      "total": 100
+    }
+  ]
+}
