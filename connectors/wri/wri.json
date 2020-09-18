@@ -9,7 +9,7 @@
       "title": "GHG Emissions by Sector 2016",
       "legend": [
         "Energy: Transport",
-        "Energy: Electr/Heat",
+        "Energy: Electricity, Heat",
         "Energy: Other",
         "Energy: Buildings",
         "Energy: Manufacturing Construction",
@@ -17,7 +17,7 @@
         "Industrial Processes",
         "Agriculture",
         "Land Use Change, Forestry",
-        "Landfills"
+        "Waste"
       ],
       "values": [
         15.9,
@@ -29,7 +29,7 @@
         5.6,
         11.8,
         6.5,
-        2.9
+        3.2
       ],
       "total": 49.4
     }
