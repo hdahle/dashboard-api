@@ -9,27 +9,13 @@
       "title": "CO2 emissions by global income groups",
       "legend": [
         "Richest 10%",
-        "Middle 40%",
-        "Poorest 50%"
+        "Poorest 50%",
+        "Middle 40%"
       ],
       "percentages": [
         52,
-        41,
-        7
-      ],
-      "legend2": [
-        "Top 0.1%",
-        "Top 1%",
-        "Top 10%",
-        "Middle 40%",
-        "Bottom 50%"
-      ],
-      "percentages2": [
         7,
-        8,
-        37,
-        41,
-        7
+        41
       ]
     }
   ]
