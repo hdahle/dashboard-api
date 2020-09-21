@@ -1,11 +1,10 @@
 {
   "source": "Oxfam/Stockholm Environment Institute: The Carbon Inequality Era: An assessment of the global distribution of consumption emissions among individuals from 1990 to 2015 and beyond",
   "link": "https://policy-practice.oxfam.org.uk/publications/the-carbon-inequality-era-an-assessment-of-the-global-distribution-of-consumpti-621049",
-  "license": "Creative Commons Attribution-ShareAlike 4.0 International License",
   "doi": "10.21201/2020.6492",
   "data": [
     {
-      "year": 2015,
+      "year": "cumulative 1990-2015",
       "region": "Global",
       "title": "CO2 emissions by global income groups",
       "legend": [
@@ -18,23 +17,9 @@
       "percentages": [
         4,
         15,
-        49,
-        44,
+        52,
+        41,
         7
-      ],
-      "emissions": [
-        1.6,
-        5.4,
-        17.2,
-        15.7,
-        2.5
-      ],
-      "percapita": [
-        216.7,
-        74,
-        23.5,
-        5.3,
-        0.69
       ],
       "minimumIncome": [
         402000,
