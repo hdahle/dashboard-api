@@ -8,25 +8,28 @@
       "region": "Global",
       "title": "CO2 emissions by global income groups",
       "legend": [
+        "Top 10%",
+        "Middle 40%",
+        "Bottom 50%"
+      ],
+      "percentages": [
+        52,
+        41,
+        7
+      ],
+      "legend2": [
         "Top 0.1%",
         "Top 1%",
         "Top 10%",
         "Middle 40%",
         "Bottom 50%"
       ],
-      "percentages": [
-        4,
-        15,
-        52,
+      "percentages2": [
+        7,
+        8,
+        37,
         41,
         7
-      ],
-      "minimumIncome": [
-        402000,
-        109000,
-        38000,
-        6000,
-        0
       ]
     }
   ]
