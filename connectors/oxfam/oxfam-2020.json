@@ -8,9 +8,9 @@
       "region": "Global",
       "title": "CO2 emissions by global income groups",
       "legend": [
-        "Top 10%",
+        "Richest 10%",
         "Middle 40%",
-        "Bottom 50%"
+        "Poorest 50%"
       ],
       "percentages": [
         52,
