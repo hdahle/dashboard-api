@@ -8,5 +8,8 @@ if [ ! -f ${FILE} ] ; then
   exit 1
 fi
 
+echo Redis-key: ${KEY}
+echo Reading from file: ${FILE}
+
 redis-cli -x set ${KEY} < ${FILE}
 
