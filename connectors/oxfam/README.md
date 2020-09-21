@@ -10,7 +10,7 @@ There should be a shell script that updates Redis with the JSON data. There is n
 ````
 # redis key is ofxam-2020
 # data is in oxfam-2020.json
-redis-cli -x set oxfam-2020 < wri.json 
+redis-cli -x set oxfam-2020 < oxfam-2020.json 
 ````
 ### Accessing the data
 ````
