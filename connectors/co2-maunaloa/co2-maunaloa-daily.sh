@@ -55,7 +55,9 @@ awk -v d="${DATE}" 'BEGIN {ORS="";
      
      # end of file reached, print data, done
      END   {
-            printf "{\"date\":\"%04d-%02d-%02d\", \"value\":%.2f, \"valueLastYear\":%.2f, \"value10yrsAgo\":%.2f}]}", $1, $2, $3, $4, lastYr, tenYrs
+            printf "{\"date\":\"%04d-%02d-%02d\", \"value\":%.2f, \"valueLastYear\":%.2f, \"value10yrsAgo\":%.2f,", $1, $2, $3, $4, lastYr, tenYrs
+            printf "\"change1yr\":%.2f, \"change10yr\":%.2f", 100*($4-lastYr)/lastYr, 100*($4-tenYrs)/tenYrs
+            printf "}]}"
      }' < ${CSVFILE} > ${JSONFILE}
 
 # Just for reassurance
