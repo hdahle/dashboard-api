@@ -6,11 +6,14 @@
   "private": true,
   "scripts": {
     "test": "mocha",
-    "deaths": "node covid.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths",
-    "confirmed": "node covid.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-confirmed",
+    "deaths": "node covid2.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths",
+    "confirmed": "node covid2.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-confirmed",
+    "summarydeaths": "node covid2.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-summary --summaryOnly",
+    "summaryconfirmed": "node covid2.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-confirmed-summary --summaryOnly",
     "regions": "node covid2.js --countries regions --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-regions",
     "top20": "node covid2.js --countries top20 --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-top20",
-    "select": "node covid2.js --countries US,UK,Spain,Italy,France,World,Norway,Denmark,Sweden --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-select"
+    "select": "node covid2.js --countries US,UK,Spain,Italy,France,World,Norway,Denmark,Sweden --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-select",
+    "world": "node covid2.js --countries World --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-world"
   },
   "keywords": [],
   "author": "Håkon Dahle",
