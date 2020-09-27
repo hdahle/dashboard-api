@@ -280,6 +280,7 @@ main();
 function parseArgv(argv) {
   let fn = argv.file; // filename from cmd line
   let redisKey = argv.key; // redis-key from cmd line
+  let summaryOnly = argv.summaryOnly;
   let cList = (argv.countries === undefined) ? ['All'] : argv.countries.split(','); // list of countries
   let countriesOK = cList.every(x =>
     ['World', 'All', 'top20', 'regions'].includes(x) || worldPop.findIndex(c => c.c === x) > -1 || worldPop.findIndex(c => c.r === x) > -1
@@ -303,19 +304,20 @@ function parseArgv(argv) {
   return {
     redisKey: redisKey,
     cList: cList,
-    fn: fn
+    fn: fn,
+    summaryOnly: summaryOnly
   }
 }
 
 function main() {
-  let { redisKey, cList, fn } = parseArgv(argv);
+  let { redisKey, cList, fn, summaryOnly } = parseArgv(argv);
   var redClient = redis.createClient();
   redClient.on('connect', function () {
     console.log(moment().format(momFmt) + ' Redis client connected');
   });
   redClient.on('ready', function () {
     console.log(moment().format(momFmt) + ' Redis client ready');
-    processFile(fn, redisKey, redClient, cList);
+    processFile(fn, redisKey, redClient, cList, summaryOnly);
   });
   redClient.on('warning', function () {
     console.log(moment().format(momFmt) + ' Redis warning');
@@ -349,7 +351,7 @@ function redisSave(key, value, redClient) {
 //
 // Process input-file line-by line
 //
-function processFile(fn, redisKey, redClient, cList) {
+function processFile(fn, redisKey, redClient, cList, summaryOnly) {
   let allCountries = [];
   let csvDates = [];
   fs.createReadStream(fn)
@@ -367,16 +369,18 @@ function processFile(fn, redisKey, redClient, cList) {
       let d = [];
       for (let i = 4; i < csv.length; i++) {
         d.push({
-          t: csvDates[i - 4],
-          y: parseInt(csv[i], 10),
-          d: parseInt(i > 4 ? csv[i] - csv[i - 1] : csv[i], 10),
-          ypm: 0,
-          c: 0
+          t: csvDates[i - 4],                                    // date
+          y: parseInt(csv[i], 10),                               // cumulative cases
+          d: parseInt(i > 4 ? csv[i] - csv[i - 1] : csv[i], 10), // daily new cases
+          ypm: 0,                                                // cumulative cases per million capita
+          dpm: 0,                                                // daily new cases per million capita
+          c: 0                                                   // 7 day average cases
         });
       }
       // Each country may have several entries which should be added together
       let idx = allCountries.findIndex(x => x.country === cName);
       if (idx === -1) {
+        // starting a new country
         let i = worldPop.findIndex(x => x.c === cName);
         //console.log(i, cName, worldPop[i], worldPop[i].r)
         allCountries.push({
@@ -386,6 +390,7 @@ function processFile(fn, redisKey, redClient, cList) {
           data: d
         })
       } else {
+        // country exists, add this region (such as San Marino) to country (Italy)
         let d = allCountries[idx].data;
         for (let i = 0; i < d.length; i++) {
           d[i].y += parseInt(csv[i + 4], 10);
@@ -410,10 +415,16 @@ function processFile(fn, redisKey, redClient, cList) {
       });
       // for eases of use in charting, add a field for total deaths/cases
       allCountries.forEach(c => c.total = c.data[c.data.length - 1].y);
+      // for eases of use in charting, add a field for most recent weeks deaths/cases
+      allCountries.forEach(c => c.thisWeek = c.data[c.data.length - 1].y - c.data[c.data.length - 8].y);
+      // for eases of use in charting, add a field for previous weeks deaths/cases
+      allCountries.forEach(c => c.prevWeek = c.data[c.data.length - 8].y - c.data[c.data.length - 15].y);
       // calculate average number of deaths
       allCountries.forEach(c => c.data = avgData(c.data));
-      // calculate YPM deaths per million
+      // calculate YPM cumulative deaths per million
       allCountries.forEach(c => c.data.forEach((x => x.ypm = Math.trunc(10 * x.y / c.population) / 10)));
+      // calculate DPM daily new deaths per million
+      allCountries.forEach(c => c.data.forEach((x => x.dpm = Math.trunc(10 * x.d / c.population) / 10)));
       // Store key/value pair to Redis
       let val = {
         source: '2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE, https://systems.jhu.edu. Population figures from Wikipedia/UN',
@@ -426,12 +437,17 @@ function processFile(fn, redisKey, redClient, cList) {
 
       if (cList[0] === 'All') {
         // save entire dataset
-        val.data = allCountries;
+        if (summaryOnly) {
+          val.data = allCountries.map(c => ({ country: c.country, population: c.population, thisWeek: c.thisWeek, prevWeek: c.prevWeek }));
+        } else {
+          val.data = allCountries;
+        }
       } else if (cList[0] === 'top20') {
         // Create list of top 20 countries wrt deaths per capita
         let topCountries = allCountries.filter(x => x.population > 0.05).map(d => ({
           country: d.country,
           ypm: d.data.slice(-1)[0].ypm,
+          dpm: d.data.slice(-1)[0].dpm,
           y: d.data.slice(-1)[0].y
         }));
         // Sort array and extract top 20
@@ -439,6 +455,7 @@ function processFile(fn, redisKey, redClient, cList) {
         val.data = {
           countries: topCountries.map(x => x.country),
           percapita: topCountries.map(x => x.ypm),
+          dailypercapita: topCountries.map(x => x.dpm),
           total: topCountries.map(x => x.y)
         };
 
@@ -449,6 +466,7 @@ function processFile(fn, redisKey, redClient, cList) {
             let tmp = c.data.map(x => ({
               t: x.t,
               d: x.d,
+              dpm: x.dpm,
               y: x.c // 'y' is now average of last seven days
             }));
             val.data.push({
