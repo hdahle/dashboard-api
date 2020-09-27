@@ -438,7 +438,7 @@ function processFile(fn, redisKey, redClient, cList, summaryOnly) {
       if (cList[0] === 'All') {
         // save entire dataset
         if (summaryOnly) {
-          val.data = allCountries.map(c => ({ country: c.country, population: c.population, thisWeek: c.thisWeek, prevWeek: c.prevWeek }));
+          val.data = allCountries.map(c => ({ country: c.country, population: c.population, total: c.total, thisWeek: c.thisWeek, prevWeek: c.prevWeek }));
         } else {
           val.data = allCountries;
         }
