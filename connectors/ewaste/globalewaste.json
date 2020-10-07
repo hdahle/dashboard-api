@@ -1,0 +1,52 @@
+{
+  "source": "Forti V., Baldé C.P., Kuehr R., Bel G. The Global E-waste Monitor 2020: Quantities, flows and the circular economy potential. United Nations University (UNU)/United Nations Institute for Training and Research (UNITAR) – co-hosted SCYCLE Programme, International Telecommunication Union (ITU) & International Solid Waste Association (ISWA), Bonn/Geneva/Rotterdam",
+  "link": "https://globalewaste.org/",
+  "copyright": "UNU/UNITAR and ITU, 2020",
+  "license": "Original material: Creative Commons Attribution Noncommercial-Share Alike 3.0 IGO License",
+  "info": "Data in kg per capita",
+  "data": {
+    "labels": [
+      "World",
+      "Americas",
+      "Europe",
+      "Africa",
+      "Asia",
+      "Oceania"
+    ],
+    "datasets": [
+      {
+        "label": 2014,
+        "data": [
+          6.4,
+          12.2,
+          15.6,
+          1.7,
+          3.7,
+          15.2
+        ]
+      },
+      {
+        "label": 2016,
+        "data": [
+          6.8,
+          11.6,
+          16.6,
+          1.9,
+          4.2,
+          17.3
+        ]
+      },
+      {
+        "label": 2019,
+        "data": [
+          7.3,
+          13.3,
+          16.2,
+          2.5,
+          5.6,
+          16.1
+        ]
+      }
+    ]
+  }
+}
