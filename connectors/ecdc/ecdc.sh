@@ -18,11 +18,11 @@ DATETODAY=`date -I -d today`
 for DSTRING in $DATETWODAYSAGO $DATEYESTERDAY $DATETODAY
 do  
   echo "Trying ${SOURCEDIR}/${FILENAME}${DSTRING}.xlsx"
-  echo "Saving to ${OUTPUTFILE}"
-  curl  "${SOURCEDIR}/${FILENAME}${DSTRING}.xlsx" --output ${TMPFILE}
+  echo "Saving to ${TMPFILE}"
+  curl  -s "${SOURCEDIR}/${FILENAME}${DSTRING}.xlsx" --output ${TMPFILE}
 
   if grep "DOCTYPE html" ${TMPFILE}  ; then 
-    echo No update from ECDC
+    echo "No update from ECDC for date ${DSTRING}"
   else
     mv ${TMPFILE} ${XLSXFILE}
     echo "XLSX file stored in ${XLSXFILE}"
