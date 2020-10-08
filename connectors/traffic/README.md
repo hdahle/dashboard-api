@@ -41,3 +41,5 @@ Once we've sorted the query, the rest is standard:
 ````
 Then just save it to Redis.
 
+
+Can't get pagination to work though.

@@ -419,6 +419,10 @@ function processFile(fn, redisKey, redClient, cList, summaryOnly) {
       allCountries.forEach(c => c.thisWeek = c.data[c.data.length - 1].y - c.data[c.data.length - 8].y);
       // for eases of use in charting, add a field for previous weeks deaths/cases
       allCountries.forEach(c => c.prevWeek = c.data[c.data.length - 8].y - c.data[c.data.length - 15].y);
+      // for eases of use in charting, add a field for most recent weeks deaths/cases
+      allCountries.forEach(c => c.this14 = c.data[c.data.length - 1].y - c.data[c.data.length - 15].y);
+      // for eases of use in charting, add a field for previous weeks deaths/cases
+      allCountries.forEach(c => c.prev14 = c.data[c.data.length - 8].y - c.data[c.data.length - 23].y);
       // calculate average number of deaths
       allCountries.forEach(c => c.data = avgData(c.data));
       // calculate YPM cumulative deaths per million
@@ -438,7 +442,15 @@ function processFile(fn, redisKey, redClient, cList, summaryOnly) {
       if (cList[0] === 'All') {
         // save entire dataset
         if (summaryOnly) {
-          val.data = allCountries.map(c => ({ country: c.country, population: c.population, total: c.total, thisWeek: c.thisWeek, prevWeek: c.prevWeek }));
+          val.data = allCountries.map(c => ({
+            country: c.country,
+            population: c.population,
+            total: c.total,
+            thisWeek: c.thisWeek,
+            prevWeek: c.prevWeek,
+            this14: c.this14,
+            prev14: c.prev14
+          }));
         } else {
           val.data = allCountries;
         }
