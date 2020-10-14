@@ -24,7 +24,7 @@ const worldPop = [
   { c: "Nigeria", p: 200963599, r: "Africa" },
   { c: "Bangladesh", p: 163046161, r: "Asia" },
   { c: "Russia", p: 145872256, r: "Europe" },
-  { c: "Mexico", p: 127575529, r: "North America" },
+  { c: "Mexico", p: 127575529, r: "Northern America" },
   { c: "Japan", p: 126860301, r: "Asia" },
   { c: "Ethiopia", p: 112078730, r: "Africa" },
   { c: "Philippines", p: 108116615, r: "Asia" },
