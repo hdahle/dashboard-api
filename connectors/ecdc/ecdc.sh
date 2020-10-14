@@ -10,6 +10,13 @@ TMPFILE="${TMPDIR}/ecdc.tmp"
 XLSXFILE="${TMPDIR}/ecdc.xlsx"
 REDISKEY="ecdc-weekly"
 FILENAME="subnational_weekly_data_"
+NODEPATH=$1
+
+if [ "$NODEPATH" = "" ] ; then
+  echo "Usage: $0 nodepath"
+  echo "  nodepath - path to the node.bin executable, e.g. /usr/bin"
+  exit
+fi
 
 DATETWODAYSAGO=`date -I -d "2 days ago"`
 DATEYESTERDAY=`date -I -d yesterday`
@@ -26,6 +33,6 @@ do
   else
     mv ${TMPFILE} ${XLSXFILE}
     echo "XLSX file stored in ${XLSXFILE}"
-    node ecdc.js --verbose --file ${XLSXFILE} --key ${REDISKEY}
+    ${NODEPATH}/node ecdc.js --verbose --file ${XLSXFILE} --key ${REDISKEY}
   fi
 done
