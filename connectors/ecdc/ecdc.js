@@ -8,8 +8,6 @@ let XLSX = require('xlsx');
 let moment = require('moment');
 let argv = require('minimist')(process.argv.slice(2));
 const momFmt = 'YY-MM-DD hh:mm:ss';
-const jsonDateFormat = 'YYYYWW';
-
 // Command-line arguments
 let verbose = argv.verbose;
 let fileName = argv.file;
@@ -18,7 +16,7 @@ let redisKey = argv.key;
 if (fileName === undefined || fileName === true || redisKey === undefined || redisKey === true || redisKey === '') {
   console.log('Usage: node script --file <filename> --key <rediskey> [--verbose]');
   console.log('  filename: name of XLSX file downloaded from ECDC');
-  console.log('  rediskey: a string such as \'ecdc-weekly\'');
+  console.log('  rediskey: a string such as \'ecdc\' to which this script adds either \'-weekly\' or \'-daily\'');
   return;
 }
 
@@ -121,6 +119,7 @@ let country = 'A';
 let region = 'B';
 let date = 'D';
 let value = 'E';
+let weekly = true;
 
 // Figure out the actual column usage
 for (let ch = colMin; ch <= colMax; ch++) {
@@ -129,9 +128,15 @@ for (let ch = colMin; ch <= colMax; ch++) {
     case 'country': country = cellIndex.charAt(0); break;
     case 'region_name': region = cellIndex.charAt(0); break;
     case 'year_week': date = cellIndex.charAt(0); break;
+    case 'date': date = cellIndex.charAt(0); weekly = false; break;
     case 'rate_14_day_per_100k': value = cellIndex.charAt(0); break;
   }
 }
+
+if (verbose) {
+  console.log(moment().format(momFmt), 'Daily or weekly? ', (weekly) ? 'weekly' : 'daily')
+}
+let jsonDateFormat = (weekly) ? 'YYYYWW' : 'YYYY-MM-DD';
 
 // Now process the entire file row by row
 let results = [];
@@ -179,6 +184,7 @@ for (let i = rowMin + 1; i <= rowMax; i++) {
     continue;
   }
   // Country and region both exist, push data only
+  if (moment(dateStamp, jsonDateFormat).isBefore(moment().add(-6, 'weeks'))) continue;
   results[idx].region[x].data.push({
     t: dateStamp,
     v: dataValue
@@ -204,6 +210,7 @@ let redisVal = JSON.stringify({
   info: 'Data is adapted from XLSX files downloaded from ECDC weekly',
   accessed: workbook.Props.ModifiedDate,
   dateformat: jsonDateFormat,
+  countries: results.map(x => x.country),
   data: results
 });
 

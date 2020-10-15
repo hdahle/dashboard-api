@@ -24,9 +24,15 @@ DATETODAY=`date -I -d today`
 
 for DSTRING in $DATETWODAYSAGO $DATEYESTERDAY $DATETODAY
 do  
-  echo "Trying ${SOURCEDIR}/${FILENAME}${DSTRING}.xlsx"
-  echo "Saving to ${TMPFILE}"
-  curl  -s "${SOURCEDIR}/${FILENAME}${DSTRING}.xlsx" --output ${TMPFILE}
+  if [ ${DSTRING} = "2020-10-15" ] ; then
+    echo "Trying ${SOURCEDIR}/${FILENAME}${DSTRING}_0.xlsx"
+    echo "Saving to ${TMPFILE}"
+    curl  -s "${SOURCEDIR}/${FILENAME}${DSTRING}_0.xlsx" --output ${TMPFILE}
+  else
+    echo "Trying ${SOURCEDIR}/${FILENAME}${DSTRING}_0.xlsx"
+    echo "Saving to ${TMPFILE}"
+    curl  -s "${SOURCEDIR}/${FILENAME}${DSTRING}_0.xlsx" --output ${TMPFILE}
+  fi
 
   if grep "DOCTYPE html" ${TMPFILE}  ; then 
     echo "No update from ECDC for date ${DSTRING}"
