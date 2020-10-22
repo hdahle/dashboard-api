@@ -29,9 +29,9 @@ do
     echo "Saving to ${TMPFILE}"
     curl  -s "${SOURCEDIR}/${FILENAME}${DSTRING}_0.xlsx" --output ${TMPFILE}
   else
-    echo "Trying ${SOURCEDIR}/${FILENAME}${DSTRING}_0.xlsx"
+    echo "Trying ${SOURCEDIR}/${FILENAME}${DSTRING}.xlsx"
     echo "Saving to ${TMPFILE}"
-    curl  -s "${SOURCEDIR}/${FILENAME}${DSTRING}_0.xlsx" --output ${TMPFILE}
+    curl  -s "${SOURCEDIR}/${FILENAME}${DSTRING}.xlsx" --output ${TMPFILE}
   fi
 
   if grep "DOCTYPE html" ${TMPFILE}  ; then 
