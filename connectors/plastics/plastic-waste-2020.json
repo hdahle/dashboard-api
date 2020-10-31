@@ -3,7 +3,13 @@
     "link": "https://advances.sciencemag.org/content/6/44/eabd0288",
     "license": "https://creativecommons.org/licenses/by/4.0/ This is an open-access article distributed under the terms of the Creative Commons Attribution license, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.",
     "data": {
-        "labels": ["USA", "EU-28", "India", "China", "Brazil", "Indonesia", "Russia", "Germany", "UK", "Mexico", "Japan", "Thailand", "South Korea", "Italy", "Egypt", "France", "Pakistan", "Argentina", "Algeria", "Malaysia", "Spain"],
+        "labels": [
+            "USA", "EU-28", "India", "China", "Brazil",
+            "Indonesia", "Russia", "Germany", "UK", "Mexico",
+            "Japan", "Thailand", "South Korea", "Italy", "Egypt",
+            "France", "Pakistan", "Argentina", "Algeria", "Malaysia",
+            "Spain"
+        ],
         "datasets": [{
             "label": "Plastic waste",
             "data": [
@@ -18,7 +24,13 @@
             "data": []
         }, {
             "label": "Plastic waste per capita",
-            "data": []
+            "data": [
+                130.09, 54.56, 19.88, 15.67, 51.78,
+                34.9, 58.66, 61.16, 98.66, 47.86,
+                38.44, 69.54, 88.09, 55.51, 32.16,
+                43.81, 13.42, 60.95, 51.59, 67.09,
+                39.42
+            ]
         }]
     }
 }
