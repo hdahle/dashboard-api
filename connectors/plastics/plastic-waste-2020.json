@@ -1,2 +1,24 @@
 {
+    "source": "K.L.Law et.al. 'The United States’ contribution of plastic waste to land and ocean', Science Advances 30 Oct 2020",
+    "link": "https://advances.sciencemag.org/content/6/44/eabd0288",
+    "license": "https://creativecommons.org/licenses/by/4.0/ This is an open-access article distributed under the terms of the Creative Commons Attribution license, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.",
+    "data": {
+        "labels": ["USA", "EU-28", "India", "China", "Brazil", "Indonesia", "Russia", "Germany", "UK", "Mexico", "Japan", "Thailand", "South Korea", "Italy", "Egypt", "France", "Pakistan", "Argentina", "Algeria", "Malaysia", "Spain"],
+        "datasets": [{
+            "label": "Plastic waste",
+            "data": [
+                42027215, 29890143, 26327933, 21599465, 10675989,
+                9128000, 8467156, 6683412, 6471650, 5902490,
+                4881161, 4796494, 4514186, 3365130, 3037675,
+                2929042, 2731768, 2656771, 2092007, 2058501,
+                1832533
+            ]
+        }, {
+            "label": "Total waste",
+            "data": []
+        }, {
+            "label": "Plastic waste per capita",
+            "data": []
+        }]
+    }
 }
