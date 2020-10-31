@@ -1,6 +1,7 @@
 #!/bin/sh
 #
 # ECDC Weekly Corona Update
+# This was originally written before ECDC supported CSV
 #
 # H.Dahle, 2020
 
@@ -9,12 +10,11 @@ SOURCEDIR="https://opendata.ecdc.europa.eu/covid19/subnationalcaseweekly/xlsx/"
 TMPFILE="${TMPDIR}/ecdc.tmp"
 XLSXFILE="${TMPDIR}/ecdc.xlsx"
 REDISKEY="ecdc-weekly"
-FILENAME="subnational_weekly_data_"
 NODEPATH=$1
 
 if [ ! -f "$NODEPATH" ] ; then
   echo "Usage: $0 nodepath"
-  echo "  nodepath - path to the node.bin executable, e.g. /usr/bin"
+  echo "  nodepath - path to the node.bin executable, e.g. /usr/bin/node"
   exit
 fi
 
