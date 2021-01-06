@@ -31,7 +31,6 @@
     "datasets": [
       {
         "label": "Plastic waste per capita",
-        "yAxisID": "L",
         "units": "kg/year",
         "data": [
           130.09,
@@ -59,7 +58,6 @@
       },
       {
         "label": "Plastic waste",
-        "yAxisID": "R",
         "units": "million metric tons/year",
         "data": [
           42.027215,
