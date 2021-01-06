@@ -3,6 +3,7 @@
   "link": "https://advances.sciencemag.org/content/6/44/eabd0288",
   "license": "https://creativecommons.org/licenses/by/4.0/ This is an open-access article distributed under the terms of the Creative Commons Attribution license, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.",
   "info": "Top 50 plastic waste producing countries have been considered",
+  "units": "Waste per capita: kg. Waste: Million metric tons",
   "data": {
     "labels": [
       "USA",
@@ -31,6 +32,7 @@
       {
         "label": "Plastic waste per capita",
         "yAxisID": "L",
+        "units": "kg/year",
         "data": [
           130.09,
           98.66,
@@ -58,28 +60,29 @@
       {
         "label": "Plastic waste",
         "yAxisID": "R",
+        "units": "million metric tons/year",
         "data": [
-          42027215,
-          6471650,
-          4514186,
-          4796494,
-          2058501,
-          6683412,
-          2656771,
-          8467156,
-          3365130,
-          29890143,
-          10675989,
-          2092007,
-          5902490,
-          2929042,
-          1832533,
-          4881161,
-          9128000,
-          3037675,
-          26327933,
-          21599465,
-          2731768
+          42.027215,
+          6.471650,
+          4.514186,
+          4.796494,
+          2.058501,
+          6.683412,
+          2.656771,
+          8.467156,
+          3.365130,
+          29.890143,
+          10.675989,
+          2.092007,
+          5.902490,
+          2.929042,
+          1.832533,
+          4.881161,
+          9.128000,
+          3.037675,
+          26.327933,
+          21.599465,
+          2.731768
         ]
       }
     ]
