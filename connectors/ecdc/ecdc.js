@@ -73,7 +73,7 @@ if (verbose)
 
 if (sheetNames.length !== 1) {
   console.log(moment().format(momFmt), 'Unexpected number of sheetNames, should be 1, found:', sheetNames.length);
-  return;
+  //return;
 }
 
 // Grab the sheetname and find the sheet
