@@ -1,7 +1,7 @@
 //
 // Read CSV file, Write JSON to Redis
 //
-// H. Dahle, 2020
+// H. Dahle, 2021
 //
 
 // CSV input format:
@@ -72,7 +72,6 @@ function processCSV() {
     console.log('Using --countries: --countries "Norway,Sweden,USA,Canada,Saudi Arabia"');
     console.log('Using --countries: --countries Regions');
     console.log('Using --countries: --countries G20');
-    console.log('Also have a look in npm scripts for usage')
     process.exit();
   }
 
@@ -82,7 +81,6 @@ function processCSV() {
     cList = c.toLowerCase().split(',');
   }
 
-  console.log(cList)
   if (cList.length === 1) {
     if (cList[0] === 'g20') {
       cList = [
@@ -124,10 +122,17 @@ function processCSV() {
         // process the yearly data, 'year' is first element in the row
         // multiply all values by 3.664 to convert from C to CO2
         let year = csvRow.shift();
+        if (isNaN(year)) {
+          console.log("Error: Year is NaN:", csvRow)
+        }
+
         for (let i = 0; i < nCols; i++) {
+          let y = csvRow[i];
+          if (isNaN(y)) y = 0;
+
           d.data[i].data.push({
             x: parseInt(year, 10), // avoid quotemarks around year
-            y: Math.floor(csvRow[i] * 366.4) / 100
+            y: Math.floor(y * 366.4) / 100
           });
         }
       }
