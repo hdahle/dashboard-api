@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "fueltype": "node fossil-emissions-by-fuel-type.js --file Global*csv",
-    "fueltype-redis": "node fossil-emissions-by-fuel-type.js --file Global*csv --key emissions-by-fuel-type",
-    "region": "node national-carbon-emissions.js --file National*csv --countries Regions",
-    "region-redis": "node national-carbon-emissions.js --file National*csv --countries Regions --key emissions-by-region",
-    "g20": "node national-carbon-emissions.js --file National*csv",
-    "g20-redis": "node national-carbon-emissions.js --file National*csv --countries G20 --key emissions-by-g20",
-    "countries": "node national-carbon-emissions.js --file National*csv",
-    "countries-redis": "node national-carbon-emissions.js --file National*csv --key emissions-by-country"
+    "fueltype": "node fossil-emissions-by-fuel-type-2020.js --file Global*2020*csv",
+    "fueltype-redis": "node fossil-emissions-by-fuel-type-2020.js --file Global*2020*csv --key emissions-by-fuel-type",
+    "region": "node national-carbon-emissions-2020.js --file National*2020*csv --countries Regions",
+    "region-redis": "node national-carbon-emissions-2020.js --file National*2020*csv --countries Regions --key emissions-by-region",
+    "g20": "node national-carbon-emissions-2020.js --file National*2020*csv",
+    "g20-redis": "node national-carbon-emissions-2020.js --file National*2020*csv --countries G20 --key emissions-by-g20",
+    "countries": "node national-carbon-emissions-2020.js --file National*2020*csv",
+    "countries-redis": "node national-carbon-emissions-2020.js --file National*2020*csv --key emissions-by-country"
   },
   "author": "H Dahle",
   "license": "MIT",
