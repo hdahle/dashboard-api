@@ -444,6 +444,7 @@ function processFile(fn, redisKey, redClient, cList, summaryOnly) {
         if (summaryOnly) {
           val.data = allCountries.map(c => ({
             country: c.country,
+            region: c.region,
             population: c.population,
             total: c.total,
             thisWeek: c.thisWeek,
