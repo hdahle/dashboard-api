@@ -71,6 +71,7 @@ awk -v ACCESSDATE="${DATE}" 'BEGIN {ORS=""
             print "\"source\":\"Cryptocurrency and Blockchain Programme Team (Michel Rauchs, Apolline Blandin, Anton Dek, and Yue Wu) at the Cambridge Centre for Alternative Finance, University of Cambridge, Judge Business School\", "
             print "\"link\":\"https://cbeci.org \", "
             print "\"license\":\"Unknown, publicly available data\", "
+            print "\"info\":\"Numbers are annualized power consumption in TWh, assuming miners use a basket of profitable hardware\", "
             print "\"accessed\":\"" ACCESSDATE "\", "
             print "\"data\": ["
             FIRSTRECORD = 1
