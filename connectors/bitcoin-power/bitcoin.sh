@@ -58,7 +58,7 @@ fi
 #   'accessed': '<date of access>'
 #   'data':
 #   [
-#     { 't': COL2, 'y':COL5 },
+#     { 't': COL2, 'y':COL5, 'max': COL3, 'min': COL4 },
 #     {},...
 #   ]
 # }
@@ -84,7 +84,7 @@ awk -v ACCESSDATE="${DATE}" 'BEGIN {ORS=""
      START == 1 && NF == 5 {
        if (!FIRSTRECORD) printf ","
        FIRSTRECORD = 0
-       printf "{ \"t\":\"%s\", \"y\":%s }", substr($2,1,10), $5
+       printf "{ \"t\":\"%s\", \"y\":%s, \"max\":%s, \"min\":%s  }", substr($2,1,10), $5, $3, $4
      }  
 
      END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
