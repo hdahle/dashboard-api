@@ -6,18 +6,23 @@
 #
 # H. Dahle
 
-MAUNALOA="co2_annmean_mLo"
+REDISKEY="maunaloa-annual-mean"
 TMPDIR=$(mktemp -d)
+CSVFILE="${TMPDIR}/${REDISKEY}.csv"
+JSONFILE="${TMPDIR}/${REDISKEY}.json"
+DATE=`date --iso-8601='minutes'`
 
-echo "Get Maunaloa annual mean CO2 data, convert to JSON and save to Redis"
+echo ${DATE}
+echo "Fetching Mauna Loa annual mean data from ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_annmean_mlo.txt, saving to ${CSVFILE}"
+curl "ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_annmean_mlo.txt" > ${CSVFILE}
 
-if [ -f "${MAUNALOA}.txt" ]; then
-    echo "File ${MAUNALOA}.txt exists"
+if [ -f "${CSVFILE}" ]; then
+    echo -n "Number of lines in CSV:"
+    cat ${CSVFILE} | wc -l
 else
-    echo "Fetching Mauna Loa annual mean data from ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_annmean_mlo.txt, saving to ${MAUNALOA}.txt"
-    curl "ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_annmean_mlo.txt" > ${MAUNALOA}.txt
+    echo "File not found: ${CSVFILE}, aborting "
+    exit 0
 fi
-wc -l ${MAUNALOA}.txt
 
 #Maunaloa format (co2_annmean_mlo.txt)
 # # CO2 expressed as a mole fraction in dry air, micromol/mol, abbreviated as ppm
@@ -38,18 +43,8 @@ wc -l ${MAUNALOA}.txt
 #   ]
 # }
 
-REDISKEY="maunaloa-annual-mean"
-
-echo "Cleaning Mauna Loa data, writing to ${TMPDIR}/${REDISKEY}.txt"
-
-awk '/^#/       {next}
-     NF==3      {print $1 " " $2}' < ${MAUNALOA}.txt >> ${TMPDIR}/${REDISKEY}.txt
-
-wc -l ${TMPDIR}/${REDISKEY}.txt
-
-echo "Sort data by year then convert to JSON, writing to ${TMPDIR}/${REDISKEY}.json"
-
-sort -n ${TMPDIR}/${REDISKEY}.txt | awk 'BEGIN {ORS=""
+echo "Converting data to JSON, saving to ${JSONFILE}"
+awk 'BEGIN {ORS=""
             print "{"
             print "\"source\":\"Dr. Pieter Tans, NOAA/ESRL (www.esrl.noaa.gov/gmd/ccgg/trends/) and Dr. Ralph Keeling, Scripps Institution of Oceanography (scrippsco2.ucsd.edu/)\", "
             print "\"link\":\"ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt\", "
@@ -58,26 +53,34 @@ sort -n ${TMPDIR}/${REDISKEY}.txt | awk 'BEGIN {ORS=""
      }
 
      # Skip comments
-     /^*/  {next}
+     /^#/  {next}
 
-     # Skip text
-     /[A-Za-z]/ {next}
-
-     NF==2 {if (!FIRSTRECORD) printf ","
+     NF==3 {if (!FIRSTRECORD) printf ","
             FIRSTRECORD = 0
             printf " {\"x\":%s,\"y\":%s}", $1, $2
      }
 
-     END   {print "]}"}' > ${TMPDIR}/${REDISKEY}.json
+     END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
 
-# sanity check
-echo "Saving JSON, number of bytes:"
-cat ${TMPDIR}/${REDISKEY}.json | wc --bytes
+# Just for reassurance
+echo -n "JSON byte count:"
+cat ${JSONFILE} | wc --bytes
 
-# save JSON to Redis
-echo "Saving to Redis, key ${REDISKEY}"
-redis-cli -x SET ${REDISKEY} < ${TMPDIR}/${REDISKEY}.json
+# When installing cron job, provde fully qualified filename to this script
+REDIS=$1
+if [ "$REDIS" = "" ]; then
+  REDIS="redis-cli"
+else
+  if [ ! -f ${REDIS} ]; then
+    echo "Redis-executable not found: ${REDIS}, not storing in Redis"
+    exit
+  fi
+fi
 
-# quick test
-echo "Retrieving keu=${REDISKEY}, number of bytes:"
-redis-cli get ${REDISKEY} | wc --bytes
+# Save to redis
+echo -n "Saving JSON to Redis, key: ${REDISKEY}: "
+${REDIS} -x set ${REDISKEY} < ${JSONFILE}
+
+# Quick verification
+echo -n "Retrieving from Redis, JSON byte count: "
+${REDIS} get ${REDISKEY} | wc --bytes
