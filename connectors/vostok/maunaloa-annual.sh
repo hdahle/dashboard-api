@@ -44,10 +44,11 @@ fi
 # }
 
 echo "Converting data to JSON, saving to ${JSONFILE}"
-awk 'BEGIN {ORS=""
+awk -v d="${DATE}" 'BEGIN {ORS=""
             print "{"
             print "\"source\":\"Dr. Pieter Tans, NOAA/ESRL (www.esrl.noaa.gov/gmd/ccgg/trends/) and Dr. Ralph Keeling, Scripps Institution of Oceanography (scrippsco2.ucsd.edu/)\", "
             print "\"link\":\"ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt\", "
+            print "\"accessed\":\"" d "\", "
             print "\"data\": ["
             FIRSTRECORD = 1
      }
