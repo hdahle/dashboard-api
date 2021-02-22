@@ -63,8 +63,7 @@ redClient.on('error', function (err) {
         process.exit();
       }
 
-      // original coindesk.com data is:   {bpi:{  }}
-      // convert to chart.js-friendly:    {results: {data: [{t, y}, {t,y}, ...] }
+      // original coindesk.com data is:   {bpi:{ "yyyy-mm-dd":nnnn, "yyyy-mm-dd":nnnn, ...  }}
       let json = {
         source: 'Bitcoin price data is Powered by CoinDesk',
         link: 'https://www.coindesk.com/price/bitcoin',
