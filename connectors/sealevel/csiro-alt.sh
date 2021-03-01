@@ -18,7 +18,7 @@ echo "Using temporary directory ${TMPDIR}"
 
 #if [ ! -f "${CSVFILE}" ]; then
 #  echo -n "File not found: ${CSVFILE}, downloading: "
-  curl -s -S "ftp://ftp.csiro.au/legresy/gmsl_files/CSIRO_Alt.csv" > ${CSVFILE}
+  curl -S "ftp://ftp.csiro.au/legresy/gmsl_files/CSIRO_Alt.csv" > ${CSVFILE}
 #fi
 
 if [ -f "${CSVFILE}" ]; then
