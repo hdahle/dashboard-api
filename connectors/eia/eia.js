@@ -27,7 +27,7 @@ redClient.on('error', function (err) {
 });
 
 // Fetch EIA data
-function goFetch() {
+(() => {
   function status(response) {
     if (response.status >= 200 && response.status < 300) {
       return Promise.resolve(response)
@@ -45,8 +45,10 @@ function goFetch() {
   let series = argv.series; // coal, oil or gas
   let endDate = argv.end;   // end date
 
+  let region = argv.region; // region
+
   // These are the regions we always query for
-  const eiaRegions = [
+  let eiaRegions = [
     { region: 'Africa', code: 'AFRC' },
     { region: 'World', code: 'WORL' },
     { region: 'Europe', code: 'EURO' },
@@ -62,6 +64,7 @@ function goFetch() {
     { region: 'Japan', code: 'JPN' },
     { region: 'Russia', code: 'RUS' }
   ];
+
   // Series names and appropriate units for series
   const eiaSeries = {
     'coal': { eiaSeriesName: 'INTL.7-1-', eiaUnit: 'MT.A' },
@@ -71,15 +74,29 @@ function goFetch() {
     'emissions': { eiaSeriesName: 'INTL.4008-8-', eiaUnit: 'MMTCD.A' },
     'nuclear': { eiaSeriesName: 'INTL.27-12-', eiaUnit: 'BKWH.A' },
     'gdp': { eiaSeriesName: 'INTL.4701-34-', eiaUnit: 'BDOLPPP.A' },
-    'electricity': { eiaSeriesName: 'INTL.2-12-', eiaUnit: 'BKWH.A' }
+    'electricity': { eiaSeriesName: 'INTL.2-12-', eiaUnit: 'BKWH.A' },
+    'renewable-gen': { eiaSeriesName: 'INTL.29-12-', eiaUnit: 'BKWH.A' },
+    'nuclear-gen': { eiaSeriesName: 'INTL.27-12-', eiaUnit: 'BKWH.A' },
+    'fossilfuel-gen': { eiaSeriesName: 'INTL.28-12-', eiaUnit: 'BKWH.A' },
+    'solar-gen': { eiaSeriesName: 'INTL.116-12-', eiaUnit: 'BKWH.A' },
+    'wind-gen': { eiaSeriesName: 'INTL.37-12-', eiaUnit: 'BKWH.A' },
+    'hydro-gen': { eiaSeriesName: 'INTL.33-12-', eiaUnit: 'BKWH.A' }
   };
 
   if (apiKey === undefined || redisKey === undefined || series === undefined || eiaSeries[series] === undefined) {
-    console.log('Usage: node eia.js --series <seriesname> --apikey <apikey> --key <rediskey> [--end <endYear>]');
+    console.log('Usage: node eia.js --series <seriesname> --apikey <apikey> --key <rediskey> [--end <endYear>] [--region <RegionName>]');
     let s = '';
     Object.keys(eiaSeries).forEach(x => s += x + ' ');
     console.log('  <seriesname> is one of: ', s);
     process.exit();
+  }
+
+  // Use a single region if it is specified. If not, query for all regions in eiaRegions
+  if (region !== undefined) {
+    const tmp = eiaRegions.filter(e => e.region === region)
+    if (tmp.length) {
+      eiaRegions = tmp;
+    }
   }
 
   let { eiaSeriesName, eiaUnit } = eiaSeries[series];
@@ -89,6 +106,7 @@ function goFetch() {
   eiaRegions.forEach(element => {
     url += eiaSeriesName + element.code + '-' + eiaUnit + ';';
   });
+
   // If ending date was specified, use it. With no end date, EIA will return all data up to today
   if (endDate !== undefined) {
     let n = parseInt(endDate, 10);
@@ -160,6 +178,4 @@ function goFetch() {
       }), 1000)
     })
     .catch(err => console.log(err))
-}
-
-goFetch();
+})();

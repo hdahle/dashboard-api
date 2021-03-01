@@ -35,7 +35,7 @@ done
 
 for i in "gas"; do
   rediskey="eia-global-${i}"
-  node ${jsfile} --series ${i} --apikey ${eiakey} --key ${rediskey} --end 2018
+  node ${jsfile} --series ${i} --apikey ${eiakey} --key ${rediskey} 
 done
 
 # now run the second file which uses the output of the above
