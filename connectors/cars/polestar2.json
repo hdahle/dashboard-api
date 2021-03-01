@@ -1,0 +1,65 @@
+{
+  "source": "Polestar document 'Life cycle assessment. Carbon footprint of Polestar 2'",
+  "link": "https://www.polestar.com/dato-assets/11286/1600176185-20200915polestarlcafinala.pdf",
+  "assumptions": "Driving distance: 200.000km. Electricity mix in materials manufacturing: 69% EU, 26% China, 5% US. Polestar battery capacity: 78kWh. Battery weight: 350kg. Polestar weight: 2110kg. XC40 weight: 1690kg. Tailpipe emissions XC40: 163 g/km. Electricity use Polestar: 198 Wh/km.",
+  "data": {
+    "labels": [
+      "XC40 ICE",
+      "Polestar (Global mix)",
+      "Polestar (EU28 mix)",
+      "Polestar (Wind power)"
+    ],
+    "datasets": [
+      {
+        "label": "Materials",
+        "data": [
+          14,
+          17,
+          17,
+          17
+        ],
+        "backgroundColor": "rgba(80,180,40,0.5)"
+      },
+      {
+        "label": "Battery",
+        "data": [
+          0,
+          7,
+          7,
+          7
+        ],
+        "backgroundColor": "rgba(80,80,140,0.5)"
+      },
+      {
+        "label": "Manufacturing",
+        "data": [
+          2.1,
+          2.2,
+          2.2,
+          2.2
+        ],
+        "backgroundColor": "rgba(180,80,140,0.5)"
+      },
+      {
+        "label": "Use",
+        "data": [
+          41,
+          23,
+          15,
+          0.4
+        ],
+        "backgroundColor": "rgba(80,180,140,0.5)"
+      },
+      {
+        "label": "End-of-life",
+        "data": [
+          0.6,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "backgroundColor": "rgba(180,80,40,0.5)"
+      }
+    ]
+  }
+}
