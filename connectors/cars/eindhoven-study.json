@@ -6,21 +6,21 @@
   "data": {
     "labels": [
       "Toyota Prius 1.8L",
-      "VW e-Golf",
       "Mercedes C220d",
-      "Tesla Model 3",
       "Bugatti Veyron",
-      "Porsche Taycan S"
+      "VW e-Golf",
+      "Tesla Model 3 75kWh",
+      "Porsche Taycan S 93kWh"
     ],
     "datasets": [
       {
         "label": "Manufacturing",
         "data": [
           7,
-          6,
           8,
-          7,
           10,
+          6,
+          7,
           9
         ],
         "backgroundColor": "rgba(80,180,40,0.5)"
@@ -29,10 +29,10 @@
         "label": "Battery",
         "data": [
           0,
+          0,
+          0,
           2.75,
-          0,
           5.75,
-          0,
           7
         ],
         "backgroundColor": "rgba(80,80,140,0.5)"
@@ -41,10 +41,10 @@
         "label": "Driving",
         "data": [
           35,
-          10.75,
           57,
-          10,
           184.5,
+          10.75,
+          10,
           19
         ],
         "backgroundColor": "rgba(180,80,140,0.5)"
