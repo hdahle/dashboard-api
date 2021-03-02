@@ -7,7 +7,6 @@
     "labels": [
       "Toyota Prius 1.8L",
       "Mercedes C220d",
-      "Bugatti Veyron",
       "VW e-Golf",
       "Tesla Model 3 75kWh",
       "Porsche Taycan S 93kWh"
@@ -18,7 +17,6 @@
         "data": [
           7,
           8,
-          10,
           6,
           7,
           9
@@ -28,7 +26,6 @@
       {
         "label": "Battery",
         "data": [
-          0,
           0,
           0,
           2.75,
@@ -42,7 +39,6 @@
         "data": [
           35,
           57,
-          184.5,
           10.75,
           10,
           19
