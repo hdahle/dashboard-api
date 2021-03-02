@@ -89,7 +89,7 @@ awk -v ACCESSDATE="${DATE}" 'BEGIN {
 
      # STATE 1 and 2: Print an object, If in STATE 1, go to STATE 2
      NF == 5 {
-            printf "{ \"t\":\"%s\", \"y\":%s }", substr($2,1,10), $5
+            printf "{ \"t\":\"%s\", \"y\":%.2f }", substr($2,1,10), $5
             STATE = 2
      }  
 

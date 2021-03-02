@@ -73,7 +73,7 @@ redClient.on('error', function (err) {
           datasets: [
             {
               label: 'Bitcoin price, USD',
-              data: Object.entries(results.bpi).map(x => ({ t: x[0], y: x[1] }))
+              data: Object.entries(results.bpi).map(x => ({ t: x[0], y: Math.floor(x[1]) }))
             }
           ]
         }
