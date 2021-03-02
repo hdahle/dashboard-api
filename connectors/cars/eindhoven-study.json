@@ -1,0 +1,54 @@
+{
+  "source": "Comparing the lifetime greenhouse gas emissions of electric cars with the emissions of cars using gasoline or diesel, Eindhoven University of Technology, Auke Hoekstra et.al.",
+  "link": "https://www.avere.org/wp-content/uploads/2020/09/englisch_Studie-EAuto-versus-Verbrenner_CO2.pdf",
+  "assumptions": "Driving distance: 250.000km. Battery manufacturing: 85 kg CO2 per kWh. Battery is assumed to last more than 250.000km. Electricity will become cleaner during the car's lifetime, 250g CO2e/kWh. Gasoline/diesel consumption is based on figures from spritmonitor.de and EPA. Emissions during fuel extraction/production is accounted for by addng 30% to tailpipe emissions. Emissions per litre: 3310g (diesel), 3140g (gasoline).",
+  "units": "tons CO2e",
+  "data": {
+    "labels": [
+      "Toyota Prius 1.8L",
+      "VW e-Golf",
+      "Mercedes C220d",
+      "Tesla Model 3",
+      "Bugatti Veyron",
+      "Porsche Taycan S"
+    ],
+    "datasets": [
+      {
+        "label": "Manufacturing",
+        "data": [
+          7,
+          6,
+          8,
+          7,
+          10,
+          9
+        ],
+        "backgroundColor": "rgba(80,180,40,0.5)"
+      },
+      {
+        "label": "Battery",
+        "data": [
+          0,
+          2.75,
+          0,
+          5.75,
+          0,
+          7
+        ],
+        "backgroundColor": "rgba(80,80,140,0.5)"
+      },
+      {
+        "label": "Driving",
+        "data": [
+          35,
+          10.75,
+          57,
+          10,
+          18.45,
+          1.9
+        ],
+        "backgroundColor": "rgba(180,80,140,0.5)"
+      }
+    ]
+  }
+}
