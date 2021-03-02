@@ -21,8 +21,7 @@ REDISKEY="bitcoin-power"
 TMPDIR=$(mktemp -d)
 CSVFILE="${TMPDIR}/${REDISKEY}.csv"
 JSONFILE="${TMPDIR}/${REDISKEY}.json"
-DATE=`date`
-
+DATE=`date --iso-8601='minutes'`
 echo ${DATE}
 echo "Converting Bitcoin power consumption data from CSV to JSON"
 echo "Downloading ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
