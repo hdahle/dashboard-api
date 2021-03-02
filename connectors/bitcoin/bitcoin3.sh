@@ -76,7 +76,7 @@ awk -v ACCESSDATE="${DATE}" 'BEGIN {
             print "\"accessed\":\"" ACCESSDATE "\", "
             print "\"data\": { "
             print "\"datasets\": [{ "
-            print "\"legend\":\"Bitcoin electricity usage, TWh\","
+            print "\"label\":\"Bitcoin electricity usage, TWh\","
             print "\"data\": ["
             STATE = 0
      }
