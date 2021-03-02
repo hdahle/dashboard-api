@@ -5,7 +5,7 @@
 # H. Dahle
 
 PWD=`pwd`
-SCRIPT="bitcoin.sh"
+SCRIPT="bitcoin-power.sh"
 
 # must use eval for tilde-expansion to work...dirty
 LOGDIR=`eval echo ~${USER}/log`
