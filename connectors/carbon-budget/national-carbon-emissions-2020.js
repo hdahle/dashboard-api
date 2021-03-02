@@ -1,6 +1,7 @@
 //
 // Read CSV file, Write JSON to Redis
 //
+// March 2, 2021: Change output values to Gigatons
 // H. Dahle, 2021
 //
 
@@ -55,7 +56,7 @@ function processCSV() {
 
   let d = {
     source: 'Global Carbon Project December 2020, https://www.globalcarbonproject.org/carbonbudget/',
-    info: 'Fossil fuels and cement production emissions by country, in million tons of CO2 per country per year',
+    info: 'Fossil fuels and cement production emissions by country, in billion tons (Gt, gigatons) of CO2 per country per year',
     link: 'https://www.globalcarbonproject.org',
     data: []
   }
@@ -132,7 +133,7 @@ function processCSV() {
 
           d.data[i].data.push({
             x: parseInt(year, 10), // avoid quotemarks around year
-            y: Math.floor(y * 366.4) / 100
+            y: Math.floor(y * 366.4 / 1000) / 100
           });
         }
       }
