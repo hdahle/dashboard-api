@@ -3,19 +3,18 @@
 # Svalbard Lufthavn time series
 
 # CSV input:
-# name,station,time,id,best_estimate_mean(air_temperature P1Y)
-# Svalbard Lufthavn,SN99840,1899,0,"-7,8"
-# Svalbard Lufthavn,SN99840,1900,1,"-8,1"
-# Svalbard Lufthavn,SN99840,1901,2,"-7,7"
-
+# Navn;Stasjon;Tid(norsk normaltid);Homogenisert middeltemperatur (år)
+# Svalbard Lufthavn;SN99840;1899;-7,6
+# Svalbard Lufthavn;SN99840;1900;-8,1
+# Svalbard Lufthavn;SN99840;1901;-7,7
+#
 # JSON output:
 # { 'source': '',
 #   'license': '',
 #   'link':
 #   'data':
 #   [
-#     { 'region': $1, 'data': [ {'year': $3, 'temperature': $5 }, { ... }] }
-#     { 'region': ... }
+#     {'x': $3, 'y': $4 }, { ... },  ]
 #   ]
 # }
 
@@ -34,9 +33,8 @@ fi
 echo "Writing file: ${TMPDIR}/${REDISKEY}.json"
 
 # Convert CSV-to-JSON
-awk 'BEGIN {ORS=""
-            FS=","
-            COUNTRY=""
+cat ${REDISKEY}.csv | sed s/,/./ | awk 'BEGIN {ORS=""
+            FS=";"
             print "{"
             print "\"source\":\"The Norwegian Meteorological Institute and The Norwegian Centre for Climate Services NCCS\", "
             print "\"license\":\"CC BY 4.0 \", "
@@ -45,20 +43,11 @@ awk 'BEGIN {ORS=""
             print "\"data\": ["
             SEP=""
      }
-
-     $2 == "station" {next}
-     /Meteorologisk institutt/ {next}
-
      $1 == "Svalbard Lufthavn" {
-            if ($6 == "") {
-              printf "%s{\"x\":%s,\"y\":\"%s\"}", SEP, $3, $5
-            } else {
-              printf "%s{\"x\":%s,\"y\":%s.%s}", SEP, $3, $5, $6
-            }
+            printf "%s{\"x\":%s,\"y\":%s}", SEP, $3, $4
             SEP = ","
      }
-
-     END   {print "]}"}' < ${REDISKEY}.csv > ${TMPDIR}/${REDISKEY}.json
+     END   {print "]}"}' > ${TMPDIR}/${REDISKEY}.json
 
 
 echo "Saving JSON to Redis, bytes:"
