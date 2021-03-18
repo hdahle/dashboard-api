@@ -33,7 +33,7 @@ for i in "electricity" "coal" "oil" "emissions" "population" "gdp" "nuclear"; do
   node ${jsfile} --series ${i} --apikey ${eiakey} --key ${rediskey} 
 done
 
-for i in "gas"; do
+for i in "gas" "renewable-gen" "nuclear-gen" "fossilfuel-gen";  do
   rediskey="eia-global-${i}"
   node ${jsfile} --series ${i} --apikey ${eiakey} --key ${rediskey} 
 done
