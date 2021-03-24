@@ -44,21 +44,15 @@ do
             LINE = 0
      }
 
-     $1 == "source"  { SOURCE=$2 }
-     $1 == "link"    { LINK=$2 }
-     $1 == "Country" { for (i=2; i<=NF; i++) datasetName[i-2] = $i; numDatasets = NF }
-     $1 == "Austria" { START=1 }
-
-     START && NF == numDatasets { 
+     $1 == "source"  { SOURCE=$2 ; next }
+     $1 == "link"    { LINK=$2 ; next }
+     $1 == "Country" { for (i=2; i<=NF; i++) datasetName[i-2] = $i; numDatasets = NF ; next}
+     
+     NF == numDatasets { 
             for (i=1; i<=NF; i++) dataset[i][LINE] = $i
             LINE++
      }  
-     END {  if (START == 0) {
-              print "Error: No CSV header found"
-              exit
-            }
-
-            print "{"
+     END {  print "{"
             print "\"source\":\"" SOURCE "\", "
             print "\"link\":\"" LINK "\", "
             print "\"accessed\":\"" ACCESSDATE "\", "
