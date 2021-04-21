@@ -2,6 +2,8 @@
 
 # Fetch annual forest fire data from 
 #   http://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv
+# Apr 20, 2021: Document moved to
+#   https://queimadas.dgi.inpe.br//queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv
 # Convert CSV file to JSON
 # Resulting CSV file should be saved to queimadas-brazil.csv
 #
@@ -27,7 +29,7 @@ DATE=`date`
 echo ${DATE}
 echo "Converting Brazil forest-fire data from CSV to JSON"
 echo "Downloading ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
-curl --silent --show-error "http://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv" > ${CSVFILE}
+curl --silent --show-error "https://queimadas.dgi.inpe.br/queimadas/portal-static/csv_estatisticas/historico_pais_brasil.csv" > ${CSVFILE}
 
 if [ -f "${CSVFILE}" ]; then
     echo -n "Downloaded CSV-file, lines: "
