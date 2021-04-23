@@ -47,7 +47,7 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
  $1 == "LICENSE" { LICENSE=$2; next }
  $1 == "LOCATION" { START = 1; next }
  
- START { data[$1][$3][$6] = $7 }  # data[country][type of meat][year] = kg per capita
+ START && $4 == "KG_CAP" { data[$1][$3][$6] = $7 }  # data[country][type of meat][year] = kg per capita
 
  END {  print "{"
         print "\"source\":\"" SOURCE "\", "
