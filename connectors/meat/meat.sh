@@ -41,6 +41,10 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
         FS  = ","
         START = 0
         LINE = 0
+        type["BEEF"] = "Beef";
+        type["PIG"] = "Pork";
+        type["POULTRY"] = "Poultry";
+        type["SHEEP"] = "Sheep"; 
  }
  $1 == "SOURCE"  { SOURCE=$2 ; next }
  $1 == "LINK"    { LINK=$2 ; next }
@@ -65,7 +69,7 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
           for (TYPE in data[COUNTRY]) {         
             if (!firsttype) print ","
             firsttype=0 
-            printf "{\"meat\":\"%s\",\"data\":[", TYPE
+            printf "{\"meat\":\"%s\",\"data\":[", type[TYPE]
             first = 1
             for (YEAR in data[COUNTRY][TYPE]) {
               if (!first) print ","
