@@ -70,7 +70,7 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
             for (YEAR in data[COUNTRY][TYPE]) {
               if (!first) print ","
               first = 0
-              printf "{\"x\":%d,\"y\":%d}",YEAR, data[COUNTRY][TYPE][YEAR]
+              printf "{\"x\":%d,\"y\":%s}",YEAR, data[COUNTRY][TYPE][YEAR]
             }
             print "]}"
           }
