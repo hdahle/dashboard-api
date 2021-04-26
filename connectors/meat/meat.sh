@@ -45,9 +45,10 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
         meatName["PIG"] = "Pork";
         meatName["POULTRY"] = "Poultry";
  }
- $1 == "SOURCE"  { SOURCE=$2 ; next }
- $1 == "LINK"    { LINK=$2 ; next }
- $1 == "LICENSE" { LICENSE=$2; next }
+ $1 == "SOURCE"   { SOURCE=$2 ; next }
+ $1 == "LINK"     { LINK=$2 ; next }
+ $1 == "LICENSE"  { LICENSE=$2; next }
+ $1 == "INFO"     { INFO=$2; next }
  $1 == "LOCATION" { START = 1; next }
  
  START && $4 == "KG_CAP" { data[$1][$3][$6] = $7 }  # data[country][type of meat][year] = kg per capita
@@ -56,6 +57,7 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
         print "\"source\":\"" SOURCE "\", "
         print "\"link\":\"" LINK "\", "
         print "\"license\":\"" LICENSE "\", "
+        print "\"info\":\"" INFO "\", "
         print "\"accessed\":\"" ACCESSDATE "\", "
         print "\"data\": ["
 
