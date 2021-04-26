@@ -59,19 +59,17 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
         print "\"accessed\":\"" ACCESSDATE "\", "
         print "\"data\": ["
 
+        n=split("SHEEP BEEF PIG POULTRY", meats, " "); # need to step thru array in specific sequence
         firstcountry=1
         for (COUNTRY in data) {
           if (!firstcountry) print ","
           firstcountry=0
-          printf "\n{\"country\":\"%s\",\"data\":[", COUNTRY
-          firsttype=1
+          printf "\n{\"country\":\"%s\",\"datasets\":[", COUNTRY
+                    
+          for (i=1; i<=n; i++) {                     
+            if (i>1) print ","
 
-          n=split("SHEEP BEEF PIG POULTRY", meats, " "); # need to step thru array in specific sequence
-          for (i=1; i<=n; i++) {         
-            
-            if (!firsttype) print ","
-            firsttype=0 
-            printf "{\"meat\":\"%s\",\"data\":[", meatName[meats[i]]
+            printf "{\"label\":\"%s\",\"data\":[", meatName[meats[i]]
             first = 1
             for (YEAR in data[COUNTRY][meats[i]]) {
               if (!first) print ","
