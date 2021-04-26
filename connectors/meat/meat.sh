@@ -40,11 +40,10 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
         ORS = ""
         FS  = ","
         START = 0
-        LINE = 0
-        type["BEEF"] = "Beef";
-        type["PIG"] = "Pork";
-        type["POULTRY"] = "Poultry";
-        type["SHEEP"] = "Sheep"; 
+        meatName["SHEEP"] = "Sheep"; 
+        meatName["BEEF"] = "Beef";
+        meatName["PIG"] = "Pork";
+        meatName["POULTRY"] = "Poultry";
  }
  $1 == "SOURCE"  { SOURCE=$2 ; next }
  $1 == "LINK"    { LINK=$2 ; next }
@@ -66,15 +65,18 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
           firstcountry=0
           printf "\n{\"country\":\"%s\",\"data\":[", COUNTRY
           firsttype=1
-          for (TYPE in data[COUNTRY]) {         
+
+          n=split("SHEEP BEEF PIG POULTRY", meats, " "); # need to step thru array in specific sequence
+          for (i=1; i<=n; i++) {         
+            
             if (!firsttype) print ","
             firsttype=0 
-            printf "{\"meat\":\"%s\",\"data\":[", type[TYPE]
+            printf "{\"meat\":\"%s\",\"data\":[", meatName[meats[i]]
             first = 1
-            for (YEAR in data[COUNTRY][TYPE]) {
+            for (YEAR in data[COUNTRY][meats[i]]) {
               if (!first) print ","
               first = 0
-              printf "{\"x\":%d,\"y\":%s}",YEAR, data[COUNTRY][TYPE][YEAR]
+              printf "{\"x\":%d,\"y\":%s}",YEAR, data[COUNTRY][meats[i]][YEAR]
             }
             print "]}"
           }
