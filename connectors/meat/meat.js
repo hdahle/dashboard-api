@@ -103,13 +103,13 @@ redClient.on('error', function (err) {
       sorted.sort((a, b) => b.total - a.total)
 
       // Store key/value pair to Redis
-      let redisValue = JSON.stringify(/*{
+      let redisValue = JSON.stringify({
         source: results.source,
         link: results.link,
         license: results.license,
         accessed: results.accessed,
         year: year,
-        data: */{
+        data: {
           labels: sorted.map(x => x.country),
           datasets: [{
             label: "Sheep",
@@ -125,7 +125,7 @@ redClient.on('error', function (err) {
             data: sorted.map(x => x.poultry)
           }]
         }
-      /*}*/);
+      });
       console.log(moment().format(momFmt) +
         ' Storing ' + redisValue.length +
         ' bytes, key=' + redisKey +
