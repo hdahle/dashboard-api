@@ -54,6 +54,44 @@ cat ${CSVFILE} | sed s/\"//g  | awk -v ACCESSDATE="${DATE}" 'BEGIN {
  $1 == "INFO"     { INFO=$2; next }
  $1 == "LOCATION" { START = 1; next }
  
+ # Country codes from https://irows.ucr.edu/research/tsmstudy/wbcountrycodes.htm
+
+ $1 == "NOR" { $1 = "Norway" }
+ $1 == "VNM" { $1 = "Vietnam" }
+ $1 == "PHL" { $1 = "Philippines" }
+ $1 == "EGY" { $1 = "Egypt" }
+ $1 == "GBR" { $1 = "United Kingdom" }
+ $1 == "IND" { $1 = "India" }
+ $1 == "IDN" { $1 = "Indonesia" }
+ $1 == "ARG" { $1 = "Argentina" }
+ $1 == "CHL" { $1 = "Chile" } 
+ $1 == "AUS" { $1 = "Autralia" } 
+ $1 == "ZAF" { $1 = "South Africa" } 
+ $1 == "TUR" { $1 = "Turkey" } 
+ $1 == "KOR" { $1 = "South Korea" } 
+ $1 == "CHN" { $1 = "China" } 
+ $1 == "PER" { $1 = "Peru" } 
+ $1 == "IRN" { $1 = "Iran" } 
+ $1 == "SAU" { $1 = "Saudi Arabia" } 
+ $1 == "RUS" { $1 = "Russia" } 
+ $1 == "WLD" { $1 = "World" } 
+ $1 == "PAK" { $1 = "Pakistan" } 
+ $1 == "ETH" { $1 = "Ethiopia" } 
+ $1 == "COL" { $1 = "Colombia" } 
+ $1 == "BRA" { $1 = "Brazil" } 
+ $1 == "MEX" { $1 = "Mexico" } 
+ $1 == "UKR" { $1 = "Ukraine" } 
+ $1 == "KAZ" { $1 = "Kazakhstan" } 
+ $1 == "ISR" { $1 = "Israel" } 
+ $1 == "NZL" { $1 = "New Zealand" } 
+ $1 == "CAN" { $1 = "Canada" } 
+ $1 == "THA" { $1 = "Thailand" } 
+ $1 == "MYS" { $1 = "Malaysia" } 
+ $1 == "PRY" { $1 = "Paraguay" } 
+ $1 == "JPN" { $1 = "Japan" } 
+ $1 == "CHE" { $1 = "Switzerland" } 
+ $1 == "NGA" { $1 = "Nigeria" } 
+ 
  START && $4 == "KG_CAP" { data[$1][$3][$6] = $7 }  # data[country][type of meat][year] = kg per capita
 
  END {  print "{"

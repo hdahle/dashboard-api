@@ -64,9 +64,9 @@ redClient.on('error', function (err) {
       }
       let labels = []; // list of countries
       let datasets = [];
-      ["Sheep", "Beef", "Pork", "Poultry"].forEach(x => {
+      ["Sheep", "Beef", "Pork", "Poultry"].forEach(meatName => {
         datasets.push({
-          label: x,
+          label: meatName,
           data: []
         })
       });
