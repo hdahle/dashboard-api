@@ -46,7 +46,7 @@ awk -v d="${DATE}" 'BEGIN {
      NF == 5 {
             labels[line] = $1 " " $2
             data[line] = $4
-            color[line] = ($5 == "EOR") ? "red" : "green"
+            color[line] = ($5 == "EOR") ? "red" : (($5 == "Suspended") ? "grey" : "green")  
             line++
      }
 
