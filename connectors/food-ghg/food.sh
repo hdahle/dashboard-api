@@ -66,7 +66,8 @@ NF == 9 {
         print "\"accessed\":\"" ACCESSDATE "\", "
         print "\"data\": {"
   
-        print "\n\"labels\": ["
+        # print the labels, each label is a foodstuff such as beef, peas, fish
+        print "\"labels\": ["
         printComma = 0
         for (i in labels) {
           if (printComma++) print ","
@@ -74,7 +75,8 @@ NF == 9 {
         }
         print "],"
   
-        print "\n\"totals\": ["
+        # print the totals. this can be removed
+        print "\"totals\": ["
         printComma = 0
         for (i in totals) {
           if (printComma++) print ","
@@ -82,8 +84,8 @@ NF == 9 {
         }
         print "],"
   
-        print "\"datasets\": [\n"
-        
+        # print one dataset per GHG contribution factor such as Packaging, Transport, etc
+        print "\"datasets\": ["
         printComma = 0
         for (i in datasets) {
           if (printComma) print ","
@@ -94,7 +96,7 @@ NF == 9 {
             if (printComma++) print ","
             print datasets[i][x]
           }
-          print "]}\n"
+          print "]}"
         }
         print "]}}\n"
 }' > ${JSONFILE}
