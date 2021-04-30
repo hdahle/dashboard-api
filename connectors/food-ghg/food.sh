@@ -22,9 +22,8 @@ TMPDIR=$(mktemp -d)
 CSVFILE="${REDISKEY}.csv"
 JSONFILE="${TMPDIR}/${REDISKEY}.json"
 DATE=`date --iso-8601='minutes'`
-#echo ${DATE}
-#echo "Converting OECD data from CSV to JSON"
-#echo "Using ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
+echo "Converting from CSV to JSON"
+echo "Using ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
 if [ -f "${CSVFILE}" ]; then
   LINES=`cat ${CSVFILE} | wc -l`
   if [ "$LINES" -eq "0" ]; then
@@ -98,8 +97,8 @@ NF == 9 {
           print "]}\n"
         }
         print "]}}\n"
-}' #> ${JSONFILE}
-exit
+}' > ${JSONFILE}
+
 echo -n "Storing JSON to Redis, bytes: "
 cat ${JSONFILE} | wc --bytes 
 
