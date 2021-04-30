@@ -83,7 +83,7 @@ NF == 9 {
           print "\"" totals[i] "\""
         }
         print "],"
-  exit
+  
         # print one dataset per GHG contribution factor such as Packaging, Transport, etc
         print "\"datasets\": ["
         printComma = 0
