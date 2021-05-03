@@ -40,9 +40,7 @@ redClient.on('error', function (err) {
   }
 
   // process commandline
-  let redisKey = argv.key;  // redis-key from cmd line
-  let endDate = argv.end;   // end date
-  let startDate = argv.start; // start date
+  const redisKey = argv.key;  // redis-key from cmd line
 
   if (redisKey === undefined) {
     console.log('Usage: node bitcoin-price.js --key <rediskey>');
@@ -50,13 +48,15 @@ redClient.on('error', function (err) {
   }
 
   // build a single query URL, include all regions
-  const dateToday = moment().format('YYYY-MM-DD')
-  let url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=2015-01-01&end=' + dateToday;
+  const dateToday = moment().format('YYYY-MM-DD');
+  const dateFiveYearsAgo = moment().add(-5, 'years').format('YYYY-MM-DD');
+  const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=' + dateFiveYearsAgo + '&end=' + dateToday;
 
   fetch(url)
     .then(status)
     .then(json)
     .then(results => {
+      console.log(results)
       // results.series is undefined if incorrect query URL
       if (results.bpi === undefined) {
         console.log('No data from api.coindesk.com: ', results, url);
@@ -64,7 +64,7 @@ redClient.on('error', function (err) {
       }
 
       // original coindesk.com data is:   {bpi:{ "yyyy-mm-dd":nnnn, "yyyy-mm-dd":nnnn, ...  }}
-      let json = {
+      const json = {
         source: 'Bitcoin price data is Powered by CoinDesk',
         link: 'https://www.coindesk.com/price/bitcoin',
         license: 'From the Coindesk website: You are free to use this API to include our data in any application or website as you see fit, as long as each page or app that uses it includes the text “Powered by CoinDesk”, linking to our price page. ',
@@ -80,7 +80,7 @@ redClient.on('error', function (err) {
       };
 
       // Store key/value pair to Redis
-      let redisValue = JSON.stringify(json);
+      const redisValue = JSON.stringify(json);
       console.log(moment().format(momFmt) +
         ' Bytes=' + redisValue.length +
         ' Array length=' + json.data.length +
