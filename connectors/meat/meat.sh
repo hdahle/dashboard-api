@@ -17,6 +17,7 @@ else
 fi
 
 REDISKEY="oecd-meat-2020" 
+REDISKEYSORTED="oecd-meat-sorted-2019"
 
 TMPDIR=$(mktemp -d)
 CSVFILE="${REDISKEY}.csv"
@@ -134,4 +135,10 @@ ${REDIS} -x set ${REDISKEY} < ${JSONFILE}
 
 echo -n "Retrieving key=${REDISKEY} from Redis, bytes: "
 ${REDIS} get ${REDISKEY} | wc --bytes
+
+if [ -f "meat.js" ] ; then
+  node meat.js --key ${REDISKEYSORTED} --url "https://api.dashboard.eco/${REDISKEY}"
+fi
+
+
 
