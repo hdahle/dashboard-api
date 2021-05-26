@@ -1,8 +1,4 @@
-// eia.js
-//
-// Fetches coal/oil/gas production data from api.eia.gov
-// Fetches from all 8 global regions
-// Reult from EIA is JSON, but we convert to chart.js-friendly format
+// meat.js
 //
 // H. Dahle, 2020
 
@@ -28,6 +24,7 @@ redClient.on('warning', function () {
 redClient.on('error', function (err) {
   console.log(moment().format(momFmt) + ' Redis error:' + err);
 });
+
 
 // Fetch OECD data
 (() => {
