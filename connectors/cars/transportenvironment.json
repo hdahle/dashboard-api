@@ -1,0 +1,50 @@
+{
+  "source": "How clean are electric cars? A briefing by Transport & Environment, April 2020",
+  "link": "https://www.transportenvironment.org/what-we-do/electric-cars/how-clean-are-electric-cars",
+  "assumptions": "Fuel consumption based on https://spritmonitor.de. Small cars (B-segment): Ford Fiesta, Peugeot 208, Renault Zoe. Medium cars (C-segment): VW Golf and ID3, Nissan Qashqai and Leaf. Large car (D-segment): VW Passat, BMW 3-series, Tesla Model 3 and Y, Mercedes EQC. Executive car (E-segment): Audi A6/A7, Volvo XC90, Tesla Model S/X. high mileage cars: Large cars used for Taxi/Uber/etc services, 30-40000 km/year. Production, not including battery: 4.8tCO2/kg in 2020, 2.9tCO2/kg. Lifetime mileage: Small cars 170000km, Medium cars 225000km, Large cars 280000km, Executive cars 335000km, High mileage csrs: 500000km. Well-to-tank emissions: 735gCO2/l diesel, 614gCO2/l gasoline. Electricity grid loss: 7%. Charging loss: 10%",
+  "units": "tons CO2e",
+  "data": {
+    "labels": [
+      "Toyota Prius 1.8L",
+      "Mercedes C220d",
+      "VW e-Golf 36kWh",
+      "Tesla Model 3 75kWh",
+      "Porsche Taycan S 93kWh"
+    ],
+    "datasets": [
+      {
+        "label": "Manufacturing",
+        "data": [
+          7,
+          8,
+          6,
+          7,
+          9
+        ],
+        "backgroundColor": "rgba(80,180,40,0.5)"
+      },
+      {
+        "label": "Battery",
+        "data": [
+          0,
+          0,
+          2.75,
+          5.75,
+          7
+        ],
+        "backgroundColor": "rgba(80,80,140,0.5)"
+      },
+      {
+        "label": "Driving",
+        "data": [
+          35,
+          57,
+          10.75,
+          10,
+          19
+        ],
+        "backgroundColor": "rgba(180,80,140,0.5)"
+      }
+    ]
+  }
+}
