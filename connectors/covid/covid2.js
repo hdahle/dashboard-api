@@ -365,6 +365,12 @@ function processFile(fn, redisKey, redClient, cList, summaryOnly) {
       }
       // Now process each line of country-data
       let cName = countryName(csv[1]);
+
+      let country = worldPop.find(x => x.c === cName);
+      if (country === undefined) {
+        console.log('Undefined country:', cName);
+        return;
+      }
       let cPop = worldPop.find(x => x.c === cName).p / 1000000;//p(cName) / 1000000;
       let d = [];
       for (let i = 4; i < csv.length; i++) {
