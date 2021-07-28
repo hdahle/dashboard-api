@@ -17,7 +17,8 @@ sudo setcap "cap_net_bind_service=+ep" /opt/bitnami/nodejs/bin/.node.bin
 ```
 
 Make sure to stop Apache, you don't want both Apache and node trying to serve ports 80 and 443:
-```sudo mv /opt/bitnami/apache2/scripts/ctl.sh /opt/bitnami/apache2/scripts/ctl.sh.disabled
+```shell
+sudo mv /opt/bitnami/apache2/scripts/ctl.sh /opt/bitnami/apache2/scripts/ctl.sh.disabled
 ```
 
 ## Certificate access for node.js process
