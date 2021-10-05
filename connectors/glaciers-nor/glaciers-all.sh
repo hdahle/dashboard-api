@@ -9,7 +9,7 @@
 
 TMPDIR=$(mktemp -d)
 JSONFILE="${TMPDIR}/glaciers"
-REDISKEY="glaciers-nor-all"
+REDISKEY="glacier-length-nor-all"
 
 echo "File:" $JSONFILE
 echo "[" > ${JSONFILE}
