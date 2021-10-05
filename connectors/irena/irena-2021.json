@@ -1,0 +1,43 @@
+{
+  "source": "IRENA (2021), Renewable Power Generation Costs in 2020, International Renewable Energy Agency, Abu Dhabi",
+  "link": "https://www.irena.org/publications/2021/Jun/Renewable-Power-Costs-in-2020",
+  "copyright": "Copyright IRENA 2021",
+  "license": "The source PDF says: Material in this publication may be freely used, shared, copied, reproduced, printed and/or stored, provided that all such material is clearly attributed to IRENA and bears a notation of copyright (© IRENA) with the year of copyright",
+  "data": {
+    "fuels": [
+      "Biomass",
+      "Geothermal",
+      "Hydro",
+      "Solar PV",
+      "Concentrating Solar",
+      "Wind offshore",
+      "Wind onshore"
+    ],
+    "datasets": [
+      {
+        "label": 2010,
+        "data": [
+          0.076,
+          0.049,
+          0.038,
+          0.381,
+          0.340,
+          0.162,
+          0.089
+        ]
+      },
+      {
+        "label": 2020,
+        "data": [
+          0.076,
+          0.071,
+          0.044,
+          0.057,
+          0.108,
+          0.084,
+          0.039
+        ]
+      }
+    ]
+  }
+}
