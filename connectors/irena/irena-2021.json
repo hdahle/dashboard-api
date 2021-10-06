@@ -4,7 +4,7 @@
   "copyright": "Copyright IRENA 2021",
   "license": "The source PDF says: Material in this publication may be freely used, shared, copied, reproduced, printed and/or stored, provided that all such material is clearly attributed to IRENA and bears a notation of copyright (© IRENA) with the year of copyright",
   "data": {
-    "fuels": [
+    "labels": [
       "Biomass",
       "Geothermal",
       "Hydro",
