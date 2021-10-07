@@ -1,7 +1,7 @@
 source,Sovacool et al Balancing safety with sustainability / Journal of Cleaner Production July 23 2015,,,
 link,https://www.academia.edu/40233260/Balancing_safety_with_sustainability_assessing_the_risk_of_accidents_for_modern_low-carbon_energy_systems,,,
 info,Deaths per TWh generated in the period 1990-2013, i.e. Chernobyl (4056 deaths according to WHO/IEAE) is excluded and Fukushima is included (573 deaths) in the data. Deaths due to particulate pollution from biomass and biofuels are not included,,,
-data,total,,,
+data,Deaths per TWh generated,,,
 Hydro,0.0235,,,
 Wind,0.0917,,,
 Solar,0.0136,,,

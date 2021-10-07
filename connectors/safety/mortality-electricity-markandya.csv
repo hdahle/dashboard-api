@@ -1,7 +1,7 @@
 source,Markandya Anil and Wilkinson Paul / The Lancet Volume 370 Issue 9591 P979-990 September 15 2007,,,
 link,https://www.thelancet.com/article/S0140-6736(07)61253-7/fulltext,,,
 info,Mortality figures (in deaths per TWh generated) includes accidents (occupational and those involving the public) as well as pollution/radiation related effects including cancers,,,
-data,total,public,occupational,pollution
+data,Deaths per TWh generated,public,occupational,pollution
 Lignite,32.7,0.02,0.10,32.6
 Coal,24.6,0.02,0.10,24.5
 Gas,2.8,0.02,0.001,2.8
