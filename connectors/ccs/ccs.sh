@@ -41,8 +41,8 @@ awk -v d="${DATE}" 'BEGIN {
      $1 == "License" { license = $2 ; next }
      $1 == "Source"  { source = $2 ; next }
      $1 == "Link"    { link = $2 ; next }
+     $1 == "Name"    { label = $4 }
      $2 == "Country" { next }
-
      NF == 5 {
             labels[line] = $1 " " $2
             data[line] = $4
@@ -65,6 +65,7 @@ awk -v d="${DATE}" 'BEGIN {
             }
             print "],"
             print "\"datasets\":[{"
+            print "\"label\": \"" label "\","
             print "\"data\":["
             printComma = 0
             for (i in data) {
