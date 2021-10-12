@@ -1,0 +1,18 @@
+{
+  "name": "vaccines",
+  "version": "1.0.0",
+  "description": "",
+  "main": "vaccines.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parse": "^4.16.3",
+    "fs": "0.0.1-security",
+    "minimist": "^1.2.5",
+    "moment": "^2.29.1",
+    "redis": "^3.1.2"
+  }
+}
