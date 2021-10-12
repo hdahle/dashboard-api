@@ -17,9 +17,7 @@
           17,
           17,
           17
-        ],
-        "backgroundColor": "rgba(80,180,40,0.5)"
-      },
+        ]      },
       {
         "label": "Battery",
         "data": [
@@ -27,8 +25,7 @@
           7,
           7,
           7
-        ],
-        "backgroundColor": "rgba(80,80,140,0.5)"
+        ]      
       },
       {
         "label": "Manufacturing",
@@ -37,8 +34,7 @@
           2.2,
           2.2,
           2.2
-        ],
-        "backgroundColor": "rgba(180,80,140,0.5)"
+        ]
       },
       {
         "label": "Driving",
@@ -47,8 +43,7 @@
           23,
           15,
           0.4
-        ],
-        "backgroundColor": "rgba(80,180,140,0.5)"
+        ]
       },
       {
         "label": "End-of-life",
@@ -57,8 +52,7 @@
           0.5,
           0.5,
           0.5
-        ],
-        "backgroundColor": "rgba(180,80,40,0.5)"
+        ]
       }
     ]
   }
