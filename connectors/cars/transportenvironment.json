@@ -20,8 +20,7 @@
           6,
           7,
           9
-        ],
-        "backgroundColor": "rgba(80,180,40,0.5)"
+        ]
       },
       {
         "label": "Battery",
@@ -31,8 +30,7 @@
           2.75,
           5.75,
           7
-        ],
-        "backgroundColor": "rgba(80,80,140,0.5)"
+        ]
       },
       {
         "label": "Driving",
@@ -42,8 +40,7 @@
           10.75,
           10,
           19
-        ],
-        "backgroundColor": "rgba(180,80,140,0.5)"
+        ]
       }
     ]
   }
