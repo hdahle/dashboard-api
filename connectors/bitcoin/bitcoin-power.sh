@@ -25,7 +25,7 @@ DATE=`date --iso-8601='minutes'`
 echo ${DATE}
 echo "Converting Bitcoin power consumption data from CSV to JSON"
 echo "Downloading ${REDISKEY}.csv, using tmpdir ${TMPDIR}"
-curl --silent --show-error "https://cbeci.org/api/csv" > ${CSVFILE}
+curl --silent --show-error "https://ccaf.io/cbeci/api/csv" > ${CSVFILE}
 
 if [ -f "${CSVFILE}" ]; then
     echo -n "Downloaded CSV-file, lines: "
