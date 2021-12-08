@@ -1,4 +1,4 @@
 *.csv
 node_modules/*
 update*
-time_series*.csv
+package_lock*
