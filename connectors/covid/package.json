@@ -5,28 +5,29 @@
   "main": "covid2.js",
   "private": true,
   "scripts": {
+    "update": "curl https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv > time_series_covid19_deaths_global.csv && curl https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv > time_series_covid19_confirmed_global.csv",
     "test": "mocha",
-    "deaths": "node covid2.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths",
-    "confirmed": "node covid2.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-confirmed",
-    "summarydeaths": "node covid2.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-summary --summaryOnly",
-    "summaryconfirmed": "node covid2.js --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv --key covid-confirmed-summary --summaryOnly",
-    "regions": "node covid2.js --countries regions --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-regions",
-    "top20": "node covid2.js --countries top20 --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-top20",
-    "select": "node covid2.js --countries US,UK,Spain,Italy,France,World,Norway,Denmark,Sweden --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-select",
-    "world": "node covid2.js --countries World --file ~/covid/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv --key covid-deaths-world"
+    "deaths": "node covid2.js --file time_series_covid19_deaths_global.csv --key covid-deaths",
+    "confirmed": "node covid2.js --file time_series_covid19_confirmed_global.csv --key covid-confirmed",
+    "summarydeaths": "node covid2.js --file time_series_covid19_deaths_global.csv --key covid-deaths-summary --summaryOnly",
+    "summaryconfirmed": "node covid2.js --file time_series_covid19_confirmed_global.csv --key covid-confirmed-summary --summaryOnly",
+    "regions": "node covid2.js --countries regions --file time_series_covid19_deaths_global.csv --key covid-deaths-regions",
+    "top20": "node covid2.js --countries top20 --file time_series_covid19_deaths_global.csv --key covid-deaths-top20",
+    "select": "node covid2.js --countries US,UK,Spain,Italy,France,World,Norway,Denmark,Sweden --file time_series_covid19_deaths_global.csv --key covid-deaths-select",
+    "world": "node covid2.js --countries World --file time_series_covid19_deaths_global.csv --key covid-deaths-world"
   },
   "keywords": [],
   "author": "Håkon Dahle",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "^9.1.3"
   },
   "dependencies": {
-    "csv-parse": "^4.8.8",
+    "csv-parse": "^4.16.3",
     "minimist": "^1.2.5",
-    "moment": "^2.24.0",
-    "node-fetch": "^2.6.0",
-    "redis": "^3.0.2",
+    "moment": "^2.29.1",
+    "node-fetch": "^2.6.6",
+    "redis": "^3.1.2",
     "request": "^2.88.2"
   }
 }
