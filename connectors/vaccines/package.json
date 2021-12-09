@@ -4,7 +4,9 @@
   "description": "",
   "main": "vaccines.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update": "curl https://raw.githubusercontent.com/govex/COVID-19/master/data_tables/vaccine_data/global_data/time_series_covid19_vaccine_global.csv >> vaccines.csv",
+    "vaccines": "node vax.js --file vaccines.csv --key tmp --partial --full --doses"
   },
   "author": "",
   "license": "ISC",
