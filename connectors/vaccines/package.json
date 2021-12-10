@@ -2,7 +2,7 @@
   "name": "vaccines",
   "version": "1.0.0",
   "description": "",
-  "main": "vaccines.js",
+  "main": "vax.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "update": "curl https://raw.githubusercontent.com/govex/COVID-19/master/data_tables/vaccine_data/global_data/time_series_covid19_vaccine_global.csv >> vaccines.csv",
