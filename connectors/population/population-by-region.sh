@@ -29,43 +29,40 @@
 INPUTFILE="WPP2019_TotalPopulationBySex.csv"
 REDISKEY="WPP2019_TotalPopulationByRegion"
 TMPDIR=$(mktemp -d)
+URL="https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_TotalPopulationBySex.csv"
 
 if [ -f "${INPUTFILE}" ]; then
     echo "Converting ${INPUTFILE} from CSV to JSON, using temp directory ${TMPDIR}"
 else
     echo "File not found: ${INPUTFILE}, downloading from UN"
     # Fetch population data from UN
-    curl "https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_TotalPopulationBySex.csv" > ${INPUTFILE}
+    curl ${URL} > ${INPUTFILE}
     wc -l ${INPUTFILE}
 fi
 
 # Convert JSON to CSV
 
-awk 'BEGIN {FS=",";
+awk -v URL=${URL} 'BEGIN {FS=",";
             ORS="";
             print "{"
-            print "\"source\":"
-            print "\"United Nations World Population Prospects 2019\", "
-            print "\"link\":"
-            print "\"https://population.un.org/wpp/Download/Standard/CSV\", "
-            print "\"license\":"
-            print "\"Creative Commons license CC BY 3.0 IGO: http://creativecommons.org/licenses/by/3.0/igo/\", "
-            print "\"info\":"
-            print "\"Population data is in millions\", "
+            print "\"source\":\"United Nations World Population Prospects 2019\", "
+            print "\"link\":\"" URL "\", "
+            print "\"license\":\"Creative Commons license CC BY 3.0 IGO: http://creativecommons.org/licenses/by/3.0/igo/\", "
+            print "\"info\":\"Population data is in millions\", "
             print "\"data\": ["
             FIRSTREGION=1
             REGION=""
      }
 
-     $1=="LocID" {next}
+     $1 == "LocID" {next}
 
-     $4!="Medium" {next}
+     $4 != "Medium" {next}
      
      # These codes are UN codes for the regions of the world
-     $1!="900" && $1!="903" && $1!="904" && $1!="905" && $1!="908" && $1!="909" && $1!="935" {next}
+     $1!="900" && $1!="903" && $1!="904" && $1!="905" && $1!="908" && $1!="909" && $1!="935" { next }
 
      # Start new REGION
-     REGION!=$1 {
+     REGION != $1 {
             if (!FIRSTREGION) printf "]},"
             printf "{\"region\":\"%s\",\"data\":[", $2
             REGION=$1
@@ -73,7 +70,7 @@ awk 'BEGIN {FS=",";
      }
 
      # Continue with a REGION
-     REGION==$1 {
+     REGION == $1 {
             if (!FIRSTYEAR) printf ", "
             FIRSTYEAR=0
             FIRSTREGION=0
@@ -83,6 +80,21 @@ awk 'BEGIN {FS=",";
 
 echo "JSON result in bytes:"
 cat ${TMPDIR}/${REDISKEY}.json | wc --bytes
+
+# When installing cron job, provde fully qualified filename to this script
+# Cron doesnt run with the same PATH as regular user
+REDIS=$1
+if [ "$REDIS" = "" ]; then
+  REDIS="redis-cli"
+fi
+
+if [ ! `which ${REDIS}` ]; then
+  echo "Redis-executable not found: ${REDIS}"
+  echo "Saving to ${REDISKEY}.json"
+  cp ${TMPDIR}/${REDISKEY}.json ${REDISKEY}.json
+  exit
+fi
+
 
 # stick it into Redis
 echo "Storing to key=${REDISKEY} in Redis"
