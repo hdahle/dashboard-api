@@ -90,8 +90,8 @@ function redisSave(key, value) {
       // For data>10, just use the integer part. For <10, use one digit after decimalpoint
       let y = (columns.rate<10)?(Math.trunc(10*columns.rate)/10):(Math.trunc(columns.rate))
       r.data.push({
-        x: moment(columns.date, 'YYYY-WW').format('YYYYWW'),
-        y: y
+        t: moment(columns.date, 'YYYY-WW').format('YYYYWW'),
+        v: y
       })
     })
     .on('end', () => {
