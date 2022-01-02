@@ -66,7 +66,7 @@ function redisSave(redisKey, redisVal) {
         updated: results.updated,
         license: 'Norwegian License for Open Government Data (NLOD) 2.0, http://data.norge.no/nlod/en/2.0',
         link: 'https://data.ssb.no/api/v0/',
-        info: 'Units: 1000 tons CO2 Equivalents per year',
+        info: 'Units: million tons CO2 equivalents per year',
         data: {
           datasets: []
         }
@@ -97,8 +97,8 @@ function redisSave(redisKey, redisVal) {
         let annualValues = [];
         for (let j = 0; j < numValues; j++) {
           annualValues.push({
-            x: parseInt(years[j], 10),//t: years[j],
-            y: results.value[i + j]
+            x: parseInt(years[j], 10), 
+            y: results.value[i + j] / 1000
           })
         }
         res.data.datasets.push({
