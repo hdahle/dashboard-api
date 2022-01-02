@@ -68,7 +68,8 @@ function redisSave(redisKey, redisVal) {
         link: 'https://data.ssb.no/api/v0/',
         info: 'Units: million tons CO2 equivalents per year',
         data: {
-          datasets: []
+          datasets: [],
+          yAxisLabel: 'Mt'
         }
       };
       // Number of values per component (one value for each year)
