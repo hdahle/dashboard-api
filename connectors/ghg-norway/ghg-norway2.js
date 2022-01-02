@@ -14,10 +14,10 @@ function redisSave(redisKey, redisVal) {
   let redClient = redis.createClient();
 
   redClient.on('connect', function () {
-    //console.log(moment().format(momFmt) + ' Redis client connected');
+    console.log(moment().format(momFmt) + ' Redis client connected');
   });
   redClient.on('ready', function () {
-    //console.log(moment().format(momFmt) + ' Redis client ready');
+    console.log(moment().format(momFmt) + ' Redis client ready');
     
     redClient.set(redisKey, redisVal, function (error, result) {
       if (result) {
@@ -33,7 +33,7 @@ function redisSave(redisKey, redisVal) {
     console.log(moment().format(momFmt) + ' Redis warning');
   });
   redClient.on('error', function (err) {
-    //console.log(moment().format(momFmt) + ' Redis error:' + err);
+    console.log(moment().format(momFmt) + ' Redis error:' + err);
     console.log(redisVal)
     redClient.quit();
   });
@@ -109,7 +109,7 @@ function redisSave(redisKey, redisVal) {
       // Store key/value pair to Redis
       const redisKey = 'ghg-norway';
       const redisVal = JSON.stringify(res);
-      // console.log(moment().format(momFmt) + ' Bytes: ' + redisVal.length + ' Key=' + redisKey + ' Value=' + redisVal.substring(0, 60));
+      console.log(moment().format(momFmt) + ' Bytes: ' + redisVal.length + ' Key=' + redisKey + ' Value=' + redisVal.substring(0, 60));
       redisSave(redisKey, redisVal);
     })
     .catch(err => console.log(err));
