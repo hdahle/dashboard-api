@@ -46,9 +46,7 @@ redClient.on('error', function (err) {
   console.log(moment().format(momFmt) + ' Redis error:' + err);
 });
 
-processCSV();
-
-function processCSV() {
+(() => {
   let fn = argv.file; // filename from cmd line
   let key = argv.key; // redis-key from cmd line
   let c = argv.countries; // optional country-list from cmd-line
@@ -58,7 +56,10 @@ function processCSV() {
     source: 'Global Carbon Project December 2020, https://www.globalcarbonproject.org/carbonbudget/',
     info: 'Fossil fuels and cement production emissions by country, in billion tons (Gt, gigatons) of CO2 per country per year',
     link: 'https://www.globalcarbonproject.org',
-    data: []
+    data: {
+      yAxisLabel: 'Gt',
+      datasets: []
+    }
   }
   // number of countries/entries per line/row
   let nCols = 0;
@@ -93,7 +94,7 @@ function processCSV() {
     if (cList[0] === 'regions') {
       cList = [
         'africa', 'asia', 'bunkers', 'central america', 'north america',
-        'south america', 'europe', 'middle east', 'oceania'
+        'south america', 'europe', 'middle east', 'oceania', 'world'
       ];
     }
   }
@@ -114,8 +115,8 @@ function processCSV() {
         csvRow.shift();
         nCols = csvRow.length;//indexOf('');
         for (let i = 0; i < nCols; i++) {
-          d.data[i] = {
-            country: csvRow[i],
+          d.data.datasets[i] = {
+            label: csvRow[i],
             data: []
           };
         }
@@ -131,7 +132,7 @@ function processCSV() {
           let y = csvRow[i];
           if (isNaN(y)) y = 0;
 
-          d.data[i].data.push({
+          d.data.datasets[i].data.push({
             x: parseInt(year, 10), // avoid quotemarks around year
             y: Math.floor(y * 366.4 / 1000) / 100
           });
@@ -141,14 +142,14 @@ function processCSV() {
     .on('end', () => {
       // if we have specified some countries, remove all other countries from result
       if (cList.length) {
-        d.data = d.data.filter(x => cList.includes(x.country.toLowerCase()));
+        d.data.datasets = d.data.datasets.filter(x => cList.includes(x.label.toLowerCase()));
       }
 
-      d.data.forEach(x => {
-        x.country = x.country.replace('Central', 'C');
-        x.country = x.country.replace('North', 'N');
-        x.country = x.country.replace('South', 'S');
-        x.country = x.country.replace('Bunkers', 'Transport');
+      d.data.datasets.forEach(x => {
+        x.label = x.label.replace('Central', 'C');
+        x.label = x.label.replace('North', 'N');
+        x.label = x.label.replace('South', 'S');
+        x.label = x.label.replace('Bunkers', 'Transport');
       });
 
       let s = JSON.stringify(d);
@@ -169,4 +170,4 @@ function processCSV() {
       setInterval((() => process.exit()), 500);
     })
     .on('error', err => console.log('ReadStream Error:', err));
-}
+})();
