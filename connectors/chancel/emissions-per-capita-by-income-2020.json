@@ -2,8 +2,8 @@
 "link":"https://wid.world/document/climate-change-the-global-inequality-of-carbon-emissions-1990-2020-world-inequality-lab-working-paper-2021-21/",
 "info": "Emissions per capita by income group",
 "data":{
-    "yAxisLabel": "tCO2E",
-    "labels": ["East Asia", "Europe", "North America", "South East Asia", "Russia and Central Asia", "MENA", "Latin America", "Sub-Saharan Africa"],
+    "units": "tCO2E",
+    "labels": ["East Asia", "Europe", "North America", "South, South East Asia", "Russia, Central Asia", "Middle East, N Africa", "Latin America", "Sub-Saharan Africa"],
     "datasets": [{
         "label": "Bottom 50%",
         "data": [3.1, 5.1, 9.7,1,4.6,2.3,2,0.5]
