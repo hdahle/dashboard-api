@@ -9,7 +9,7 @@
       "labels": ["Denmark", "Uruguay","Ireland","Germany","Spain","UK","Greece","Portugal","Belgium","Netherlands","Italy","Sweden","Chile","Australia","Romania"],
       "datasets": [
         {
-          "label": "2020",
+          "label": "Solar and wind as % share of electricity generation",
           "data": [61,44,35,33,29,29,27,26,20,19,17,17,17,17,16]
         }
        ]
