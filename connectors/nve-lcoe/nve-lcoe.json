@@ -1,0 +1,54 @@
+{
+  "source": "NVE, The Norwegian Water Resources and Energy Directorate",
+  "link": "https://www.nve.no/energi/analyser-og-statistikk/kostnader-for-kraftproduksjon/?ref=mainmenu",
+  "copyright": "NVE",
+  "license": "Public information",
+  "data": {
+    "labels": [
+      "Coal",
+      "Gas CC",
+      "Nuclear",
+      "Hydro >10MWh",
+      "Hydro <10MWh",
+      "Solar ground-mount",
+      "Solar large rooftop",
+      "Solar small rooftop",
+      "Wind offshore",
+      "Wind onshore"
+    ],
+    "datasets": [
+      {
+        "label": "2021",
+        "info": "LCOE in NOK/kWh, without tax-incentives, for new plants coming online in 2021",
+        "data": [
+          0.687289,
+          0.611550,
+          0.655761,
+          0.391662,
+          0.348260,
+          0.488360,
+          0.679571,
+          1.014973,
+          1.165995,
+          0.299386
+        ]
+      },
+      {
+        "label": "2030",
+        "info": "LCOE in NOK/kWh, without tax-incentives, for new plants coming online in 2030",
+        "data": [
+          0.701034,
+          0.654359,
+          0.655760,
+          0.391662,
+          0.348260,
+          0.293016,
+          0.407742,
+          0.608443,
+          0.676277,
+          0.221545
+        ]
+      }
+    ]
+  }
+}
