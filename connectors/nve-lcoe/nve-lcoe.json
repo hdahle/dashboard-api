@@ -10,12 +10,14 @@
       "Nuclear",
       "Hydro >10MWh",
       "Hydro <10MWh",
+      "Solar small rooftops",
+      "Solar large rooftops",
       "Solar ground-mount",
-      "Solar large rooftop",
-      "Solar small rooftop",
-      "Wind offshore",
+      "Wind offshore floating",
+      "Wind offshore fixed",
       "Wind onshore"
     ],
+    "units": "NOK/kWh",
     "datasets": [
       {
         "label": "2021",
@@ -26,10 +28,11 @@
           0.655761,
           0.391662,
           0.348260,
-          0.488360,
-          0.679571,
           1.014973,
+          0.679571,
+          0.488360,
           1.165995,
+          0.690270,
           0.299386
         ]
       },
@@ -42,10 +45,11 @@
           0.655760,
           0.391662,
           0.348260,
-          0.293016,
-          0.407742,
           0.608443,
+          0.407742,
+          0.293016,
           0.676277,
+          0.510800,
           0.221545
         ]
       }
