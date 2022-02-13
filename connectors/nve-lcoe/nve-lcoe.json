@@ -1,6 +1,7 @@
 {
-  "source": "NVE, The Norwegian Water Resources and Energy Directorate",
+  "source": "NVE, The Norwegian Water Resources and Energy Directorate, January 31 2022",
   "link": "https://www.nve.no/energi/analyser-og-statistikk/kostnader-for-kraftproduksjon/?ref=mainmenu",
+  "accessed": "January 31, 2022",
   "copyright": "NVE",
   "license": "Public information",
   "data": {
@@ -17,10 +18,10 @@
       "Wind offshore fixed",
       "Wind onshore"
     ],
-    "units": "NOK/kWh",
+    "units": "NOK",
     "datasets": [
       {
-        "label": "2021",
+        "label": "2021, NOK/kWh",
         "info": "LCOE in NOK/kWh, without tax-incentives, for new plants coming online in 2021",
         "data": [
           0.687289,
@@ -37,7 +38,7 @@
         ]
       },
       {
-        "label": "2030",
+        "label": "2030, NOK/kWh",
         "info": "LCOE in NOK/kWh, without tax-incentives, for new plants coming online in 2030",
         "data": [
           0.701034,
