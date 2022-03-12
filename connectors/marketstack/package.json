@@ -5,14 +5,15 @@
   "main": "marketstack.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "node marketstack.js --apikey `cat apikey.txt` --key tmp --ticker wco2.xfra"
+    "set": "node marketstack.js --apikey `cat apikey.txt` --key ticker-wco2.xfra --ticker wco2.xfra",
+    "get": "redis-cli get ticker-wco2.xfra"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "minimist": "^1.2.5",
     "moment": "^2.29.1",
-    "node-fetch": "^2.6.7",
+    "node-fetch": "2",
     "redis": "2.8"
   }
 }
