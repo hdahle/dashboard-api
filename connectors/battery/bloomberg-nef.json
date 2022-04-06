@@ -8,10 +8,15 @@
     ],
     "datasets": [
       {
-        "label": "LiIon cell price, USD/kWh",
+        "label": "Battery cell price, USD/kWh",
         "data": [ 
           469,412,263,221,159,134,112,104,101
+        ],
+        "label": "Battery pack price, USD/kWh",
+        "data": [ 
+684,607,393,303,226,185,161,150,132
         ]
+
       }
     ]
   }
