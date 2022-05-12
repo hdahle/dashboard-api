@@ -4,9 +4,15 @@
   "description": "API server for Redis database",
   "main": "api-server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "sudo node api-server.js"
   },
   "author": "Håkon Dahle",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "http": "0.0.1-security",
+    "https": "1.0.0",
+    "redis": "2.8.0"
+  }
 }

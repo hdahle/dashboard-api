@@ -12,15 +12,12 @@ var redClient = redis.createClient();
 redClient.on('connect', function () {
   console.log('Redis client connected');
 });
-
 redClient.on('ready', function () {
   console.log('Redis client ready');
 });
-
 redClient.on('warning', function () {
   console.log('Redis warning');
 });
-
 redClient.on('error', function (err) {
   console.log('Redis error:' + err);
 });
@@ -45,9 +42,12 @@ if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
 }
 
 // Listen on HTTP Port 80 also
-http.createServer(requestListener).listen(80);
+let httpServer = http.createServer(requestListener).listen(80);
+httpServer.on('error', function (e) {
+  console.log('Error starting HTTP server on port 80. Use sudo in order to get root access to low port numbers');
+});
 
-// A single requestListener for both HTTP and HTTPS
+// Identical requestListener for both HTTP and HTTPS
 // The old way of doing this was:
 // let path = url.parse(req.url).pathname;
 // let query = url.parse(req.url).query;
