@@ -1,0 +1,19 @@
+{
+  "name": "wisdomtree",
+  "version": "1.0.0",
+  "description": "",
+  "main": "marketstack.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "set": "node marketstack.js --apikey `cat apikey.txt` --key ticker-wco2.xfra --ticker wco2.xfra",
+    "get": "redis-cli get ticker-wco2.xfra"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "1",
+    "moment": "2",
+    "node-fetch": "2",
+    "redis": "2.8"
+  }
+}

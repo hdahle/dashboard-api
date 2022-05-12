@@ -3,12 +3,13 @@
  "accessed": "2021-08-20",
  "link": "https://ember-climate.org/commentary/2021/07/08/top-15-wind-and-solar-power-countries-in-2020/",
  "license": "ember-climate.org writes: All content is released under a Creative Commons Attribution Licence (CC BY-SA 4.0).",
+ "info": "Percentage of electricity generation from wind and solar in 2020",
  "data": 
     {
       "labels": ["Denmark", "Uruguay","Ireland","Germany","Spain","UK","Greece","Portugal","Belgium","Netherlands","Italy","Sweden","Chile","Australia","Romania"],
       "datasets": [
         {
-          "label": "2020",
+          "label": "Solar and wind as % share of electricity generation",
           "data": [61,44,35,33,29,29,27,26,20,19,17,17,17,17,16]
         }
        ]

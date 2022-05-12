@@ -1,0 +1,20 @@
+{ "source": "Climate Change & the Global Inequality of Carbon Emissions (1990-2020), Lucas Chancel, 22 December 2021",
+"link":"https://wid.world/document/climate-change-the-global-inequality-of-carbon-emissions-1990-2020-world-inequality-lab-working-paper-2021-21/",
+"info": "Emissions per capita by income group",
+"data":{
+    "units": "tCO2E",
+    "labels": ["East Asia", "Europe", "North America", "South, South East Asia", "Russia, Central Asia", "Middle East, N Africa", "Latin America", "Sub-Saharan Africa"],
+    "datasets": [{
+        "label":"Top 1%",
+        "data": [147,90,267,39,156,117,68,27]
+    },{
+        "label":"Top 10%",
+        "data": [38.9,29.2,73,10.6,35.1,33.6,19.2,7.3]
+    },{
+        "label":"Middle 40%",
+        "data": [7.9,10.6,21.7,2.5,10.2,7.3,4.7,1.7]
+    },{
+        "label": "Bottom 50%",
+        "data": [3.1, 5.1, 9.7,1,4.6,2.3,2,0.5]
+    }]
+}}

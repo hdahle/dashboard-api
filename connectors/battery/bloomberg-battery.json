@@ -1,0 +1,19 @@
+{
+ "source": "BloombergNEF, November 30, 2021",
+  "link" : "https://about.bnef.com/blog/battery-pack-prices-fall-to-an-average-of-132-kwh-but-rising-commodity-prices-start-to-bite",
+  "copyright": "Bloomberg NEF",
+  "data": {
+    "labels": [
+      "2013","2014","2015","2016","2017","2018","2019","2020","2021"
+    ],
+    "datasets": [
+      {
+        "label": "Battery pack price, $/kWh",
+        "data": [684,607,393,303,226,185,161,150,132]
+      },{
+        "label": "Battery cell price, $/kWh",
+        "data": [469,412,263,221,159,134,112,104,101]
+      }
+    ]
+  }
+}

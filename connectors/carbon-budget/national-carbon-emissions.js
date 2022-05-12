@@ -1,7 +1,7 @@
 //
 // Read CSV file, Write JSON to Redis
 //
-// H. Dahle, 2020
+// H. Dahle, 2021
 //
 
 // CSV input format:
@@ -57,7 +57,9 @@ function processCSV() {
     source: 'Global Carbon Project December 2019, https://www.globalcarbonproject.org/carbonbudget/',
     info: 'Fossil fuels and cement production emissions by country, in million tons of CO2 per country per year',
     link: 'https://www.icos-cp.eu/GCP/2019',
-    data: []
+    data: {
+      datasets: []
+    }
   }
   // number of countries/entries per line/row
   let nCols = 0;
@@ -112,8 +114,8 @@ function processCSV() {
         csvRow.shift();
         nCols = csvRow.indexOf('');
         for (let i = 0; i < nCols; i++) {
-          d.data[i] = {
-            country: csvRow[i],
+          d.data.datasets[i] = {
+            label: csvRow[i],
             data: []
           };
         }
@@ -122,7 +124,7 @@ function processCSV() {
         // multiply all values by 3.664 to convert from C to CO2
         let year = csvRow.shift();
         for (let i = 0; i < nCols; i++) {
-          d.data[i].data.push({
+          d.data.datasets[i].data.push({
             x: parseInt(year, 10), // avoid quotemarks around year
             y: Math.floor(csvRow[i] * 366.4) / 100
           });
@@ -132,14 +134,14 @@ function processCSV() {
     .on('end', () => {
       // if we have specified some countries, remove all other countries from result
       if (cList.length) {
-        d.data = d.data.filter(x => cList.includes(x.country));
+        d.data.datasets = d.data.datasets.filter(x => cList.includes(x.label));
       }
 
-      d.data.forEach(x => {
-        x.country = x.country.replace('Central', 'C');
-        x.country = x.country.replace('North', 'N');
-        x.country = x.country.replace('South', 'S');
-        x.country = x.country.replace('Bunkers', 'Transport');
+      d.data.datasets.forEach(x => {
+        x.label = x.label.replace('Central', 'C');
+        x.label = x.label.replace('North', 'N');
+        x.label = x.label.replace('South', 'S');
+        x.label = x.label.replace('Bunkers', 'Transport');
       });
 
       let s = JSON.stringify(d);
