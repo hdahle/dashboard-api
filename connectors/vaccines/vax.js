@@ -11,10 +11,9 @@ var argv = require('minimist')(process.argv.slice(2));
 const momFmt = 'YY-MM-DD hh:mm:ss';
 var wp = require('./worldpop.js');
 
-// Parse commandline
-const fn = argv.file; 
-const redisKey = argv.key; 
-const verbose = argv.verbose;
+const fn = argv.file;         // filename of CSV-file
+const redisKey = argv.key;    // Redis-key
+const verbose = argv.verbose; // if you want lots of console output
 let partial = argv.partial;   // Share of population partially vaccinated
 let full = argv.full;         // Share of population fully vaccinated
 let doses = argv.doses;       // Number of doses administered
