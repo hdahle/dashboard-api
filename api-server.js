@@ -1,36 +1,28 @@
 //
-// A super-simple node.js API-server
-// Should have used Express actually
-// Should have used some debug framework and not console.log
-// Should have done a lot of things...
-// Most important todo: use mocha for testing
+// A super-simple node.js HTTP(S) API-server using a Redis-cache
 //
 // H Dahle
 //
 var http = require('http');
 var https = require('https');
-var url = require('url');
 var fs = require('fs');
 var redis = require('redis');
 var redClient = redis.createClient();
-var moment = require('moment');
-
-const momFmt = 'YY-MM-DD hh:mm:ss';
 
 redClient.on('connect', function () {
-  console.log(moment().format(momFmt) + ' Redis client connected');
+  console.log('Redis client connected');
 });
 
 redClient.on('ready', function () {
-  console.log(moment().format(momFmt) + ' Redis client ready');
+  console.log('Redis client ready');
 });
 
 redClient.on('warning', function () {
-  console.log(moment().format(momFmt) + ' Redis warning');
+  console.log('Redis warning');
 });
 
 redClient.on('error', function (err) {
-  console.log(moment().format(momFmt) + ' Redis error:' + err);
+  console.log('Redis error:' + err);
 });
 
 // For the certificate stuff
@@ -49,69 +41,42 @@ if (fs.existsSync(keyFile) && fs.existsSync(crtFile)) {
   };
   https.createServer(httpsOptions, requestListener).listen(443);
 } else {
-  console.log(moment().format(momFmt), 'Warning: Not starting HTTPS server. Cert not found');
+  console.log('Warning: Not starting HTTPS server. Cert not found');
 }
 
-// Listen on HTTP Port 80
+// Listen on HTTP Port 80 also
 http.createServer(requestListener).listen(80);
 
 // A single requestListener for both HTTP and HTTPS
+// The old way of doing this was:
+// let path = url.parse(req.url).pathname;
+// let query = url.parse(req.url).query;
+// However we're not using the query part anyway so the URL module is overkill (and has bugs)
 function requestListener(req, res) {
-  let path = url.parse(req.url).pathname;
-  let query = url.parse(req.url).query;
-  let t = moment().format(momFmt);
-
-  console.log(t, req.url, req.headers.host);
-  if (path === '/favicon.ico') {
-    // The favicon handler is inspired by
-    //   https://stackoverflow.com/questions/15463199/how-to-set-custom-favicon-in-express
-    // To make an icon:        http://www.favicon.cc/
-    // To convert to base64:   http://base64converter.com/
-    const favicon = new Buffer.from(
-      'AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAE' +
-      'AAAAAAAAAC9bEsAAAAAAEGwIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
-      'AAAAAAAAAAAAAAAAAAAAAAERERERERERESIiIiIiIiIRIREREREREREhABABABABESEAEAEAE' +
-      'AERIQAQAQAQAREhABABABABESEAEAEAERERIQAQAQAREREhABABABERESEAEAEAERERIREQAQ' +
-      'AREREhERABERERESEREAERERERIREQARERERERERERERERH//wAAgAEAAL//AACkkwAApJMAA' +
-      'KSTAACkkwAApJ8AAKSfAACknwAApJ8AALyfAAC8/wAAvP8AALz/AAD//wAA', 'base64');
-    res.setHeader('Content-Length', favicon.length);
-    res.setHeader('Content-Type', 'image/x-icon');
-    res.setHeader('Cache-Control', 'public, max-age=2592000');// expires after a month
-    res.setHeader('Expires', moment().add(1, 'months').format('YYYY-MM-DD'));
-    res.end(favicon);
-    return;
-  }
-  // This is for the standard case. Write some headers first
+  console.log(req.url, req.url.length, req.headers.host);
+  // Always write some headers first
   res.writeHead(200, {
     'Content-Type': 'text/plain',
     'Access-Control-Allow-Origin': '*'
   });
-
-  // The path part should not be empty
-  if (path === undefined || path === null || path.length === 0) {
-    console.log(t, 'Empty path');
-    res.write('null');
+  // req.url should not be empty, so this code will never execute
+  if (req.url === undefined || req.url === null || req.url.length === 0) {
+    console.log('impossible');
+    res.write('impossible');
     res.end('\n');
     return;
   }
-
   // This is where I could serve index.html...
-  if (path === '/') {
+  if (req.url === '/') {
     res.write('null');
     res.end('\n');
     return;
   }
-
-  // Look up path in Redis after removing leading '/', write
-  redClient.get(path.substr(1), function (error, result) {
+  // Look up key (req.url) in Redis after removing leading '/', write
+  redClient.get(req.url.substr(1), function (error, result) {
     if (result) {
-      console.log(t, 'OK', result.substring(0, 50));
+      console.log('OK', result.substring(0, 50));
       res.write(result);
-    }
-    else {
-      // dbgMsg.status = 'Error';
-      // dbgMsg.result = 'nothing in db';
-      // res.write(JSON.stringify(dbgMsg));
     }
     res.end('\n');
   });
