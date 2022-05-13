@@ -1,6 +1,2 @@
-tmp.*
 *csv
 node_modules/
-package-lock*
-*.xlsx
-report*json
