@@ -17,8 +17,9 @@
   "author": "H Dahle",
   "license": "MIT",
   "dependencies": {
-    "csv-parse": "^4.8.5",
-    "minimist": "^1.2.0"
+    "csv-parse": "4.8.5",
+    "minimist": "1.2.6",
+    "moment": "2.29.2"
   },
   "devDependencies": {}
 }
