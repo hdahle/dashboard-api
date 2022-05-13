@@ -1,15 +1,15 @@
 {
   "name": "marketstack",
   "version": "1.0.0",
-  "description": "",
+  "description": "Pull ticker data from Marketstack, save to Redis as JSON",
   "main": "marketstack.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "set": "node marketstack.js --apikey `cat apikey.txt` --key ticker-wco2.xfra --ticker wco2.xfra",
     "get": "redis-cli get ticker-wco2.xfra"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Håkon Dahle, Hamachi AS",
+  "license": "MIT",
   "dependencies": {
     "minimist": "1.2.6",
     "moment": "2.29.2",
