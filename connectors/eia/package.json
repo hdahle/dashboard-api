@@ -1,7 +1,7 @@
 {
   "name": "eia",
   "version": "1.0.0",
-  "description": "",
+  "description": "Get various energy data from EIA and store to Redis",
   "main": "eia.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,9 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "minimist": "^1.2.5",
-    "moment": "^2.24.0",
-    "node-fetch": "^2.6.0",
-    "redis": "^2.8.0"
+    "minimist": "1.2.6",
+    "moment": "2.29.2",
+    "node-fetch": "2.6.7",
+    "redis": "3.1.1"
   }
 }
