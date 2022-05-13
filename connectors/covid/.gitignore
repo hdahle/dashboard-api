@@ -1,4 +1,3 @@
 *.csv
 node_modules/*
 update*
-package_lock*package_lock*
