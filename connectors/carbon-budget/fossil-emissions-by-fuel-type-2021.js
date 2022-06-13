@@ -81,7 +81,7 @@ redClient.on('error', function (err) {
         // populate d with fuel types, push data values later
         for (let i = 0; i < nCols - 1; i++) {
           d.data[i] = {
-            fuel: csvRow[i + 1].replace('Cement emission', 'Cement').replace('fossil emissions excluding carbonation', 'Total').replace('fossil.emissions.excluding.carbonation', 'Total'),
+            fuel: csvRow[i + 1].replace('Cement emission', 'Cement').replace('Cement.emission', 'Cement').replace('fossil emissions excluding carbonation', 'Total').replace('fossil.emissions.excluding.carbonation', 'Total'),
             data: []
           };
         }
