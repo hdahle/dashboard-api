@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "fueltype": "node fossil-emissions-by-fuel-type-2020.js --file Global*2021*csv",
-    "fueltype-redis": "node fossil-emissions-by-fuel-type-2020.js --file Global*2021*csv --key emissions-by-fuel-type",
+    "fueltype": "node fossil-emissions-by-fuel-type-2021.js --file Global*2021*csv",
+    "fueltype-redis": "node fossil-emissions-by-fuel-type-2021.js --file Global*2021*csv --key emissions-by-fuel-type",
     "region": "node national-carbon-emissions-2021.js --file National*2021*csv --countries Regions",
     "region-redis": "node national-carbon-emissions-2021.js --file National*2021*csv --countries Regions --key emissions-by-region",
     "g20": "node national-carbon-emissions-2021.js --file National*2021*csv",
