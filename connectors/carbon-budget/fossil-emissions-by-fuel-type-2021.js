@@ -79,7 +79,7 @@ redClient.on('error', function (err) {
         // find first empty column
         nCols = csvRow.length;
         // populate d with fuel types, push data values later
-        for (let i = 0; i < nCols - 1; i++) {
+        for (let i = 0; i < nCols - 2; i++) {
           d.data[i] = {
             fuel: csvRow[i + 1].replace('Cement emission', 'Cement').replace('Cement.emission', 'Cement').replace('fossil emissions excluding carbonation', 'Total').replace('fossil.emissions.excluding.carbonation', 'Total'),
             data: []
@@ -88,7 +88,8 @@ redClient.on('error', function (err) {
       } else if (!isNaN(csvRow[0]) && csvRow[0] > 1900 && csvRow[0] < 2100) {
         // process the yearly data, 'year' is first element in the row
         // convert from C to CO2 by multiplying by 3.664
-        for (let i = 0; i < nCols - 1; i++) {
+        // Note: we skip the "Per.Capita" column which is the last one, hence loop until nCols-2
+        for (let i = 0; i < nCols - 2; i++) {
           d.data[i].data.push({
             x: parseInt(csvRow[0], 10),
             y: Math.floor(csvRow[i + 1] * 366.4) / 100
