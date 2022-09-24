@@ -8,10 +8,10 @@
 PWD=`pwd`
 
 # must use eval for tilde-expansion to work...dirty
-REDISKEY="emissions-norway"
+# REDISKEY="emissions-norway" # hard-coded in script to 'ghg-norway'
 TMPDIR=$(mktemp -d)
 LOGDIR=`eval echo ~${USER}/log`
-SCRIPT="ghg-norway.js"
+SCRIPT="ghg-norway2.js"
 LOGFILE="${LOGDIR}/cron.log"
 NEWCRONTAB="${TMPDIR}/crontab"
 NODE=`which node`
