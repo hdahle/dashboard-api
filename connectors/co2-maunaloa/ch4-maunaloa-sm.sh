@@ -36,7 +36,7 @@ awk -v d="${DATE}" 'BEGIN {ORS="";
             NOTFIRST=0
            }
      /^#/  {next}
-           {if (NOTFIRST) print ", "
+     NF==7 {if (NOTFIRST) print ", "
             NOTFIRST=1
             printf "{\"t\":\"%s-%02d-15\",\"y\":%s}",  $1, $2, $4 }
      END   {print "]}"}' < ${CSVFILE} > ${JSONFILE}
