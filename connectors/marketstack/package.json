@@ -12,7 +12,6 @@
   "license": "MIT",
   "dependencies": {
     "minimist": "1.2.6",
-    "moment": "2.29.2",
     "node-fetch": "2.6.7",
     "redis": "3.1.1"
   }
