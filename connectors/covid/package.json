@@ -20,7 +20,7 @@
   "author": "Håkon Dahle",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "^9.1.3"
+    "mocha": "^9.2.2"
   },
   "dependencies": {
     "csv-parse": "4.16.3",
