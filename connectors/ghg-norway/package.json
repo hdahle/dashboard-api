@@ -5,13 +5,13 @@
   "main": "ghg-norway.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "node ghg-norway.js"
+    "run": "node ghg-norway2.js"
   },
   "author": "Håkon Dahle",
   "license": "MIT",
   "dependencies": {
     "minimist": "1.2.6",
-    "moment": "2.29.2",
+    "moment": "2.29.4",
     "node-fetch": "2.6.7",
     "redis": "3.1.1"
   }
