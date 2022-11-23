@@ -4,7 +4,7 @@
   "description": "",
   "main": "bitcoin-price.js",
   "scripts": {
-    "run": "node --key bitcoin-price bitcoin-price.js",
+    "run": "node bitcoin-price.js --key bitcoin-price",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
