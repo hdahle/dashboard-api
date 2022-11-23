@@ -1,4 +1,4 @@
-var covid = require('../covid.js');
+var covid = require('../covid2.js');
 var assert = require('assert');
 
 // --- Population Lookup Table ---
