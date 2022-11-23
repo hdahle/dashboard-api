@@ -4,14 +4,15 @@
   "description": "",
   "main": "bitcoin-price.js",
   "scripts": {
+    "run": "node --key bitcoin-price bitcoin-price.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "minimist": "^1.2.5",
-    "moment": "^2.29.1",
-    "node-fetch": "^2.6.1",
-    "redis": "^3.0.2"
+    "minimist": "1.2.6",
+    "moment": "2.29.4",
+    "node-fetch": "2.6.7",
+    "redis": "3.1.1"
   }
 }
