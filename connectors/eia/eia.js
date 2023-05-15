@@ -4,51 +4,73 @@
 // Fetches from all 8 global regions
 // Reult from EIA is JSON, but we convert to chart.js-friendly format
 //
-// H. Dahle, 2020
+// H. Dahle, 2023
 
 var fetch = require('node-fetch');
 var redis = require('redis');
-var redClient = redis.createClient();
-var moment = require('moment');
 var argv = require('minimist')(process.argv.slice(2));
-const momFmt = 'YY-MM-DD hh:mm:ss';
 
-redClient.on('connect', function () {
-  console.log(moment().format(momFmt) + ' Redis client connected');
-});
-redClient.on('ready', function () {
-  console.log(moment().format(momFmt) + ' Redis client ready');
-});
-redClient.on('warning', function () {
-  console.log(moment().format(momFmt) + ' Redis warning');
-});
-redClient.on('error', function (err) {
-  console.log(moment().format(momFmt) + ' Redis error:' + err);
-});
+// Wrapper for node-fetch
+// Arg can be {} for a simple GET
+async function fetchJson(url, arg) {
+  let json;
+  try {
+    const response = await fetch(url, arg);
+    json = await response.json();
+  } catch (error) {
+    console.error(error);
+  }
+  return json;
+}
+
+// Connect to local redis
+// Save key/value pair
+// Close redis
+function saveToRedis(key, value) {
+  console.log('Storing ' + value.length +
+    ' bytes, key=' + key +
+    ' value=' + value.substring(0, 60));
+  let redClient = redis.createClient();
+  redClient.on('connect', function () {
+    console.log('Redis client connected');
+  });
+  redClient.on('ready', function () {
+    console.log('Redis client ready');
+  });
+  redClient.on('warning', function () {
+    console.log('Redis warning');
+  });
+  redClient.on('error', function (err) {
+    console.log('Redis error:' + err);
+  });
+  redClient.set(key, value, function (error, result) {
+    if (result) {
+      console.log('Result:' + result);
+    } else {
+      console.log('Error: ' + error);
+    }
+    redClient.quit();
+  });
+}
 
 // Fetch EIA data
-(() => {
-  function status(response) {
-    if (response.status >= 200 && response.status < 300) {
-      return Promise.resolve(response)
-    } else {
-      return Promise.reject(new Error(response.statusText))
-    }
+(async () => {
+  function usage(msg) {
+    console.log("Error:", msg);
+    console.log('Usage: node eia.js --series <seriesname> --apikey <apikey> [--key <rediskey>]');
+    console.log('  <apikey> is the alphanum code required for API access ');
+    console.log('  <rediskey> is optional, required for storing result to Redis');
+    console.log('    If <rediskey> is not used, output goes to stdout');
+    let s = '';
+    Object.keys(eiaSeries).forEach(x => s += x + ' ');
+    console.log('  <seriesname> is one of: ', s);
   }
-  function json(response) {
-    return response.json()
-  }
-
   // process commandline
   let apiKey = argv.apikey; // filename from cmd line
   let redisKey = argv.key;  // redis-key from cmd line
   let series = argv.series; // coal, oil or gas
-  let endDate = argv.end;   // end date
-
-  let region = argv.region; // region
-
-  // These are the regions we always query for
-  let eiaRegions = [
+  // mapping region names <-> EIA Region Codes
+  const eiaRegionCodes = [
     { region: 'Africa', code: 'AFRC' },
     { region: 'World', code: 'WORL' },
     { region: 'Europe', code: 'EURO' },
@@ -57,15 +79,9 @@ redClient.on('error', function (err) {
     { region: 'Eurasia', code: 'EURA' },
     { region: 'Asia&Oceania', code: 'ASOC' },
     { region: 'S America', code: 'CSAM' },
-    { region: 'N America', code: 'NOAM' },
-    { region: 'USA', code: 'USA' },
-    { region: 'China', code: 'CHN' },
-    { region: 'India', code: 'IND' },
-    { region: 'Japan', code: 'JPN' },
-    { region: 'Russia', code: 'RUS' }
+    { region: 'N America', code: 'NOAM' }
   ];
-
-  // Series names and appropriate units for series
+  // EIA Series names and appropriate units for series
   const eiaSeries = {
     'coal': { eiaSeriesName: 'INTL.7-1-', eiaUnit: 'MT.A' },
     'oil': { eiaSeriesName: 'INTL.55-1-', eiaUnit: 'TBPD.A' },
@@ -86,99 +102,58 @@ redClient.on('error', function (err) {
     'hydro-gen': { eiaSeriesName: 'INTL.33-12-', eiaUnit: 'BKWH.A' }
   };
 
-  if (apiKey === undefined || redisKey === undefined || series === undefined || eiaSeries[series] === undefined) {
-    console.log('Usage: node eia.js --series <seriesname> --apikey <apikey> --key <rediskey> [--end <endYear>] [--region <RegionName>]');
-    let s = '';
-    Object.keys(eiaSeries).forEach(x => s += x + ' ');
-    console.log('  <seriesname> is one of: ', s);
-    process.exit();
+  if (apiKey === undefined) {
+    usage("Missing API key");
+    return;
+  }
+  if (redisKey === true) {
+    usage("Missing Redis key");
+    return;
+  }
+  if (series === undefined) {
+    usage("Series not specified");
+    return;
+  }
+  if (eiaSeries[series] === undefined) {
+    usage("Invalid series")
+    return;
   }
 
-  // Use a single region if it is specified. If not, query for all regions in eiaRegions
-  if (region !== undefined) {
-    const tmp = eiaRegions.filter(e => e.region === region)
-    if (tmp.length) {
-      eiaRegions = tmp;
+  // Fetch data from all regions, one HTTPS GET per region
+  const today = new Date();
+  let results = {
+    source: "US EIA Energy Information Administration",
+    link: "https://www.eia.gov/",
+    accessed: today.toUTCString(),
+    data: {
+      datasets: []
     }
-  }
+  };
 
-  let { eiaSeriesName, eiaUnit } = eiaSeries[series];
-
-  // build a single query URL, include all regions
-  let url = 'https://api.eia.gov/series/?api_key=' + apiKey + '&series_id=';
-  eiaRegions.forEach(element => {
-    url += eiaSeriesName + element.code + '-' + eiaUnit + ';';
-  });
-
-  // If ending date was specified, use it. With no end date, EIA will return all data up to today
-  if (endDate !== undefined) {
-    let n = parseInt(endDate, 10);
-    if (isNaN(n) || n < 2000 || n > parseInt(moment().format("YYYY"), 10)) {
-      console.log('  <end> should be a valid year between 2000 and today');
-      process.exit();
+  // Perform one HTTPS GET per region, simplify results, then save results in results.data.datasets[]
+  const { eiaSeriesName, eiaUnit } = eiaSeries[series];
+  const eiaURL = 'https://api.eia.gov/v2/seriesid/';
+  for (i = 0; i < eiaRegionCodes.length; i++) {
+    const { region, code } = eiaRegionCodes[i];
+    const url = eiaURL + eiaSeriesName + code + '-' + eiaUnit + '?api_key=' + apiKey;
+    const json = await fetchJson(url);
+    if (json && json.response && json.response.data) {
+      results.data.datasets.push({
+        label: region,
+        data: json.response.data.map(d => ({
+          x: d.period,
+          y: Math.trunc(d.value * 10) / 10
+        }))
+      });
     }
-    url += '&end=' + endDate;
+  };
+
+  // Output results (or save to Redis if Redis Key has been specified)
+  const resultsJSON = JSON.stringify(results);
+  if (redisKey === undefined) {
+    console.log(resultsJSON);
+  } else {
+    saveToRedis(redisKey, resultsJSON);
   }
 
-  fetch(url)
-    .then(status)
-    .then(json)
-    .then(results => {
-      // results.series is undefined if incorrect query URL
-      if ((results.series === undefined) || (results.series.length === 0) ||
-        (results.series[0].data === undefined) || (results.series[0].data.length === 0)) {
-        console.log('No data from api.eia.gov: ', results, url);
-        process.exit();
-      }
-
-      // original EIA data array is:   [ [year,value], [], ...]
-      // convert to chart.js-friendly: [ {year,value}, {}, ...]
-      results.series.forEach(series => {
-        let d = series.data;
-        series.data = d.map(x => ({
-          x: parseInt(x[0], 10),
-          y: Math.round(x[1] * 100) / 100
-        }));
-      })
-
-      // add chart.js-friendly region-name to each series
-      // this avoids client having to do this
-      results.series.forEach(s => {
-        eiaRegions.forEach(r => {
-          if (s.series_id.indexOf(r.code) > -1) {
-            s.region = r.region;
-          }
-        });
-      });
-
-      // sort regions based on production volumes -> chart easier to read
-      results.series.sort((a, b) => a.data[0].y - b.data[0].y);
-
-      // add 'source', 'link', 'accessed' key/values to JSON 
-      // this is so that website can display this autmatically
-      results.link = 'https://www.eia.gov/opendata/qb.php';
-      results.source = results.series[0].source;
-      results.accessed = results.series[0].updated;
-
-      // Store key/value pair to Redis
-      let redisValue = JSON.stringify(results);
-      console.log(moment().format(momFmt) +
-        ' Storing ' + redisValue.length +
-        ' bytes, key=' + redisKey +
-        ' value=' + redisValue.substring(0, 60));
-
-      redClient.set(redisKey, redisValue, function (error, result) {
-        if (result) {
-          console.log(moment().format(momFmt) + ' Result:' + result);
-        } else {
-          console.log(moment().format(momFmt) + ' Error: ' + error);
-        }
-      });
-
-      // exit
-      setInterval((() => {
-        process.exit();
-      }), 1000)
-    })
-    .catch(err => console.log(err))
 })();
