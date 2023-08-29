@@ -3,6 +3,8 @@
 # Fetch temperature data from UK Met Office / Hadley
 # Convert to JSON and store to Redis
 #
+# 2023-08-28: Use HadCRUT5 dataset instead of HadCRUT4 (deprecated)
+#
 # H. Dahle
 
 REDISKEY="global-temperature-hadcrut"
@@ -13,8 +15,9 @@ DATE=`date --iso-8601='minutes'`
 
 echo ${DATE}
 echo "Getting ftp data from crudata.uea.ac.uk, saving to ${CSVFILE}"
-curl "https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat" > ${CSVFILE}
- 
+# curl "https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat" > ${CSVFILE}
+curl "https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT5.0Analysis_gl.txt" > ${CSVFILE}
+
 if [ -f "${CSVFILE}" ]; then
     echo -n "Number of lines in CSV:"
     cat ${CSVFILE} | wc -l
@@ -36,12 +39,12 @@ echo "Converting data to JSON, saving to ${JSONFILE}"
 awk -v d="${DATE}" 'BEGIN {
             ORS="";FS=" ";
             print "{"
-            print "\"source\":\"HadCRUT4 Dataset, Climatic Research Unit, University of East Anglia, UK\", "
+            print "\"source\":\"HadCRUT5 Dataset, Climatic Research Unit, University of East Anglia, UK\", "
             print "\"license\":\"These datasets are made available under the Open Database License. "
             print "Any rights in individual contents of the datasets are licensed under the "
             print "Database Contents License under the conditions of Attribution and Share-Alike. "
             print "Please use the attribution Climatic Research Unit, University of East Anglia\", "
-            print "\"link\":\"https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT4-gl.dat\", "
+            print "\"link\":\"https://crudata.uea.ac.uk/cru/data/temperature/HadCRUT5.0Analysis_gl.txt\", "
             print "\"accessed\":\"" d "\", "
             print "\"legend\":\"The temperature data is organized in year/value pairs: [ {y:year, x:annualMean}, ... ] \", "
             print "\"info\":\"Land temperature data is based on measurements at 4800 stations across the world. "
